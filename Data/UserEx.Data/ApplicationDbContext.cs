@@ -6,11 +6,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using UserEx.Data.Common.Models;
-    using UserEx.Data.Models;
-
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using UserEx.Data.Common.Models;
+    using UserEx.Data.Models;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -25,6 +24,10 @@
         }
 
         public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<Number> Numbers { get; set; }
+
+        public DbSet<Provider> Providers { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -49,6 +52,15 @@
         {
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
+
+            // Decimal Monthly and Setup Cost precision
+            builder.Entity<Number>()
+                .Property(p => p.MonthlyPrice)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Entity<Number>()
+                .Property(p => p.SetupPrice)
+                .HasColumnType("decimal(5,2)");
 
             this.ConfigureUserIdentityRelations(builder);
 

@@ -23,4 +23,8 @@
     <ProjectReference Include="..\..\Services\UserEx.Services.Mapping\UserEx.Services.Mapping.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Numbers\" />
+  </ItemGroup>
+
 </Project>
