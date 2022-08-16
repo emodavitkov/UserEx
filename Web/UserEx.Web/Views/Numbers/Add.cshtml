@@ -1,0 +1,65 @@
+﻿@model UserEx.Web.ViewModels.Numbers.AddNumberManualModel
+@{
+	ViewData["Title"] = "Add DID number manually";
+}
+
+<div class="row">
+	<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+		<h2 class="heading-margin text-center">Add Number</h2>
+		
+		@*<div asp-validation-summary="All"></div>*@
+		
+		<form method="post">
+		<div class="form-group">
+			<label asp-for="ProviderId"></label>
+			<select asp-for="ProviderId" class="form-control">
+				@foreach (var provider in Model.Providers)
+				{
+					<option value="@provider.Id">@provider.Name</option>
+				}
+			</select>
+			<span asp-validation-for="ProviderId" class="small text-danger"></span>
+		</div>
+			<div class="form-group">
+				<label asp-for="DidNumber"></label>
+				<input asp-for="DidNumber" class="form-control" placeholder="Add number in E.164 format (country code + area code + number). Note that no spaces or symbols are used when entering this phone number.">
+				<span asp-validation-for="DidNumber" class="small text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="OrderReference"></label>
+				<input asp-for="OrderReference" class="form-control" placeholder="Provider Order reference, example: N1003R" >
+				<span asp-validation-for="OrderReference" class="small text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description"></label>
+				<textarea asp-for="Description" rows="4" class="form-control" placeholder="This is the perfect car.."></textarea>
+				<span asp-validation-for="Description" class="small text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="SetupPrice"></label>
+				<input asp-for="SetupPrice" class="form-control" placeholder="">
+				<span asp-validation-for="SetupPrice" class="small text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="MonthlyPrice"></label>
+				<input asp-for="MonthlyPrice" class="form-control" placeholder="">
+				<span asp-validation-for="MonthlyPrice" class="small text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="StartDate"></label>
+				<input asp-for="StartDate" class="form-control" placeholder="@DateTime.UtcNow.Year">
+				<span asp-validation-for="StartDate" class="small text-danger"></span>
+			</div>
+			
+			<div class="form-group">
+				<label asp-for="EndDate"></label>
+				<input asp-for="EndDate" class="form-control" placeholder="@DateTime.UtcNow.Year">
+				<span asp-validation-for="EndDate" class="small text-danger"></span>
+			</div>
+
+			<input class="btn btn-primary mt-3" type="submit" value="Save" />
+		</form>
+	</div>
+</div>
+
+

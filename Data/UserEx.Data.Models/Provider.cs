@@ -7,7 +7,6 @@
     {
         public int Id { get; init; }
 
-        [Required]
         public string Name { get; set; }
 
         public IEnumerable<Number> Numbers { get; init; } = new List<Number>();
