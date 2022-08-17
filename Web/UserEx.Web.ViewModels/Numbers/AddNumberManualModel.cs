@@ -16,7 +16,8 @@
         public const int NumberMaxLength = 15;
 
         [Required]
-        //[Range(NumberMinLength, NumberMaxLength)]
+
+        // [Range(NumberMinLength, NumberMaxLength)]
         public int DidNumber { get; set; }
 
         public string OrderReference { get; set; }
@@ -34,6 +35,7 @@
         public string Description { get; set; }
 
         [Required]
+        [Display(Name = "Active")]
         public bool IsActive { get; set; }
 
         public DateTime StartDate { get; set; } = DateTime.Today;

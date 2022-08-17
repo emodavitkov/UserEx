@@ -45,6 +45,7 @@
                 SetupPrice = number.SetupPrice,
                 MonthlyPrice = number.MonthlyPrice,
                 Description = number.Description,
+                IsActive = number.IsActive,
                 StartDate = number.StartDate,
                 EndDate = number.EndDate,
             };

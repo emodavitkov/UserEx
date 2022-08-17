@@ -22,7 +22,7 @@
 		</div>
 			<div class="form-group">
 				<label asp-for="DidNumber"></label>
-				<input asp-for="DidNumber" class="form-control" placeholder="Add number in E.164 format (country code + area code + number). Note that no spaces or symbols are used when entering this phone number.">
+				<input asp-for="DidNumber" class="form-control" placeholder="Add number in E.164 format (without spaces or symbols).">
 				<span asp-validation-for="DidNumber" class="small text-danger"></span>
 			</div>
 			<div class="form-group">
@@ -32,8 +32,14 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="Description"></label>
-				<textarea asp-for="Description" rows="4" class="form-control" placeholder="This is the perfect car.."></textarea>
+				<textarea asp-for="Description" rows="4" class="form-control" placeholder="Number specifics"></textarea>
 				<span asp-validation-for="Description" class="small text-danger"></span>
+			</div>
+			<div class="form-check form-switch">
+				<label asp-for="IsActive"></label>
+				<input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+				<label class="form-check-label" for="flexSwitchCheckChecked">number</label>
+				<span asp-validation-for="IsActive" class="small text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="SetupPrice"></label>
