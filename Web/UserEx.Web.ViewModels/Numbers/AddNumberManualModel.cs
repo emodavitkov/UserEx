@@ -16,9 +16,8 @@
         public const int NumberMaxLength = 15;
 
         [Required]
-
         // [Range(NumberMinLength, NumberMaxLength)]
-        public int DidNumber { get; set; }
+        public string DidNumber { get; set; }
 
         public string OrderReference { get; set; }
 

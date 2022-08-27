@@ -13,7 +13,7 @@
         public int Id { get; init; }
 
         [Required]
-        public int DidNumber { get; set; }
+        public string DidNumber { get; set; }
 
         public string OrderReference { get; set; }
 
