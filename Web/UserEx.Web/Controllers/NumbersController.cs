@@ -17,6 +17,27 @@
             this.data = data;
         }
 
+        public IActionResult All()
+        {
+            var numbers = this.data
+                .Numbers
+                .OrderByDescending(n => n.Id)
+                .Select(n => new NumberListingViewModel
+                {
+                    Id = n.Id,
+                    DidNumber = n.DidNumber,
+                    MonthlyPrice = n.MonthlyPrice,
+                    Description = n.Description,
+                    Provider = n.Provider.Name,
+                })
+                .ToList();
+
+            return View(numbers);
+            // return RedirectToAction("Index", "Home");
+        }
+
+
+
         public IActionResult Add() => View(new AddNumberManualModel
         {
             Providers = this.GetNumberProviders(),
@@ -54,7 +75,9 @@
 
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
+
+            // return RedirectToAction("Index", "Home");
         }
 
         private IEnumerable<NumberProviderViewModel> GetNumberProviders()

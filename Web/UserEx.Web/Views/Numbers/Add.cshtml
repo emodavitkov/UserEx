@@ -1,4 +1,5 @@
-﻿@model UserEx.Web.ViewModels.Numbers.AddNumberManualModel
+﻿@model AddNumberManualModel
+
 @{
 	ViewData["Title"] = "Add DID number manually";
 }
@@ -7,7 +8,7 @@
 	<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
 		<h2 class="heading-margin text-center">Add Number</h2>
 		
-		@*<div asp-validation-summary="All"></div>*@
+		<div asp-validation-summary="All"></div>
 		
 		<form method="post">
 		<div class="form-group">

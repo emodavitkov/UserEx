@@ -4,19 +4,15 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-    using UserEx.Data.Models;
 
     public class AddNumberManualModel
     {
         public const int NumberMinLength = 5;
         public const int NumberMaxLength = 15;
+        public const int NumberDescriptionMinLength = 2;
 
         [Required]
-        // [Range(NumberMinLength, NumberMaxLength)]
+        [StringLength(NumberMaxLength, MinimumLength = NumberMinLength)]
         public string DidNumber { get; set; }
 
         public string OrderReference { get; set; }
@@ -31,6 +27,11 @@
         [Display(Name = "Monthly Price")]
         public decimal MonthlyPrice { get; set; }
 
+        [Required]
+        [StringLength(
+            int.MaxValue,
+            MinimumLength = NumberDescriptionMinLength,
+            ErrorMessage = "The field Description must be a string with a minimum length of {2}.")]
         public string Description { get; set; }
 
         [Required]

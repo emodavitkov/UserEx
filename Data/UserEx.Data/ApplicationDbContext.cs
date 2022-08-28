@@ -62,6 +62,13 @@
                 .Property(p => p.SetupPrice)
                 .HasColumnType("decimal(5,2)");
 
+            builder
+                .Entity<Number>()
+                .HasOne(n => n.Provider)
+                .WithMany(n => n.Numbers)
+                .HasForeignKey(n => n.ProviderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             this.ConfigureUserIdentityRelations(builder);
 
             EntityIndexesConfiguration.Configure(builder);

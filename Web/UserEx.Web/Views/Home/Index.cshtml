@@ -1,6 +1,10 @@
 ﻿@using UserEx.Common
+
+@*@model List<NumberListingViewModel>*@
+@model IndexViewModel
+
 @{
-    this.ViewData["Title"] = "Home Page";
+    this.ViewData["Title"] = "UserEx Home";
 }
 
 <div class="text-center">
@@ -8,4 +12,84 @@
 	<p>
 		<h2 class="text-danger">Best UX Guaranteed</h2>
 	</p>
+</div>
+
+@{
+	var numbers = Model.Numbers;
+	var firstNumber = numbers.Any() ? numbers[0] : null;
+	var secondNumber = numbers.Any() ? numbers[1] : null;
+	var thirdNumber = numbers.Any() ? numbers[2] : null;
+}
+
+@if (!numbers.Any())
+{
+	<div class="jumbotron">
+		<h1 class="display-4">Welcome to the UserEx number manager!</h1>
+		<p class="lead">There are no DID numbers in the system currently available so why don't you add one?</p>
+		<hr class="my-4">
+		<p class="lead">
+			<a asp-controller="Numbers" asp-action="Add" class="btn btn-primary btn-lg" role="button">Add DID number</a>
+		</p>
+	</div>
+}
+
+<div class="mb-5"></div>
+
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+	<div class="carousel-inner">
+		@if (firstNumber != null)
+		{
+			<div class="carousel-item active bg-success text-white text-center border border-danger">
+				<img src="@firstNumber.DidNumber" class="d-block w-100" alt="@firstNumber.DidNumber @firstNumber.Description $@firstNumber.MonthlyPrice (Monthly Price)">
+				<div class="carousel-caption d-none d-md-block">
+					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@firstNumber.Id">@firstNumber.DidNumber @firstNumber.Description</a></h5>
+				</div>
+			</div>
+		}
+		
+		@if (secondNumber != null)
+		{
+			<div class="carousel-item bg-info text-white text-center border border-warning">
+				<img src="@secondNumber.DidNumber" class="d-block w-100" alt="@secondNumber.DidNumber @secondNumber.Description $@secondNumber.MonthlyPrice (Monthly Price)">
+				<div class="carousel-caption d-none d-md-block">
+					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@secondNumber.Id">@secondNumber.DidNumber @secondNumber.Description</a></h5>
+				</div>
+			</div>
+		}
+		
+		
+		@if (thirdNumber != null)
+		{
+			<div class="carousel-item bg-success text-white text-center border border-warning">
+				<img src="@thirdNumber.DidNumber" class="d-block w-100" alt="@thirdNumber.DidNumber @thirdNumber.Description $@thirdNumber.MonthlyPrice (Monthly Price)">
+				<div class="carousel-caption d-none d-md-block">
+					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@thirdNumber.Id">@thirdNumber.DidNumber @thirdNumber.Description</a></h5>
+				</div>
+			</div>
+		}
+	</div>
+	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</div>
+
+<div class="mb-5"></div>
+
+<div class="jumbotron">
+	<div class="row bg-success text-white">
+		<h2 class="col-md-4 text-center">
+			@Model.TotalNumbers Numbers
+		</h2>
+		<h2 class="col-md-4 text-center">
+			@Model.TotalUsers Users
+		</h2>
+		<h2 class="col-md-4 text-center">
+			@Model.TotalX X
+		</h2>
+	</div>
 </div>
