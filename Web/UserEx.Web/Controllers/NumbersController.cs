@@ -17,10 +17,26 @@
             this.data = data;
         }
 
-        public IActionResult All()
+        public IActionResult All(string provider, string searchTerm)
         {
-            var numbers = this.data
-                .Numbers
+            var numbersQuery = this.data.Numbers.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(provider))
+            {
+                numbersQuery = numbersQuery.Where(n => n.Provider.Name == provider);
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                numbersQuery = numbersQuery.Where(n =>
+
+                  // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
+                   (n.DidNumber).ToLower().Contains(searchTerm.ToLower()) ||
+                    n.Description.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            var numbers = numbersQuery
                 .OrderByDescending(n => n.Id)
                 .Select(n => new NumberListingViewModel
                 {
@@ -32,13 +48,24 @@
                 })
                 .ToList();
 
-            return View(numbers);
+            // brand
+            var numberProviders = this.data
+                .Numbers
+                .Select(p => p.Provider.Name)
+                .Distinct()
+                .ToList();
+
+            return this.View(new AllNumbersQueryModel
+            {
+                Providers = numberProviders,
+                Numbers = numbers,
+                SearchTerm = searchTerm,
+            });
+
             // return RedirectToAction("Index", "Home");
         }
 
-
-
-        public IActionResult Add() => View(new AddNumberManualModel
+        public IActionResult Add() => this.View(new AddNumberManualModel
         {
             Providers = this.GetNumberProviders(),
         });
@@ -51,16 +78,16 @@
                 this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
             }
 
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 number.Providers = this.GetNumberProviders();
 
-                return View(number);
+                return this.View(number);
             }
 
             var numberData = new Number
-            { 
-                ProviderId= number.ProviderId,
+            {
+                ProviderId = number.ProviderId,
                 DidNumber = number.DidNumber,
                 OrderReference = number.OrderReference,
                 SetupPrice = number.SetupPrice,
@@ -75,7 +102,7 @@
 
             this.data.SaveChanges();
 
-            return RedirectToAction(nameof(All));
+            return this.RedirectToAction(nameof(this.All));
 
             // return RedirectToAction("Index", "Home");
         }
