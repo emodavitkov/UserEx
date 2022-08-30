@@ -17,27 +17,39 @@
             this.data = data;
         }
 
-        public IActionResult All(string provider, string searchTerm)
+        public IActionResult All([FromQuery]AllNumbersQueryModel query)
         {
             var numbersQuery = this.data.Numbers.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(provider))
+            if (!string.IsNullOrWhiteSpace(query.Provider))
             {
-                numbersQuery = numbersQuery.Where(n => n.Provider.Name == provider);
+                numbersQuery = numbersQuery.Where(n => n.Provider.Name == query.Provider);
             }
 
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
                 numbersQuery = numbersQuery.Where(n =>
 
-                  // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
-                   (n.DidNumber).ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Description.ToLower().Contains(searchTerm.ToLower()));
+                    // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
+                    n.DidNumber.ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    n.Description.ToLower().Contains(query.SearchTerm.ToLower()));
             }
 
+            numbersQuery = query.Sorting switch
+            {
+                NumberSorting.DateCreated => numbersQuery.OrderByDescending(n => n.StartDate),
+                NumberSorting.MonthlyPrice => numbersQuery.OrderByDescending(n => n.MonthlyPrice),
+                NumberSorting.Description => numbersQuery.OrderBy(n => n.Description),
+                _ => numbersQuery.OrderByDescending(n => n.Id),
+
+                // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
+                // _ => carsQuery.OrderByDescending(c => c.Id)
+            };
+
             var numbers = numbersQuery
-                .OrderByDescending(n => n.Id)
+                .Skip((query.CurrentPage - 1) * AllNumbersQueryModel.NumbersPerPage)
+                .Take(AllNumbersQueryModel.NumbersPerPage)
+                // .OrderByDescending(n => n.Id)
                 .Select(n => new NumberListingViewModel
                 {
                     Id = n.Id,
@@ -53,14 +65,22 @@
                 .Numbers
                 .Select(p => p.Provider.Name)
                 .Distinct()
+                .OrderBy(p => p)
                 .ToList();
 
-            return this.View(new AllNumbersQueryModel
-            {
-                Providers = numberProviders,
-                Numbers = numbers,
-                SearchTerm = searchTerm,
-            });
+            query.Providers = numberProviders;
+            query.Numbers = numbers;
+
+            return this.View(query);
+
+            // return this.View(new AllNumbersQueryModel
+            // {
+            //    Provider = provider,
+            //    Providers = numberProviders,
+            //    Numbers = numbers,
+            //    Sorting = sorting,
+            //    SearchTerm = searchTerm,
+            // });
 
             // return RedirectToAction("Index", "Home");
         }
