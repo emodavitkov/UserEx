@@ -46,9 +46,13 @@
                 // _ => carsQuery.OrderByDescending(c => c.Id)
             };
 
+            //var totalNumbers = this.data.Numbers.Count();
+            var totalNumbers = numbersQuery.Count();
+
             var numbers = numbersQuery
                 .Skip((query.CurrentPage - 1) * AllNumbersQueryModel.NumbersPerPage)
                 .Take(AllNumbersQueryModel.NumbersPerPage)
+
                 // .OrderByDescending(n => n.Id)
                 .Select(n => new NumberListingViewModel
                 {
@@ -68,6 +72,7 @@
                 .OrderBy(p => p)
                 .ToList();
 
+            query.TotalNumbers = totalNumbers;
             query.Providers = numberProviders;
             query.Numbers = numbers;
 

@@ -23,6 +23,8 @@
 
         public int CurrentPage { get; init; } = 1;
 
+        public int TotalNumbers { get; set; }
+
         public IEnumerable<NumberListingViewModel> Numbers { get; set; }
     }
 }
