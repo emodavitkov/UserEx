@@ -16,15 +16,16 @@
 
 <div class="mb-5"></div>
 
-
+@*
 @{
 	var numbers = Model.Numbers;
 	var firstNumber = numbers.Any() ? numbers[0] : null;
 	var secondNumber = numbers.Any() ? numbers[1] : null;
 	var thirdNumber = numbers.Any() ? numbers[2] : null;
 }
+*@
 
-@if (!numbers.Any())
+@if (!Model.Numbers.Any())
 {
 	<div class="jumbotron">
 		<h1 class="display-4">Welcome to the UserEx number manager!</h1>
@@ -42,6 +43,18 @@
 
 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
 	<div class="carousel-inner">
+		@for (int  i = 0;  i < Model.Numbers.Count;  i++)
+		{
+			var number = Model.Numbers[i];
+			<div class="carousel-item @(i==0 ? "active" : String.Empty) bg-success text-white text-center border border-danger">
+				<img src="@number.DidNumber" class="d-block w-100" alt="@number.DidNumber @number.Description $@number.MonthlyPrice (Monthly Price)">
+				<div class="carousel-caption d-none d-md-block">
+					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>
+				</div>
+			</div>
+		}
+		
+		@*
 		@if (firstNumber != null)
 		{
 			<div class="carousel-item active bg-success text-white text-center border border-danger">
@@ -51,7 +64,7 @@
 				</div>
 			</div>
 		}
-		
+
 		@if (secondNumber != null)
 		{
 			<div class="carousel-item bg-info text-white text-center border border-warning">
@@ -62,7 +75,7 @@
 			</div>
 		}
 		
-		
+
 		@if (thirdNumber != null)
 		{
 			<div class="carousel-item bg-success text-white text-center border border-warning">
@@ -72,6 +85,8 @@
 				</div>
 			</div>
 		}
+		*@
+
 	</div>
 	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
 		<span class="carousel-control-prev-icon" aria-hidden="true"></span>

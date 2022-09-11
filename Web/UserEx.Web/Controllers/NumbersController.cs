@@ -46,7 +46,7 @@
                 // _ => carsQuery.OrderByDescending(c => c.Id)
             };
 
-            //var totalNumbers = this.data.Numbers.Count();
+            // var totalNumbers = this.data.Numbers.Count();
             var totalNumbers = numbersQuery.Count();
 
             var numbers = numbersQuery

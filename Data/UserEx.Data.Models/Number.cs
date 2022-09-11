@@ -34,6 +34,8 @@
 
         public DateTime? EndDate { get; set; }
 
+        // public string Source { get; set; } = "manual"
+        // public SourceEnum Source { get; set; }
         public int ProviderId { get; set; }
 
         public Provider Provider { get; init; }
