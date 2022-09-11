@@ -2,6 +2,13 @@
 {
     using System.Reflection;
 
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using UserEx.Data;
     using UserEx.Data.Common;
     using UserEx.Data.Common.Repositories;
@@ -13,20 +20,15 @@
     using UserEx.Services.Messaging;
     using UserEx.Web.ViewModels;
 
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             ConfigureServices(builder.Services, builder.Configuration);
+
+            var didwwApiKey = builder.Configuration["Didww:ApiKey"];
+
             var app = builder.Build();
             Configure(app);
             app.Run();

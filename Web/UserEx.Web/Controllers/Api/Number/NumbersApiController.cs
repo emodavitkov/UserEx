@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace UserEx.Web.Controllers.Api.Number
 {
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Text.Json;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using UserEx.Data;
     using UserEx.Web.ViewModels.Api;
 
@@ -15,22 +17,22 @@ namespace UserEx.Web.Controllers.Api.Number
     public class NumbersApiController : ControllerBase
     {
         private readonly ApplicationDbContext data;
+        private readonly IConfiguration config;
 
-        public NumbersApiController(ApplicationDbContext data)
+        public NumbersApiController(
+            ApplicationDbContext data,
+            IConfiguration config)
         {
+            this.config = config;
             this.data = data;
         }
 
-        //[Route("api/upload")]
         public async Task<IActionResult> UploadDids()
         {
-            var apiKey = "3MZ92NURQ7UU8ZBX8VRX8CSRZOSJ3MT";
+            var didwwApiKey = this.config["Didww:ApiKey"];
 
             using (var httpClient = new HttpClient())
             {
-
-                // https://api.didww.com/v3/dids?page%5Bnumber%5D=1&page%5Bsize%5D=50",
-
                 var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids")
                 {
                     Headers =
@@ -39,7 +41,7 @@ namespace UserEx.Web.Controllers.Api.Number
 
                         // { "Content-Type", "application/vnd.api+json" },
                         { "Accept", "application/vnd.api+json" },
-                        { "Api-Key", apiKey },
+                        { "Api-Key", didwwApiKey },
                     },
                 };
 
@@ -47,14 +49,12 @@ namespace UserEx.Web.Controllers.Api.Number
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
-                    //  using var contentStream = httpResponseMessage.Content.ReadAsStream();
-
                     using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
                     var numbersApiResponse =
                         await JsonSerializer.DeserializeAsync<NumbersApiResponseModel>(contentStream);
 
-                    var numbers = new List<Data.Models.Number>();
+                    var numbersApiCollected = new List<Data.Models.Number>();
 
                     foreach (var number in numbersApiResponse.Data)
                     {
@@ -69,10 +69,10 @@ namespace UserEx.Web.Controllers.Api.Number
                             StartDate = number.Attributes.CreatedAt.Date,
                         };
 
-                        numbers.Add(numberData);
+                        numbersApiCollected.Add(numberData);
                     }
 
-                    this.data.Numbers.AddRange(numbers);
+                    this.data.Numbers.AddRange(numbersApiCollected);
 
                     this.data.SaveChanges();
                 }
