@@ -33,7 +33,7 @@ namespace UserEx.Web.Controllers.Api.Number
 
             using (var httpClient = new HttpClient())
             {
-                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids")
+                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids?include=order")
                 {
                     Headers =
                     {
@@ -58,16 +58,39 @@ namespace UserEx.Web.Controllers.Api.Number
 
                     foreach (var number in numbersApiResponse.Data)
                     {
+
+                        if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
+                        {
+                            continue;
+                        }
+
+                        var orderId = number.Relationships.Order.OrderData.OrderId;
+
                         var numberData = new Data.Models.Number
                         {
                             ProviderId = 1,
                             DidNumber = number.Attributes.Number,
-                            SetupPrice = 50,
-                            MonthlyPrice = 50,
+
+                            SetupPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.SetupPrice,
+                            MonthlyPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
+                            OrderReference = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderReference,
                             Description = number.Attributes.Description,
                             IsActive = true,
                             StartDate = number.Attributes.CreatedAt.Date,
                         };
+
+
+                        // foreach (var orderDetails in numbersApiResponse.Included)
+                        // {
+                        //    if (orderDetails.IncludedOrderId == orderId)
+                        //    {
+                        //        numberData.MonthlyPrice = orderDetails.Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
+                        //        numberData.SetupPrice = orderDetails.Attributes.OrderItems.OrderItemsAttributes.OrderSetupPrice,
+                        //            OrderReference = orderDetails.Attributes.OrderReference,
+
+                        //        };
+                        //    }
+                        //}
 
                         numbersApiCollected.Add(numberData);
                     }
