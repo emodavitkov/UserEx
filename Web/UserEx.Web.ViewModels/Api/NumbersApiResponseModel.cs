@@ -7,6 +7,8 @@
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
+    using UserEx.Data.Models;
+
     public class NumbersApiResponseModel
     {
         [JsonPropertyName("data")]
@@ -14,6 +16,8 @@
 
         [JsonPropertyName("included")]
         public ApiIncluded[] Included { get; set; }
+
+        public SourceEnum Source { get; set; } = (SourceEnum)1;
 
         public class ApiData
         {
@@ -87,13 +91,12 @@
                         public string OrderMonthlyPrice { get; set; }
 
                         // calculated property
-                        public decimal SetupPrice => decimal.Parse(OrderSetupPrice);
+                        public decimal SetupPrice => decimal.Parse(this.OrderSetupPrice);
 
-                        public decimal MonthlyPrice => decimal.Parse(OrderMonthlyPrice);
+                        public decimal MonthlyPrice => decimal.Parse(this.OrderMonthlyPrice);
                     }
                 }
             }
         }
     }
-
 }

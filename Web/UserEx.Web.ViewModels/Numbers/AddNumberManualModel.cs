@@ -5,6 +5,8 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using UserEx.Data.Models;
+
     public class AddNumberManualModel
     {
         public const int NumberMinLength = 5;
@@ -37,6 +39,9 @@
         [Required]
         [Display(Name = "Active")]
         public bool IsActive { get; set; }
+
+        [Required]
+        public SourceEnum Source { get; set; } = 0;
 
         public DateTime StartDate { get; set; } = DateTime.Today;
 

@@ -1,8 +1,7 @@
-﻿using System.Linq;
-
-namespace UserEx.Web.Controllers.Api.Number
+﻿namespace UserEx.Web.Controllers.Api.Number
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -58,7 +57,6 @@ namespace UserEx.Web.Controllers.Api.Number
 
                     foreach (var number in numbersApiResponse.Data)
                     {
-
                         if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
                         {
                             continue;
@@ -70,11 +68,11 @@ namespace UserEx.Web.Controllers.Api.Number
                         {
                             ProviderId = 1,
                             DidNumber = number.Attributes.Number,
-
                             SetupPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.SetupPrice,
                             MonthlyPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
                             OrderReference = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderReference,
                             Description = number.Attributes.Description,
+                            Source = numbersApiResponse.Source,
                             IsActive = true,
                             StartDate = number.Attributes.CreatedAt.Date,
                         };
@@ -88,10 +86,9 @@ namespace UserEx.Web.Controllers.Api.Number
                         //        numberData.SetupPrice = orderDetails.Attributes.OrderItems.OrderItemsAttributes.OrderSetupPrice,
                         //            OrderReference = orderDetails.Attributes.OrderReference,
 
-                        //        };
+                        // };
                         //    }
-                        //}
-
+                        // }
                         numbersApiCollected.Add(numberData);
                     }
 
