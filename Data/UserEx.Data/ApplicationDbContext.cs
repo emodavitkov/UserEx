@@ -6,6 +6,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using UserEx.Data.Common.Models;
@@ -25,9 +26,11 @@
 
         public DbSet<Setting> Settings { get; set; }
 
-        public DbSet<Number> Numbers { get; set; }
+        public DbSet<Number> Numbers { get; init; }
 
-        public DbSet<Provider> Providers { get; set; }
+        public DbSet<Provider> Providers { get; init; }
+
+        public DbSet<Partner> Partners { get; init; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -67,6 +70,20 @@
                 .HasOne(n => n.Provider)
                 .WithMany(n => n.Numbers)
                 .HasForeignKey(n => n.ProviderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Number>()
+                .HasOne(n => n.Partner)
+                .WithMany(p => p.Numbers)
+                .HasForeignKey(n => n.PartnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Partner>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Partner>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             this.ConfigureUserIdentityRelations(builder);

@@ -7,14 +7,15 @@
 
     using UserEx.Data.Models;
 
+    using static UserEx.Data.Common.DataConstants.Number;
+
     public class AddNumberManualModel
     {
-        public const int NumberMinLength = 5;
-        public const int NumberMaxLength = 15;
-        public const int NumberDescriptionMinLength = 2;
-
+        // public const int NumberMinLength = 5;
+        // public const int NumberMaxLength = 15;
+        // public const int NumberDescriptionMinLength = 2;
         [Required]
-        [StringLength(NumberMaxLength, MinimumLength = NumberMinLength)]
+        [StringLength(MaxLength, MinimumLength = MinLength)]
         public string DidNumber { get; set; }
 
         public string OrderReference { get; set; }
@@ -32,7 +33,7 @@
         [Required]
         [StringLength(
             int.MaxValue,
-            MinimumLength = NumberDescriptionMinLength,
+            MinimumLength = DescriptionMinLength,
             ErrorMessage = "The field Description must be a string with a minimum length of {2}.")]
         public string Description { get; set; }
 
