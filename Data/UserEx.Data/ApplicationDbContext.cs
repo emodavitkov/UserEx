@@ -81,7 +81,7 @@
 
             builder
                 .Entity<Partner>()
-                .HasOne<IdentityUser>()
+                .HasOne<ApplicationUser>()
                 .WithOne()
                 .HasForeignKey<Partner>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);

@@ -1,8 +1,8 @@
 ﻿namespace UserEx.Data.Configurations
 {
-    using UserEx.Data.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using UserEx.Data.Models;
 
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {

@@ -2,9 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using UserEx.Data;
+    using UserEx.Data.Common;
     using UserEx.Data.Models;
     using UserEx.Web.ViewModels.Numbers;
 
@@ -90,14 +93,35 @@
             // return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Add() => this.View(new AddNumberManualModel
+        [Authorize]
+        public IActionResult Add()
         {
-            Providers = this.GetNumberProviders(),
-        });
+            if (!this.UserIsPartner())
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
+            return this.View(new AddNumberManualModel
+            {
+                Providers = this.GetNumberProviders(),
+            });
+        }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddNumberManualModel number)
         {
+            var partnerId = this.data
+                .Partners
+                .Where(p => p.UserId == this.User.GetId())
+                .Select(p => p.Id)
+                .FirstOrDefault();
+
+            if (partnerId == 0)
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
             if (!this.data.Providers.Any(p => p.Id == number.ProviderId))
             {
                 this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
@@ -122,6 +146,7 @@
                 Source = number.Source,
                 StartDate = number.StartDate,
                 EndDate = number.EndDate,
+                PartnerId = partnerId,
             };
 
             this.data.Numbers.Add(numberData);
@@ -132,6 +157,11 @@
 
             // return RedirectToAction("Index", "Home");
         }
+
+        private bool UserIsPartner()
+            => this.data
+                .Partners
+                .Any(p => p.UserId == this.User.GetId());
 
         private IEnumerable<NumberProviderViewModel> GetNumberProviders()
             => this.data

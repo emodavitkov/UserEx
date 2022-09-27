@@ -1,4 +1,4 @@
-﻿namespace UserEx.Data.Models
+﻿namespace UserEx.Web.ViewModels.Partners
 {
     using System;
     using System.Collections.Generic;
@@ -9,22 +9,16 @@
 
     using static UserEx.Data.Common.DataConstants.Partner;
 
-    public class Partner
+    public class SetUpPartnerFormModel
     {
-        public int Id { get; init; }
-
         [Required]
-        [MaxLength(OfficeNameMaxLength)]
+        [StringLength(OfficeNameMaxLength, MinimumLength = OfficeNameMinLength)]
+        [Display(Name = "Partner Office Name")]
         public string OfficeName { get; set; }
 
         [Required]
-        [MaxLength(PhoneNumberMaxLength)]
+        [StringLength(PhoneNumberMaxLength, MinimumLength = PhoneNumberMinLength)]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
-
-        [Required]
-        public string UserId { get; set; }
-
-        // public ApplicationUser User { get; set; }
-        public IEnumerable<Number> Numbers { get; init; } = new List<Number>();
     }
 }

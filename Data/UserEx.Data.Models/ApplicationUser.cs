@@ -4,9 +4,8 @@ namespace UserEx.Data.Models
     using System;
     using System.Collections.Generic;
 
-    using UserEx.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
+    using UserEx.Data.Common.Models;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {

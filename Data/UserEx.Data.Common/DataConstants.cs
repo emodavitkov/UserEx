@@ -22,7 +22,9 @@
 
         public class Partner
         {
-            public const int NameMaxLength = 25;
+            public const int OfficeNameMinLength = 2;
+            public const int OfficeNameMaxLength = 25;
+            public const int PhoneNumberMinLength = 6;
             public const int PhoneNumberMaxLength = 20;
         }
     }

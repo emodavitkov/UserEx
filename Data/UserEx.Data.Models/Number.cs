@@ -41,7 +41,7 @@
 
         public Provider Provider { get; init; }
 
-        public int PartnerId { get; init; }
+        public int? PartnerId { get; init; }
 
         public Partner Partner { get; init; }
     }
