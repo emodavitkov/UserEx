@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using Microsoft.AspNetCore.Http;
     using UserEx.Data.Models;
 
     using static UserEx.Data.Common.DataConstants.Number;
@@ -50,6 +51,9 @@
 
         [Display(Name="Provider")]
         public int ProviderId { get; set; }
+
+        [Required(ErrorMessage = "Please select file")]
+        public IFormFile DidBulk { get; set; }
 
         public IEnumerable<NumberProviderViewModel> Providers { get; set; }
     }

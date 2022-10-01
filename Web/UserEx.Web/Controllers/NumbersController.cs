@@ -1,10 +1,13 @@
 ﻿namespace UserEx.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using UserEx.Data;
     using UserEx.Data.Common;
@@ -157,6 +160,38 @@
 
             // return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            // var filePath = Path.GetTempFileName(); // Full path to file in temp location
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+
+           // create folder if not exist
+            if (!Directory.Exists(filePath))
+            {
+               Directory.CreateDirectory(filePath);
+            }
+
+            // get file extension
+            // FileInfo fileInfo = new FileInfo(file.FileName);
+            string fileName = file.FileName;
+
+            string fileNameWithPath = Path.Combine(filePath, fileName);
+
+            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+            {
+                    await file.CopyToAsync(stream);
+            }
+
+            // Copy files to FileSystem using Streams
+
+            // var bytes = file.Sum(f => f.Length);
+
+            // return Ok(new { count = file.Count, bytes, filePath });
+            return this.RedirectToAction(nameof(this.All));
+        }
+
 
         private bool UserIsPartner()
             => this.data
