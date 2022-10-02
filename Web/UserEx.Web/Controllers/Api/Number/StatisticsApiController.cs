@@ -4,30 +4,22 @@
 
     using Microsoft.AspNetCore.Mvc;
     using UserEx.Data;
+    using UserEx.Services.Data.Statistics;
     using UserEx.Web.ViewModels.Api;
 
     [ApiController]
     [Route("api/statistics")]
     public class StatisticsApiController : Controller
     {
-        private readonly ApplicationDbContext data;
+        private readonly IStatisticsService statistics;
 
-        public StatisticsApiController(ApplicationDbContext data)
-            => this.data = data;
+        public StatisticsApiController(IStatisticsService statistics)
+            => this.statistics = statistics;
 
         [HttpGet]
-        public StatisticsResponseModel GetStatistics()
+        public StatisticsServiceModel GetStatistics()
         {
-            var totalNumbers = this.data.Numbers.Count();
-            var totalUsers = this.data.Users.Count();
-
-            var statistics = new StatisticsResponseModel
-            {
-                TotalNumbers = totalNumbers,
-                TotalUsers = totalUsers,
-                TotalMonthlyCost = 0,
-            };
-            return statistics;
+            return this.statistics.Total();
         }
     }
 }

@@ -7,6 +7,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    using UserEx.Services;
+
     public class AllNumbersQueryModel
     {
         public const int NumbersPerPage = 20;
@@ -24,6 +26,9 @@
         public int CurrentPage { get; init; } = 1;
 
         public int TotalNumbers { get; set; }
+
+        // Cannot add this model?
+       // public IEnumerable<NumberServiceModel> Numbers { get; set; }
 
         public IEnumerable<NumberListingViewModel> Numbers { get; set; }
     }

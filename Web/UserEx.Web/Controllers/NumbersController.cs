@@ -1,4 +1,7 @@
-﻿namespace UserEx.Web.Controllers
+﻿using UserEx.Services.Data.Numbers;
+using UserEx.Services.Data.Numbers.Models;
+
+namespace UserEx.Web.Controllers
 {
     using System.Collections.Generic;
     using System.IO;
@@ -16,71 +19,94 @@
 
     public class NumbersController : Controller
     {
+        private readonly INumberService numbers;
         private readonly ApplicationDbContext data;
 
-        public NumbersController(ApplicationDbContext data)
+        public NumbersController(ApplicationDbContext data, INumberService numbers)
         {
             this.data = data;
+            this.numbers = numbers;
         }
 
         public IActionResult All([FromQuery]AllNumbersQueryModel query)
         {
-            var numbersQuery = this.data.Numbers.AsQueryable();
+            // move to service
 
-            if (!string.IsNullOrWhiteSpace(query.Provider))
-            {
-                numbersQuery = numbersQuery.Where(n => n.Provider.Name == query.Provider);
-            }
+            var queryResult = this.numbers.All(
+                query.Provider,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllNumbersQueryModel.NumbersPerPage);
 
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                numbersQuery = numbersQuery.Where(n =>
+            // var numbersQuery = this.data.Numbers.AsQueryable();
 
-                    // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
-                    n.DidNumber.ToLower().Contains(query.SearchTerm.ToLower()) ||
-                    n.Description.ToLower().Contains(query.SearchTerm.ToLower()));
-            }
+            // if (!string.IsNullOrWhiteSpace(query.Provider))
+            // {
+            //    numbersQuery = numbersQuery.Where(n => n.Provider.Name == query.Provider);
+            // }
 
-            numbersQuery = query.Sorting switch
-            {
-                NumberSorting.DateCreated => numbersQuery.OrderByDescending(n => n.StartDate),
-                NumberSorting.MonthlyPrice => numbersQuery.OrderByDescending(n => n.MonthlyPrice),
-                NumberSorting.Description => numbersQuery.OrderBy(n => n.Description),
-                _ => numbersQuery.OrderByDescending(n => n.Id),
+            // if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            // {
+            //    numbersQuery = numbersQuery.Where(n =>
 
-                // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
-                // _ => carsQuery.OrderByDescending(c => c.Id)
-            };
+            //        // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
+            //        n.DidNumber.ToLower().Contains(query.SearchTerm.ToLower()) ||
+            //        n.Description.ToLower().Contains(query.SearchTerm.ToLower()));
+            //}
 
-            // var totalNumbers = this.data.Numbers.Count();
-            var totalNumbers = numbersQuery.Count();
+            //numbersQuery = query.Sorting switch
+            //{
+            //    NumberSorting.DateCreated => numbersQuery.OrderByDescending(n => n.StartDate),
+            //    NumberSorting.MonthlyPrice => numbersQuery.OrderByDescending(n => n.MonthlyPrice),
+            //    NumberSorting.Description => numbersQuery.OrderBy(n => n.Description),
+            //    _ => numbersQuery.OrderByDescending(n => n.Id),
 
-            var numbers = numbersQuery
-                .Skip((query.CurrentPage - 1) * AllNumbersQueryModel.NumbersPerPage)
-                .Take(AllNumbersQueryModel.NumbersPerPage)
+            //    // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
+            //    // _ => carsQuery.OrderByDescending(c => c.Id)
+            //};
 
-                // .OrderByDescending(n => n.Id)
-                .Select(n => new NumberListingViewModel
-                {
-                    Id = n.Id,
-                    DidNumber = n.DidNumber,
-                    MonthlyPrice = n.MonthlyPrice,
-                    Description = n.Description,
-                    Provider = n.Provider.Name,
-                })
-                .ToList();
+            //// var totalNumbers = this.data.Numbers.Count();
+            //var totalNumbers = numbersQuery.Count();
 
-            // brand
-            var numberProviders = this.data
-                .Numbers
-                .Select(p => p.Provider.Name)
-                .Distinct()
-                .OrderBy(p => p)
-                .ToList();
+            //var numbers = numbersQuery
+            //    .Skip((query.CurrentPage - 1) * AllNumbersQueryModel.NumbersPerPage)
+            //    .Take(AllNumbersQueryModel.NumbersPerPage)
 
-            query.TotalNumbers = totalNumbers;
+            //    // .OrderByDescending(n => n.Id)
+            //    .Select(n => new NumberListingViewModel
+            //    {
+            //        Id = n.Id,
+            //        DidNumber = n.DidNumber,
+            //        MonthlyPrice = n.MonthlyPrice,
+            //        Description = n.Description,
+            //        Provider = n.Provider.Name,
+            //    })
+            //    .ToList();
+
+            // brand move to service
+            var numberProviders = this.numbers.AllNumberProviders();
+
+            // var numberProviders = this.data
+            //    .Numbers
+            //    .Select(p => p.Provider.Name)
+            //    .Distinct()
+            //    .OrderBy(p => p)
+            //    .ToList();
+
+            query.TotalNumbers = queryResult.TotalNumbers;
             query.Providers = numberProviders;
-            query.Numbers = numbers;
+
+            // query.Numbers = queryResult.Numbers;
+
+            query.Numbers = queryResult.Numbers.Select(n => new NumberListingViewModel
+            {
+                Id = n.Id,
+                Provider = n.Provider,
+                DidNumber = n.DidNumber,
+                MonthlyPrice = n.MonthlyPrice,
+                Description = n.Description,
+            });
 
             return this.View(query);
 

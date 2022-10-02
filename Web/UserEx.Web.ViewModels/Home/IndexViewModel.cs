@@ -12,7 +12,7 @@
 
         public int TotalUsers { get; set; }
 
-        public int TotalX { get; set; }
+        public int TotalMonthlyCost { get; set; }
 
         public List<NumberIndexViewModel> Numbers { get; init; }
     }

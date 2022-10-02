@@ -1,4 +1,6 @@
-﻿namespace UserEx.Web.Controllers
+﻿using UserEx.Services.Data.Statistics;
+
+namespace UserEx.Web.Controllers
 {
     using System.Diagnostics;
     using System.Linq;
@@ -11,18 +13,19 @@
 
     public class HomeController : BaseController
     {
+        private readonly IStatisticsService statistics;
         private readonly ApplicationDbContext data;
 
-        public HomeController(ApplicationDbContext data)
+        public HomeController(
+            IStatisticsService statistics,
+            ApplicationDbContext data)
         {
+            this.statistics = statistics;
             this.data = data;
         }
 
         public IActionResult Index()
         {
-            var totalNumbers = this.data.Numbers.Count();
-            var totalUsers = this.data.Users.Count();
-
             var numbers = this.data
                 .Numbers
                 .OrderByDescending(n => n.Id)
@@ -36,11 +39,12 @@
                 .Take(3)
                 .ToList();
 
+            var totalStatistics = this.statistics.Total();
 
             return this.View(new IndexViewModel
             {
-                TotalNumbers = totalNumbers,
-                TotalUsers = totalUsers,
+                TotalNumbers = totalStatistics.TotalNumbers,
+                TotalUsers = totalStatistics.TotalUsers,
                 Numbers = numbers,
             });
 

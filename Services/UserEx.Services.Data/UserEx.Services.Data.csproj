@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\UserEx.Data.Common\UserEx.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\UserEx.Data.Models\UserEx.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\UserEx.Data\UserEx.Data.csproj" />
     <ProjectReference Include="..\UserEx.Services.Mapping\UserEx.Services.Mapping.csproj" />
   </ItemGroup>
 

@@ -16,6 +16,8 @@
     using UserEx.Data.Repositories;
     using UserEx.Data.Seeding;
     using UserEx.Services.Data;
+    using UserEx.Services.Data.Numbers;
+    using UserEx.Services.Data.Statistics;
     using UserEx.Services.Mapping;
     using UserEx.Services.Messaging;
     using UserEx.Web.ViewModels;
@@ -67,6 +69,8 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
+            services.AddTransient<INumberService, NumberService>();
         }
 
         private static void Configure(WebApplication app)
