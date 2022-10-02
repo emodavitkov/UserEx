@@ -18,6 +18,8 @@
             int currentPage,
             int numbersPerPage);
 
+        IEnumerable<NumberServiceModel> ByUser(string userId);
+
         IEnumerable<string> AllNumberProviders();
     }
 }

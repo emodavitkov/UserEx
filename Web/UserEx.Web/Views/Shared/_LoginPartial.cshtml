@@ -1,15 +1,32 @@
 ﻿@using UserEx.Common
 @using UserEx.Data.Models
 @using Microsoft.AspNetCore.Identity
+@using UserEx.Services.Data.Partners
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IPartnerService Partners
 
 <ul class="navbar-nav">
     @if (this.SignInManager.IsSignedIn(this.User))
     {
-	    <li class="nav-item">
-		    <a class="nav-link text-dark" asp-area="" asp-controller="Partners" asp-action="SetUp">Set Up Partner Profile</a>
-	    </li>
+            var userId = User.GetId();
+	        var userIsPartner = Partners.IsPartner(userId);
+        
+
+        @if (userIsPartner)
+        {
+	        <li class="nav-item">
+		        <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="OfficeDids">Office DIDs</a>
+	        </li>
+        }
+
+	   else
+	   {
+		   <li class="nav-item">
+			   <a class="nav-link text-dark" asp-area="" asp-controller="Partners" asp-action="SetUp">Set Up Partner Profile</a>
+		   </li>
+	   }
 	    <li class="nav-item">
 		    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Core OPS @User.Identity.Name!</a>
 	    </li>

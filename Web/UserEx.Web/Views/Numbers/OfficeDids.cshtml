@@ -1,0 +1,13 @@
+﻿@model IEnumerable<NumberServiceModel>
+
+@{
+	ViewBag.Title = "Office Numbers";
+	ViewBag.AllowNumberEdit = true;
+}
+
+@if (!Model.Any())
+{
+	<h2 class="text-center">You do not have any cars yet!</h2>
+}
+
+<partial name="_NumbersPartial" model="@Model" />

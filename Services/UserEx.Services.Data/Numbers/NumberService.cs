@@ -1,4 +1,6 @@
 ﻿
+using UserEx.Data.Models;
+
 namespace UserEx.Services.Data.Numbers
 {
     using System;
@@ -57,20 +59,24 @@ namespace UserEx.Services.Data.Numbers
             // var totalNumbers = this.data.Numbers.Count();
             var totalNumbers = numbersQuery.Count();
 
-            var numbers = numbersQuery
+            var numbers = GetNumbers(numbersQuery
                 .Skip((currentPage - 1) * numbersPerPage)
-                .Take(numbersPerPage)
+                .Take(numbersPerPage));
 
-                // .OrderByDescending(n => n.Id)
-                .Select(n => new NumberServiceModel()
-                {
-                    Id = n.Id,
-                    DidNumber = n.DidNumber,
-                    MonthlyPrice = n.MonthlyPrice,
-                    Description = n.Description,
-                    Provider = n.Provider.Name,
-                })
-                .ToList();
+            // getNumbers above
+            // var numbers = numbersQuery
+            //    .Skip((currentPage - 1) * numbersPerPage)
+            //    .Take(numbersPerPage)
+            //    // .OrderByDescending(n => n.Id)
+            //    .Select(n => new NumberServiceModel()
+            //    {
+            //        Id = n.Id,
+            //        DidNumber = n.DidNumber,
+            //        MonthlyPrice = n.MonthlyPrice,
+            //        Description = n.Description,
+            //        Provider = n.Provider.Name,
+            //    })
+            //    .ToList();
 
             //// brand
             // var numberProviders = this.data
@@ -89,6 +95,11 @@ namespace UserEx.Services.Data.Numbers
             };
         }
 
+        public IEnumerable<NumberServiceModel> ByUser(string userId)
+            => GetNumbers(this.data
+                .Numbers
+                .Where(n => n.Partner.UserId == userId));
+
         public IEnumerable<string> AllNumberProviders()
           => this.data
              .Numbers
@@ -96,5 +107,18 @@ namespace UserEx.Services.Data.Numbers
              .Distinct()
              .OrderBy(p => p)
              .ToList();
+
+        private static IEnumerable<NumberServiceModel> GetNumbers(IQueryable<Number> numberQuery)
+            => numberQuery
+                .Select(n => new NumberServiceModel
+                {
+                    Id = n.Id,
+                    DidNumber = n.DidNumber,
+                    MonthlyPrice = n.MonthlyPrice,
+                    Description = n.Description,
+                    Provider = n.Provider.Name,
+                })
+                .ToList();
+
     }
 }

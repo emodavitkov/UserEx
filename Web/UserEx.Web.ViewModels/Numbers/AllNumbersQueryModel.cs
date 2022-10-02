@@ -28,8 +28,7 @@
         public int TotalNumbers { get; set; }
 
         // Cannot add this model?
-       // public IEnumerable<NumberServiceModel> Numbers { get; set; }
-
+        // public IEnumerable<NumberServiceModel> Numbers { get; set; }
         public IEnumerable<NumberListingViewModel> Numbers { get; set; }
     }
 }

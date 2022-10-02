@@ -1,7 +1,4 @@
-﻿using UserEx.Services.Data.Numbers;
-using UserEx.Services.Data.Numbers.Models;
-
-namespace UserEx.Web.Controllers
+﻿namespace UserEx.Web.Controllers
 {
     using System.Collections.Generic;
     using System.IO;
@@ -15,6 +12,8 @@ namespace UserEx.Web.Controllers
     using UserEx.Data;
     using UserEx.Data.Common;
     using UserEx.Data.Models;
+    using UserEx.Services.Data.Numbers;
+    using UserEx.Services.Data.Numbers.Models;
     using UserEx.Web.ViewModels.Numbers;
 
     public class NumbersController : Controller
@@ -31,7 +30,6 @@ namespace UserEx.Web.Controllers
         public IActionResult All([FromQuery]AllNumbersQueryModel query)
         {
             // move to service
-
             var queryResult = this.numbers.All(
                 query.Provider,
                 query.SearchTerm,
@@ -50,30 +48,30 @@ namespace UserEx.Web.Controllers
             // {
             //    numbersQuery = numbersQuery.Where(n =>
 
-            //        // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
+            // // (n.DidNumber + " " + n.Provider.Name).ToLower().Contains(searchTerm.ToLower()) ||
             //        n.DidNumber.ToLower().Contains(query.SearchTerm.ToLower()) ||
             //        n.Description.ToLower().Contains(query.SearchTerm.ToLower()));
-            //}
+            // }
 
-            //numbersQuery = query.Sorting switch
-            //{
+            // numbersQuery = query.Sorting switch
+            // {
             //    NumberSorting.DateCreated => numbersQuery.OrderByDescending(n => n.StartDate),
             //    NumberSorting.MonthlyPrice => numbersQuery.OrderByDescending(n => n.MonthlyPrice),
             //    NumberSorting.Description => numbersQuery.OrderBy(n => n.Description),
             //    _ => numbersQuery.OrderByDescending(n => n.Id),
 
-            //    // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
+            // // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
             //    // _ => carsQuery.OrderByDescending(c => c.Id)
-            //};
+            // };
 
             //// var totalNumbers = this.data.Numbers.Count();
-            //var totalNumbers = numbersQuery.Count();
+            // var totalNumbers = numbersQuery.Count();
 
-            //var numbers = numbersQuery
+            // var numbers = numbersQuery
             //    .Skip((query.CurrentPage - 1) * AllNumbersQueryModel.NumbersPerPage)
             //    .Take(AllNumbersQueryModel.NumbersPerPage)
 
-            //    // .OrderByDescending(n => n.Id)
+            // // .OrderByDescending(n => n.Id)
             //    .Select(n => new NumberListingViewModel
             //    {
             //        Id = n.Id,
@@ -98,7 +96,6 @@ namespace UserEx.Web.Controllers
             query.Providers = numberProviders;
 
             // query.Numbers = queryResult.Numbers;
-
             query.Numbers = queryResult.Numbers.Select(n => new NumberListingViewModel
             {
                 Id = n.Id,
@@ -120,6 +117,14 @@ namespace UserEx.Web.Controllers
             // });
 
             // return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult OfficeDids()
+        {
+            var officeNumbers = this.numbers.ByUser(this.User.GetId());
+
+            return this.View(officeNumbers);
         }
 
         [Authorize]

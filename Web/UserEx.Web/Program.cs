@@ -17,6 +17,7 @@
     using UserEx.Data.Seeding;
     using UserEx.Services.Data;
     using UserEx.Services.Data.Numbers;
+    using UserEx.Services.Data.Partners;
     using UserEx.Services.Data.Statistics;
     using UserEx.Services.Mapping;
     using UserEx.Services.Messaging;
@@ -71,6 +72,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IStatisticsService, StatisticsService>();
             services.AddTransient<INumberService, NumberService>();
+            services.AddTransient<IPartnerService, PartnerService>();
         }
 
         private static void Configure(WebApplication app)

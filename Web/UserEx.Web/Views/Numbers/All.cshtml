@@ -47,7 +47,7 @@
 		<div class="col-md-4">
 			<div class="card mb-3">
 				@*<img class="card-img-top" src="@number.DidNumber" alt="@number.Provider @number.MonthlyPrice - @number.Description (@number.Provider)">*@
-				<div class="card-body text-center">
+			        <div class="card-body text-center">
 					<h5 class="card-title text-center">@number.DidNumber -> @number.Description $@number.MonthlyPrice (@number.Provider)</h5>
 					<a asp-controller="Numbers" asp-action="" asp-route-id="@number.Id" class="btn btn-primary">View More</a>
 				</div>
@@ -55,6 +55,9 @@
 		</div>
 	}
 </div>
+
+
+@*<partial name="_NumbersPartial" model="@Model.Numbers" />*@
 
 <div class="row">
 
