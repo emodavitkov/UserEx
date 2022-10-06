@@ -10,7 +10,8 @@
 
     using static UserEx.Data.Common.DataConstants.Number;
 
-    public class AddNumberManualModel
+    // public class AddNumberManualModel
+    public class NumberManualModel
     {
         // public const int NumberMinLength = 5;
         // public const int NumberMaxLength = 15;
@@ -52,9 +53,10 @@
         [Display(Name="Provider")]
         public int ProviderId { get; set; }
 
-        [Required(ErrorMessage = "Please select file")]
+       // [Required(ErrorMessage = "Please select file")]
         public IFormFile DidBulk { get; set; }
 
+        // public IEnumerable<NumberProviderServiceModel> Providers { get; set; }
         public IEnumerable<NumberProviderViewModel> Providers { get; set; }
     }
 }

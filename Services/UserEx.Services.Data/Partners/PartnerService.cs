@@ -19,5 +19,12 @@
             => this.data
                 .Partners
                 .Any(p => p.UserId == userId);
+
+        public int GetIdByUser(string userId)
+           => this.data
+            .Partners
+            .Where(p => p.UserId == userId)
+            .Select(p => p.Id)
+            .FirstOrDefault();
     }
 }

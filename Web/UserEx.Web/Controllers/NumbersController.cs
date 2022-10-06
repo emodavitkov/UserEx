@@ -14,17 +14,22 @@
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Numbers.Models;
+    using UserEx.Services.Data.Partners;
     using UserEx.Web.ViewModels.Numbers;
 
     public class NumbersController : Controller
     {
         private readonly INumberService numbers;
-        private readonly ApplicationDbContext data;
+        private readonly IPartnerService partners;
 
-        public NumbersController(ApplicationDbContext data, INumberService numbers)
+        // private readonly ApplicationDbContext data;
+        public NumbersController(
+            INumberService numbers,
+            IPartnerService partners)
         {
-            this.data = data;
+            // this.data = data;
             this.numbers = numbers;
+            this.partners = partners;
         }
 
         public IActionResult All([FromQuery]AllNumbersQueryModel query)
@@ -83,7 +88,8 @@
             //    .ToList();
 
             // brand move to service
-            var numberProviders = this.numbers.AllNumberProviders();
+           // var numberProviders = this.numbers.AllNumberProviders();
+            var numberProviders = this.numbers.AllNumbersByProvider();
 
             // var numberProviders = this.data
             //    .Numbers
@@ -130,66 +136,165 @@
         [Authorize]
         public IActionResult Add()
         {
-            if (!this.UserIsPartner())
+            // if (!this.UserIsPartner())
+                if (!this.partners.IsPartner(this.User.GetId()))
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
 
-            return this.View(new AddNumberManualModel
+                return this.View(new NumberManualModel
             {
-                Providers = this.GetNumberProviders(),
+                // Providers = this.GetNumberProviders(),
+                Providers = this.numbers.AllNumberProviders(),
             });
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddNumberManualModel number)
+        public IActionResult Add(NumberManualModel number)
         {
-            var partnerId = this.data
-                .Partners
-                .Where(p => p.UserId == this.User.GetId())
-                .Select(p => p.Id)
-                .FirstOrDefault();
+            var partnerId = this.partners.GetIdByUser(this.User.GetId());
 
+            // moved to service GetIdByUser
+            // var partnerId = this.data
+            //    .Partners
+            //    .Where(p => p.UserId == this.User.GetId())
+            //    .Select(p => p.Id)
+            //    .FirstOrDefault();
             if (partnerId == 0)
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
 
-            if (!this.data.Providers.Any(p => p.Id == number.ProviderId))
+            if (!this.numbers.ProviderExists(number.ProviderId))
             {
                 this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
             }
 
+            // moving to service
+            // if (!this.data.Providers.Any(p => p.Id == number.ProviderId))
+            // {
+            //    this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
+            // }
             if (!this.ModelState.IsValid)
             {
-                number.Providers = this.GetNumberProviders();
+                // number.Providers = this.GetNumberProviders();
+                number.Providers = this.numbers.AllNumberProviders();
 
                 return this.View(number);
             }
 
-            var numberData = new Number
+            this.numbers.Create(
+                number.ProviderId,
+                number.DidNumber,
+                number.OrderReference,
+                number.SetupPrice,
+                number.MonthlyPrice,
+                number.Description,
+                number.IsActive,
+                number.Source,
+                number.StartDate,
+                number.EndDate,
+                partnerId);
+
+            // moving to service
+            // var numberData = new Number
+            // {
+            //    ProviderId = number.ProviderId,
+            //    DidNumber = number.DidNumber,
+            //    OrderReference = number.OrderReference,
+            //    SetupPrice = number.SetupPrice,
+            //    MonthlyPrice = number.MonthlyPrice,
+            //    Description = number.Description,
+            //    IsActive = number.IsActive,
+            //    Source = number.Source,
+            //    StartDate = number.StartDate,
+            //    EndDate = number.EndDate,
+            //    PartnerId = partnerId,
+            // };
+            // this.data.Numbers.Add(numberData);
+            // this.data.SaveChanges();
+
+            return this.RedirectToAction(nameof(this.All));
+
+            // return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            var userId = this.User.GetId();
+
+            if (!this.partners.IsPartner(userId))
             {
-                ProviderId = number.ProviderId,
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
+            var number = this.numbers.Details(id);
+
+            if (number.UserId != userId)
+            {
+                return this.Unauthorized();
+            }
+
+            return this.View(new NumberManualModel
+            {
                 DidNumber = number.DidNumber,
                 OrderReference = number.OrderReference,
                 SetupPrice = number.SetupPrice,
                 MonthlyPrice = number.MonthlyPrice,
                 Description = number.Description,
                 IsActive = number.IsActive,
-                Source = number.Source,
+                Source = SourceEnum.Manual,
                 StartDate = number.StartDate,
-                EndDate = number.EndDate,
-                PartnerId = partnerId,
-            };
+                EndDate = null,
+                ProviderId = number.ProviderId,
+                Providers = this.numbers.AllNumberProviders(),
+            });
+        }
 
-            this.data.Numbers.Add(numberData);
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(int id, NumberManualModel number)
+        {
+            var partnerId = this.partners.GetIdByUser(this.User.GetId());
 
-            this.data.SaveChanges();
+            if (partnerId == 0)
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
 
+            if (!this.numbers.ProviderExists(number.ProviderId))
+            {
+                this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                number.Providers = this.numbers.AllNumberProviders();
+                return this.View(number);
+            }
+
+            if (!this.numbers.NumberIsByPartner(id, partnerId))
+            {
+                return this.BadRequest();
+            }
+
+            this.numbers.Edit(
+                id,
+                number.ProviderId,
+                number.DidNumber,
+                number.OrderReference,
+                number.SetupPrice,
+                number.MonthlyPrice,
+                number.Description,
+                number.IsActive,
+                number.Source,
+                number.StartDate,
+                number.EndDate);
+
+            // partnerId
             return this.RedirectToAction(nameof(this.All));
-
-            // return RedirectToAction("Index", "Home");
         }
 
         [HttpPost("Upload")]
@@ -223,20 +328,20 @@
             return this.RedirectToAction(nameof(this.All));
         }
 
+        // moved in the number service
+        // private bool UserIsPartner()
+        //    => this.data
+        //        .Partners
+        //        .Any(p => p.UserId == this.User.GetId());
 
-        private bool UserIsPartner()
-            => this.data
-                .Partners
-                .Any(p => p.UserId == this.User.GetId());
-
-        private IEnumerable<NumberProviderViewModel> GetNumberProviders()
-            => this.data
-                .Providers
-                .Select(p => new NumberProviderViewModel()
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                })
-                .ToList();
+        // private IEnumerable<NumberProviderViewModel> GetNumberProviders()
+        //    => this.data
+        //        .Providers
+        //        .Select(p => new NumberProviderViewModel()
+        //        {
+        //            Id = p.Id,
+        //            Name = p.Name,
+        //        })
+        //        .ToList();
     }
 }

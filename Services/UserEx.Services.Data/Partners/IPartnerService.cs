@@ -9,5 +9,7 @@
     public interface IPartnerService
     {
         public bool IsPartner(string userId);
+
+        public int GetIdByUser(string userId);
     }
 }
