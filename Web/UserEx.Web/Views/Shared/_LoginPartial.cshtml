@@ -2,6 +2,7 @@
 @using UserEx.Data.Models
 @using Microsoft.AspNetCore.Identity
 @using UserEx.Services.Data.Partners
+@using static UserEx.Common.GlobalConstants
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -12,16 +13,18 @@
     {
             var userId = User.GetId();
 	        var userIsPartner = Partners.IsPartner(userId);
+	        @*var userIsAdmin = User.IsInRole(AdministratorRoleName);*@
+	        var userIsAdmin = User.IsAdmin();
         
 
-        @if (userIsPartner)
+        @if (userIsPartner && !userIsAdmin)
         {
 	        <li class="nav-item">
 		        <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="OfficeDids">Office DIDs</a>
 	        </li>
         }
 
-	   else
+	   else if(!userIsAdmin)
 	   {
 		   <li class="nav-item">
 			   <a class="nav-link text-dark" asp-area="" asp-controller="Partners" asp-action="SetUp">Set Up Partner Profile</a>

@@ -86,6 +86,12 @@
                 .HasForeignKey<Partner>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // builder
+            //    .Entity<Partner>()
+            //    .HasOne<ApplicationUser>()
+            //    .WithOne()
+            //    .HasForeignKey<Partner>(p => p.UserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
             this.ConfigureUserIdentityRelations(builder);
 
             EntityIndexesConfiguration.Configure(builder);

@@ -1,5 +1,6 @@
 ﻿@*@model IEnumerable<NumberListingViewModel>*@
 @model AllNumbersQueryModel
+@using static UserEx.Common.GlobalConstants
 
 @{
 	ViewData["Title"] = "All Numbers";
@@ -56,6 +57,26 @@
 	}
 </div>
 
+@*Admin to edit cars -> from _NumberPartial but needs to be touched*@
+<div class="row">
+	@foreach (var number in Model.Numbers)
+	{
+		<div class="col-md-4">
+			<div class="card mb-3">
+				@*<img class="card-img-top" src="@number.DidNumber" alt="@number.Provider @number.MonthlyPrice - @number.Description (@number.Provider)">*@
+				<div class="card-body text-center">
+					<h5 class="card-title text-center">@number.DidNumber -> @number.Description $@number.MonthlyPrice (@number.Provider)</h5>
+					<a asp-controller="Numbers" asp-action="" asp-route-id="@number.Id" class="btn btn-primary">View More</a>
+					@if (ViewBag.AllowNumberEdit == true || User.IsInRole(AdministratorRoleName))
+					{
+						<a asp-controller="Numbers" asp-action="Edit" asp-route-id="@number.Id" class="btn btn-warning">Edit</a>
+						<a asp-controller="Numbers" asp-action="Delete" asp-route-id="@number.Id" class="btn btn-danger">Delete</a>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>
 
 @*<partial name="_NumbersPartial" model="@Model.Numbers" />*@
 

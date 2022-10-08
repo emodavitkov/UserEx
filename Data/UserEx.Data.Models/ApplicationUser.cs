@@ -3,9 +3,12 @@ namespace UserEx.Data.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Identity;
     using UserEx.Data.Common.Models;
+
+    using static UserEx.Data.Common.DataConstants.User;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
@@ -16,6 +19,9 @@ namespace UserEx.Data.Models
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
+
+        [MaxLength(FullNameMaxLength)]
+        public string FullName { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }

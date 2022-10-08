@@ -225,14 +225,14 @@
         {
             var userId = this.User.GetId();
 
-            if (!this.partners.IsPartner(userId))
+            if (!this.partners.IsPartner(userId) && !User.IsAdmin())
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
 
             var number = this.numbers.Details(id);
 
-            if (number.UserId != userId)
+            if (number.UserId != userId && !User.IsAdmin())
             {
                 return this.Unauthorized();
             }
@@ -259,7 +259,7 @@
         {
             var partnerId = this.partners.GetIdByUser(this.User.GetId());
 
-            if (partnerId == 0)
+            if (partnerId == 0 && !User.IsAdmin())
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
@@ -275,7 +275,7 @@
                 return this.View(number);
             }
 
-            if (!this.numbers.NumberIsByPartner(id, partnerId))
+            if (!this.numbers.NumberIsByPartner(id, partnerId) && !User.IsAdmin())
             {
                 return this.BadRequest();
             }

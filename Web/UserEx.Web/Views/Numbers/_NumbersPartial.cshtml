@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<NumberServiceModel>
+@using static UserEx.Common.GlobalConstants
 
 <div class="row">
 	@foreach (var number in Model)
@@ -9,7 +10,7 @@
 				<div class="card-body text-center">
 					<h5 class="card-title text-center">@number.DidNumber -> @number.Description $@number.MonthlyPrice (@number.Provider)</h5>
 					<a asp-controller="Numbers" asp-action="" asp-route-id="@number.Id" class="btn btn-primary">View More</a>
-					@if (ViewBag.AllowNumberEdit == true)
+					@if (ViewBag.AllowNumberEdit == true || User.IsInRole(AdministratorRoleName))
 					{
 						<a asp-controller="Numbers" asp-action="Edit" asp-route-id="@number.Id" class="btn btn-warning">Edit</a>
 						<a asp-controller="Numbers" asp-action="Delete" asp-route-id="@number.Id" class="btn btn-danger">Delete</a>
