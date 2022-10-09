@@ -1,4 +1,6 @@
-﻿namespace UserEx.Services.Data.Numbers
+﻿using UserEx.Web.ViewModels.Home;
+
+namespace UserEx.Services.Data.Numbers
 {
     using System;
     using System.Collections.Generic;
@@ -92,6 +94,34 @@
             };
         }
 
+        // issue with LatestNumbersServiceModel
+        public IEnumerable<NumberIndexViewModel> Latest()
+            => this.data
+                .Numbers
+                .OrderByDescending(n => n.Id)
+                .Select(n => new NumberIndexViewModel()
+                {
+                    Id = n.Id,
+                    DidNumber = n.DidNumber,
+                    MonthlyPrice = n.MonthlyPrice,
+                    Description = n.Description,
+                })
+                .Take(3)
+                .ToList();
+
+        // public IEnumerable<LatestNumbersServiceModel> Latest()
+        //    => this.data
+        //        .Numbers
+        //        .OrderByDescending(n => n.Id)
+        //        .Select(n => new LatestNumbersServiceModel()
+        //        {
+        //            Id = n.Id,
+        //            DidNumber = n.DidNumber,
+        //            MonthlyPrice = n.MonthlyPrice,
+        //            Description = n.Description,
+        //        })
+        //        .Take(3)
+        //        .ToList();
         public NumberDetailsServiceModel Details(int id)
             => this.data
                 .Numbers
@@ -159,6 +189,7 @@
             SourceEnum source,
             DateTime startDate,
             DateTime? endDate)
+
             // int partnerId
         {
             var numberData = this.data.Numbers.Find(id);
@@ -182,7 +213,7 @@
             numberData.EndDate = endDate;
 
             // numberData.PartnerId = partnerId;
-            this.data.SaveChanges();  
+            this.data.SaveChanges();
             return true;
         }
 
@@ -240,5 +271,6 @@
                     Provider = n.Provider.Name,
                 })
                 .ToList();
+
     }
 }

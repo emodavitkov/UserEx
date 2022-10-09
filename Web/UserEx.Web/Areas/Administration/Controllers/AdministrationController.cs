@@ -5,8 +5,10 @@
     using UserEx.Common;
     using UserEx.Web.Controllers;
 
-    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-    [Area("Administration")]
+    using static UserEx.Common.GlobalConstants;
+
+    [Authorize(Roles = AdministratorRoleName)]
+    [Area(AreaName)]
     public class AdministrationController : BaseController
     {
     }

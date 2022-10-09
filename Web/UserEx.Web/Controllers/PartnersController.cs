@@ -9,6 +9,8 @@
     using UserEx.Data.Models;
     using UserEx.Web.ViewModels.Partners;
 
+    using static UserEx.Common.GlobalConstants;
+
     public class PartnersController : Controller
     {
         private readonly ApplicationDbContext data;
@@ -51,6 +53,8 @@
             };
             this.data.Partners.Add(partnerData);
             this.data.SaveChanges();
+
+            this.TempData[GlobalMessageKey] = "Thank you for being a Partner!";
 
             return this.RedirectToAction("All", "Numbers");
         }

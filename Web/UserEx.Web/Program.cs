@@ -2,6 +2,7 @@
 {
     using System.Reflection;
 
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,8 @@
                     options.CheckConsentNeeded = context => true;
                     options.MinimumSameSitePolicy = SameSiteMode.None;
                 });
+
+            services.AddMemoryCache();
 
             services.AddControllersWithViews(
                 options =>
@@ -107,8 +110,17 @@
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-            app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                "areaRoute",
+                "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                "default",
+                "{controller=Home}/{action=Index}/{id?}");
+
+            // app.MapControllerRoute(
+            //    "Number Details",
+            //    "/Numbers/Details/{id}/{information}",
+            //    defaults: new { controller = "Numbers", action = "Details" });
             app.MapRazorPages();
         }
     }

@@ -45,12 +45,18 @@
         </nav>
     </header>
     
-    <div class="container">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
-            @this.RenderBody()
-        </main>
-    </div>
+<div class="container">
+	@if (TempData.ContainsKey(GlobalMessageKey))
+	{
+		<div class="alert alert-success text-center" role="alert">
+			@TempData[GlobalMessageKey]
+		</div>
+	}
+	<partial name="_CookieConsentPartial"/>
+	<main role="main" class="pb-3">
+		@this.RenderBody()
+	</main>
+</div>
     
     <footer class="border-top footer text-muted">
         <div class="container">

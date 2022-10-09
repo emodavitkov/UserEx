@@ -1,4 +1,6 @@
-﻿namespace UserEx.Services.Data.Numbers
+﻿using UserEx.Web.ViewModels.Home;
+
+namespace UserEx.Services.Data.Numbers
 {
     using System;
     using System.Collections.Generic;
@@ -18,6 +20,9 @@
             NumberSorting sorting,
             int currentPage,
             int numbersPerPage);
+
+        // IEnumerable<LatestNumbersServiceModel> Latest();
+        IEnumerable<NumberIndexViewModel> Latest();
 
         NumberDetailsServiceModel Details(int numberId);
 

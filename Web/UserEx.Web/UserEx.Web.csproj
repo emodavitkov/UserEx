@@ -52,4 +52,9 @@
     <ProjectReference Include="..\UserEx.Web.Infrastructure\UserEx.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\UserEx.Web.ViewModels\UserEx.Web.ViewModels.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="Areas\Administration\Views\Numbers\" />
+  </ItemGroup>
 </Project>

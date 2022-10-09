@@ -17,6 +17,8 @@
     using UserEx.Services.Data.Partners;
     using UserEx.Web.ViewModels.Numbers;
 
+    using static UserEx.Common.GlobalConstants;
+
     public class NumbersController : Controller
     {
         private readonly INumberService numbers;
@@ -214,6 +216,7 @@
             // };
             // this.data.Numbers.Add(numberData);
             // this.data.SaveChanges();
+            this.TempData[GlobalMessageKey] = "Number added successfully!";
 
             return this.RedirectToAction(nameof(this.All));
 
@@ -294,6 +297,8 @@
                 number.EndDate);
 
             // partnerId
+            this.TempData[GlobalMessageKey] = "Number edited and saved successfully!";
+
             return this.RedirectToAction(nameof(this.All));
         }
 
