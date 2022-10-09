@@ -135,6 +135,18 @@
             return this.View(officeNumbers);
         }
 
+        public IActionResult Details(int id, string information)
+        {
+            var number = this.numbers.Details(id);
+
+            if (!information.Contains(number.Provider) || !information.Contains(number.DidNumber))
+            {
+                return this.BadRequest();
+            }
+
+            return View(number);
+        }
+
         [Authorize]
         public IActionResult Add()
         {

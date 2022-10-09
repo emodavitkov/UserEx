@@ -49,6 +49,7 @@
 			<div class="carousel-item @(i==0 ? "active" : String.Empty) bg-success text-white text-center border border-danger">
 				<img src="@number.DidNumber" class="d-block w-100" alt="@number.DidNumber @number.Description $@number.MonthlyPrice (Monthly Price)">
 				<div class="carousel-caption d-none d-md-block">
+					@*<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>*@
 					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>
 				</div>
 			</div>

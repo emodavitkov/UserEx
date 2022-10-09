@@ -117,10 +117,11 @@
                 "default",
                 "{controller=Home}/{action=Index}/{id?}");
 
-            // app.MapControllerRoute(
-            //    "Number Details",
-            //    "/Numbers/Details/{id}/{information}",
-            //    defaults: new { controller = "Numbers", action = "Details" });
+            app.MapControllerRoute(
+                "Number Details",
+                "/Numbers/Details/{id}/{information}",
+                defaults: new { controller = "Numbers", action = "Details" });
+
             app.MapRazorPages();
         }
     }
