@@ -55,6 +55,5 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\Models\" />
-    <Folder Include="Areas\Administration\Views\Numbers\" />
   </ItemGroup>
 </Project>

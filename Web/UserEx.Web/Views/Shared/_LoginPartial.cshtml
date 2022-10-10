@@ -30,6 +30,12 @@
 			   <a class="nav-link text-dark" asp-area="" asp-controller="Partners" asp-action="SetUp">Set Up Partner Profile</a>
 		   </li>
 	   }
+	   else if(userIsAdmin)
+	   {
+		   <li class="nav-item">
+			   <a class="nav-link text-dark" asp-area="Administration" asp-controller="Numbers" asp-action="All">Administration</a>
+		   </li>
+	   }
 	    <li class="nav-item">
 		    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Core OPS @User.Identity.Name!</a>
 	    </li>

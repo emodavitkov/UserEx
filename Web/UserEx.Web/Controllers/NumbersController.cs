@@ -1,5 +1,6 @@
 ﻿namespace UserEx.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -198,7 +199,7 @@
                 return this.View(number);
             }
 
-            this.numbers.Create(
+            var numberId = this.numbers.Create(
                 number.ProviderId,
                 number.DidNumber,
                 number.OrderReference,
@@ -228,8 +229,10 @@
             // };
             // this.data.Numbers.Add(numberData);
             // this.data.SaveChanges();
-            this.TempData[GlobalMessageKey] = "Number added successfully!";
+            this.TempData[GlobalMessageKey] = "Number added successfully and awaiting for approval!";
 
+            // bug to be fixed later
+            // return this.RedirectToAction(nameof(Details), new { id = numberId, information = @number.DidNumber });
             return this.RedirectToAction(nameof(this.All));
 
             // return RedirectToAction("Index", "Home");
@@ -306,10 +309,11 @@
                 number.IsActive,
                 number.Source,
                 number.StartDate,
-                number.EndDate);
+                number.EndDate,
+                this.User.IsAdmin());
 
             // partnerId
-            this.TempData[GlobalMessageKey] = "Number edited and saved successfully!";
+            this.TempData[GlobalMessageKey] = $"Number edited {(this.User.IsAdmin() ? String.Empty : " and awaiting for approval")}!";
 
             return this.RedirectToAction(nameof(this.All));
         }

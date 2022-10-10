@@ -1,6 +1,4 @@
-﻿using UserEx.Web.ViewModels.Home;
-
-namespace UserEx.Services.Data.Numbers
+﻿namespace UserEx.Services.Data.Numbers
 {
     using System;
     using System.Collections.Generic;
@@ -10,16 +8,18 @@ namespace UserEx.Services.Data.Numbers
 
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers.Models;
+    using UserEx.Web.ViewModels.Home;
     using UserEx.Web.ViewModels.Numbers;
 
     public interface INumberService
     {
         NumberQueryServiceModel All(
-            string provider,
-            string searchTerm,
-            NumberSorting sorting,
-            int currentPage,
-            int numbersPerPage);
+            string provider = null,
+            string searchTerm = null,
+            NumberSorting sorting = NumberSorting.DateCreated,
+            int currentPage = 1,
+            int numbersPerPage = int.MaxValue,
+            bool publicOnly = true);
 
         // IEnumerable<LatestNumbersServiceModel> Latest();
         IEnumerable<NumberIndexViewModel> Latest();
@@ -50,12 +50,15 @@ namespace UserEx.Services.Data.Numbers
             bool isActive,
             SourceEnum source,
             DateTime startDate,
-            DateTime? endDate);
-        // int partnerId
+            DateTime? endDate,
+            bool isPublic);
 
+        // int partnerId
         IEnumerable<NumberServiceModel> ByUser(string userId);
 
         bool NumberIsByPartner(int numberId, int partnerId);
+
+        void ChangeVisibility(int numberId);
 
         // IEnumerable<string> AllNumberProviders();
         IEnumerable<string> AllNumbersByProvider();

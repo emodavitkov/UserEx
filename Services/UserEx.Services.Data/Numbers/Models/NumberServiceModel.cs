@@ -19,5 +19,7 @@
         public string Description { get; set; }
 
         public string Provider { get; init; }
+
+        public bool IsPublic { get; init; }
     }
 }

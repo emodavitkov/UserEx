@@ -23,13 +23,17 @@ namespace UserEx.Services.Data.Numbers
         }
 
         public NumberQueryServiceModel All(
-            string provider,
-            string searchTerm,
-            NumberSorting sorting,
-            int currentPage,
-            int numbersPerPage)
+            string provider = null,
+            string searchTerm = null,
+            NumberSorting sorting = NumberSorting.DateCreated,
+            int currentPage = 1,
+            int numbersPerPage = int.MaxValue,
+            bool publicOnly = true)
         {
-            var numbersQuery = this.data.Numbers.AsQueryable();
+            // isPublic addition
+            // var numbersQuery = this.data.Numbers.AsQueryable();
+            var numbersQuery = this.data.Numbers
+                .Where(n => !publicOnly || n.IsPublic);
 
             if (!string.IsNullOrWhiteSpace(provider))
             {
@@ -98,6 +102,7 @@ namespace UserEx.Services.Data.Numbers
         public IEnumerable<NumberIndexViewModel> Latest()
             => this.data
                 .Numbers
+                .Where(n => n.IsPublic)
                 .OrderByDescending(n => n.Id)
                 .Select(n => new NumberIndexViewModel()
                 {
@@ -170,6 +175,7 @@ namespace UserEx.Services.Data.Numbers
                 StartDate = startDate,
                 EndDate = endDate,
                 PartnerId = partnerId,
+                IsPublic = false,
             };
 
             this.data.Numbers.Add(numberData);
@@ -188,7 +194,8 @@ namespace UserEx.Services.Data.Numbers
             bool isActive,
             SourceEnum source,
             DateTime startDate,
-            DateTime? endDate)
+            DateTime? endDate,
+            bool isPublic)
 
             // int partnerId
         {
@@ -211,6 +218,7 @@ namespace UserEx.Services.Data.Numbers
             numberData.IsActive = isActive;
             numberData.StartDate = startDate;
             numberData.EndDate = endDate;
+            numberData.IsPublic = isPublic;
 
             // numberData.PartnerId = partnerId;
             this.data.SaveChanges();
@@ -221,6 +229,16 @@ namespace UserEx.Services.Data.Numbers
             => GetNumbers(this.data
                 .Numbers
                 .Where(n => n.Partner.UserId == userId));
+
+        public void ChangeVisibility(int numberId)
+        {
+            var number = this.data.Numbers.Find(numberId);
+
+            number.IsPublic = !number.IsPublic;
+
+            this.data.SaveChanges();
+
+        }
 
         public bool NumberIsByPartner(int numberId, int partnerId)
             => this.data
@@ -269,8 +287,8 @@ namespace UserEx.Services.Data.Numbers
                     MonthlyPrice = n.MonthlyPrice,
                     Description = n.Description,
                     Provider = n.Provider.Name,
+                    IsPublic = n.IsPublic,
                 })
                 .ToList();
-
     }
 }
