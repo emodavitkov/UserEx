@@ -145,7 +145,7 @@
                 return this.BadRequest();
             }
 
-            return View(number);
+            return this.View(number);
         }
 
         [Authorize]
@@ -298,7 +298,7 @@
                 return this.BadRequest();
             }
 
-            this.numbers.Edit(
+            var edited = this.numbers.Edit(
                 id,
                 number.ProviderId,
                 number.DidNumber,
@@ -311,6 +311,11 @@
                 number.StartDate,
                 number.EndDate,
                 this.User.IsAdmin());
+
+            if (!edited)
+            {
+                return this.BadRequest();
+            }
 
             // partnerId
             this.TempData[GlobalMessageKey] = $"Number edited {(this.User.IsAdmin() ? String.Empty : " and awaiting for approval")}!";
