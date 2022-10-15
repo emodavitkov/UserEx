@@ -20,6 +20,7 @@
         [StringLength(MaxLength, MinimumLength = MinLength)]
         public string DidNumber { get; set; }
 
+        // [DisplayFormat(ConvertEmptyStringToNull = true)]
         public string OrderReference { get; set; }
 
         [Required]
@@ -54,7 +55,7 @@
         public int ProviderId { get; set; }
 
        // [Required(ErrorMessage = "Please select file")]
-        public IFormFile DidBulk { get; set; }
+       // public IFormFile DidBulk { get; set; }
 
         // public IEnumerable<NumberProviderServiceModel> Providers { get; set; }
         public IEnumerable<NumberProviderViewModel> Providers { get; set; }

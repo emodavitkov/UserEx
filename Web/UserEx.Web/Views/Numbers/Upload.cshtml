@@ -1,0 +1,32 @@
+﻿@model NumberManualModel
+
+@{
+	ViewData["Title"] = "Add DID number in bulk.";
+}
+
+<div class="row">
+	<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+		<h2 class="heading-margin text-center">Add Number in bulk</h2>
+
+		<form method="post" asp-controller="Numbers" asp-action="Upload" enctype = "multipart/form-data">
+		@*<form asp-action="Upload" asp-controller="Numbers" method="post" enctype = "multipart/form-data">*@
+
+			<div class="row mt-2">
+				<div class="col-12">
+					<label class="col-form-label">Select File</label>
+					<input type="file" name="file" class="form-control" />
+				</div>
+			</div>
+
+			<div class="row mt-2">
+				<div class="col-12">
+					<button type="submit" class="btn btn-success">Upload File</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

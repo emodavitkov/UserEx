@@ -17,7 +17,7 @@
         public DateTime StartDate { get; set; }
 
         // public DateTime? EndDate { get; set; }
-        public int PartnerId { get; set; }
+        public int? PartnerId { get; set; }
 
         public int ProviderId { get; set; }
 

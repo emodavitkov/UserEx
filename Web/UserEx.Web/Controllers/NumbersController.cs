@@ -1,4 +1,6 @@
-﻿namespace UserEx.Web.Controllers
+﻿using OfficeOpenXml;
+
+namespace UserEx.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -22,15 +24,17 @@
 
     public class NumbersController : Controller
     {
+        // data to be removed - added for Upload test
         private readonly INumberService numbers;
         private readonly IPartnerService partners;
+        private readonly ApplicationDbContext data;
 
-        // private readonly ApplicationDbContext data;
         public NumbersController(
             INumberService numbers,
-            IPartnerService partners)
+            IPartnerService partners,
+            ApplicationDbContext data)
         {
-            // this.data = data;
+            this.data = data;
             this.numbers = numbers;
             this.partners = partners;
         }
@@ -323,9 +327,33 @@
             return this.RedirectToAction(nameof(this.All));
         }
 
-        [HttpPost("Upload")]
+        // [Route("[controller]/Upload")]
+        [Authorize]
+        public IActionResult Upload()
+        {
+            // if (!this.UserIsPartner())
+            if (!this.partners.IsPartner(this.User.GetId()))
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
+            return this.View(new NumberManualModel
+            {
+                // Providers = this.GetNumberProviders(),
+                Providers = this.numbers.AllNumberProviders(),
+            });
+        }
+
+        // [HttpPost("Upload")]
+        [HttpPost]
+        [Authorize]
+        //public async Task<List<NumberManualModel>> Upload(IFormFile file)
         public async Task<IActionResult> Upload(IFormFile file)
         {
+            var partnerId = this.partners.GetIdByUser(this.User.GetId());
+
+            var bulkDids = new List<NumberManualModel>();
+
             // var filePath = Path.GetTempFileName(); // Full path to file in temp location
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
 
@@ -344,6 +372,40 @@
             using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
             {
                     await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            bulkDids.Add(new NumberManualModel
+                            {
+                                    DidNumber = worksheet.Cells[row,1].Value.ToString().Trim(),
+                                    OrderReference = worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                    SetupPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 3].Value),
+                                    MonthlyPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 4].Value),
+
+                                    // MonthlyPrice = (decimal)worksheet.Cells[row, 4].Value,
+                                    Description = worksheet.Cells[row, 5].Value.ToString().Trim(),
+
+                                    // IsActive = (bool)worksheet.Cells[row, 5].Value,
+                                    IsActive = true,
+
+                                    // StartDate = (DateTime)worksheet.Cells[row, 6].Value,
+                                    StartDate = DateTime.Today,
+
+                                    // EndDate = (DateTime)worksheet.Cells[row, 7].Value,
+                                    EndDate = null,
+                                    ProviderId = (int)Convert.ToInt32(worksheet.Cells[row, 9].Value),
+                                    Source = (SourceEnum)0,
+
+                                    // ProviderId = (int)worksheet.Cells[row, 8].Value,
+                                    // Source = (SourceEnum)worksheet.Cells[row, 9].Value,
+                            });
+                        }
+                    }
             }
 
             // Copy files to FileSystem using Streams
@@ -351,8 +413,64 @@
             // var bytes = file.Sum(f => f.Length);
 
             // return Ok(new { count = file.Count, bytes, filePath });
-            return this.RedirectToAction(nameof(this.All));
+
+            // return this.RedirectToAction(nameof(this.All));
+
+            // to add try catch Model validation and move to services 
+            foreach (var number in bulkDids)
+            {
+                var numberFromExcel = new Number
+                {
+                    DidNumber = number.DidNumber,
+                    Description = number.Description,
+                    StartDate = number.StartDate,
+                    EndDate = number.EndDate,
+                    ProviderId = (int)number.ProviderId,
+                    Source = number.Source,
+                    IsActive = true,
+                    IsPublic = false,
+                    MonthlyPrice = number.MonthlyPrice,
+                    SetupPrice = number.SetupPrice,
+                    PartnerId = partnerId,
+                };
+                this.data.Numbers.Add(numberFromExcel);
+            }
+
+            this.data.SaveChanges();
+
+            this.TempData[GlobalMessageKey] = "Bulk numbers were added successfully and awaiting for approval!";
+
+            // return bulkDids;
+
+            // bug to be fixed later
+            // return this.RedirectToAction(nameof(Details), new { id = numberId, information = @number.DidNumber });
+            return this.RedirectToAction(nameof(this.OfficeDids));
         }
+
+        // [HttpPost("Upload")]
+        // public async Task<IActionResult> Upload(IFormFile file)
+        // {
+        //    // var filePath = Path.GetTempFileName(); // Full path to file in temp location
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+        //    // create folder if not exist
+        //    if (!Directory.Exists(filePath))
+        //    {
+        //        Directory.CreateDirectory(filePath);
+        //    }
+        //    // get file extension
+        //    // FileInfo fileInfo = new FileInfo(file.FileName);
+        //    string fileName = file.FileName;
+        //    string fileNameWithPath = Path.Combine(filePath, fileName);
+        //    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+        //    // Copy files to FileSystem using Streams
+        //    // var bytes = file.Sum(f => f.Length);
+        //    // return Ok(new { count = file.Count, bytes, filePath });
+        //    return this.RedirectToAction(nameof(this.All));
+        // }
+
 
         // moved in the number service
         // private bool UserIsPartner()
