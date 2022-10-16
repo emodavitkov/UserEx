@@ -225,6 +225,49 @@ namespace UserEx.Services.Data.Numbers
             return true;
         }
 
+        public int Delete(
+            int numberId,
+            int providerId,
+            string didNumber,
+            string orderReference,
+            decimal setupPrice,
+            decimal monthlyPrice,
+            string description,
+            bool isActive,
+            SourceEnum source,
+            DateTime startDate,
+            DateTime? endDate,
+            bool isPublic)
+        {
+            var numberData = this.data.Numbers.Find(numberId);
+
+            //if (numberData == 0)
+            //{
+            //    return false;
+            //}
+
+
+            numberData.ProviderId = providerId;
+            numberData.DidNumber = didNumber;
+            numberData.OrderReference = orderReference;
+            numberData.SetupPrice = setupPrice;
+            numberData.MonthlyPrice = monthlyPrice;
+            numberData.Description = description;
+
+            // numberData.Source = SourceEnum.Manual;
+            numberData.IsActive = false;
+            numberData.StartDate = startDate;
+            numberData.EndDate = DateTime.Now;
+            numberData.IsPublic = isPublic;
+
+
+            // numberData.PartnerId = partnerId;
+            this.data.Remove(numberData);
+            this.data.SaveChanges();
+
+            return numberData.Id;
+        }
+
         public IEnumerable<NumberServiceModel> ByUser(string userId)
             => GetNumbers(this.data
                 .Numbers

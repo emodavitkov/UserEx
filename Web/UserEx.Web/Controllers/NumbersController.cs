@@ -327,6 +327,95 @@ namespace UserEx.Web.Controllers
             return this.RedirectToAction(nameof(this.All));
         }
 
+        [Authorize]
+        public IActionResult Delete(int id)
+        {
+            var userId = this.User.GetId();
+
+            if (!this.partners.IsPartner(userId) && !User.IsAdmin())
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
+            var number = this.numbers.Details(id);
+
+            if (number.UserId != userId && !User.IsAdmin())
+            {
+                return this.Unauthorized();
+            }
+
+            return this.View(new NumberManualModel
+            {
+                DidNumber = number.DidNumber,
+                OrderReference = number.OrderReference,
+                SetupPrice = number.SetupPrice,
+                MonthlyPrice = number.MonthlyPrice,
+                Description = number.Description,
+                IsActive = number.IsActive,
+                Source = SourceEnum.Manual,
+                StartDate = number.StartDate,
+                EndDate = DateTime.Today,
+                ProviderId = number.ProviderId,
+                Providers = this.numbers.AllNumberProviders(),
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Delete(int id, NumberManualModel number)
+        {
+            var partnerId = this.partners.GetIdByUser(this.User.GetId());
+
+            if (partnerId == 0 && !User.IsAdmin())
+            {
+                return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
+            }
+
+            if (!this.numbers.ProviderExists(number.ProviderId))
+            {
+                this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                number.Providers = this.numbers.AllNumberProviders();
+                return this.View(number);
+            }
+
+            if (!this.numbers.NumberIsByPartner(id, partnerId) && !User.IsAdmin())
+            {
+                return this.BadRequest();
+            }
+
+            var delete = this.numbers.Delete(
+                id,
+                number.ProviderId,
+                number.DidNumber,
+                number.OrderReference,
+                number.SetupPrice,
+                number.MonthlyPrice,
+                number.Description,
+                number.IsActive,
+                number.Source,
+                number.StartDate,
+                number.EndDate,
+                this.User.IsAdmin());
+
+            if (delete == 0)
+            {
+                return this.BadRequest();
+            }
+
+            this.TempData[GlobalMessageKey] = $"Number is deleted";
+
+            if (User.IsAdmin())
+            {
+                return this.RedirectToAction(nameof(this.All));
+            }
+
+            return this.RedirectToAction(nameof(this.OfficeDids));
+        }
+
         // [Route("[controller]/Upload")]
         [Authorize]
         public IActionResult Upload()
@@ -347,7 +436,6 @@ namespace UserEx.Web.Controllers
         // [HttpPost("Upload")]
         [HttpPost]
         [Authorize]
-        //public async Task<List<NumberManualModel>> Upload(IFormFile file)
         public async Task<IActionResult> Upload(IFormFile file)
         {
             var partnerId = this.partners.GetIdByUser(this.User.GetId());
@@ -440,6 +528,7 @@ namespace UserEx.Web.Controllers
 
             this.TempData[GlobalMessageKey] = "Bulk numbers were added successfully and awaiting for approval!";
 
+            // public async Task<List<NumberManualModel>> Upload(IFormFile file)
             // return bulkDids;
 
             // bug to be fixed later

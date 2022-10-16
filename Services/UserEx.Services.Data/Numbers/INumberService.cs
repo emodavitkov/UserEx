@@ -53,7 +53,20 @@
             DateTime? endDate,
             bool isPublic);
 
-        // int partnerId
+        int Delete(
+            int numberId,
+            int providerId,
+            string didNumber,
+            string orderReference,
+            decimal setupPrice,
+            decimal monthlyPrice,
+            string description,
+            bool isActive,
+            SourceEnum source,
+            DateTime startDate,
+            DateTime? endDate,
+            bool isPublic);
+
         IEnumerable<NumberServiceModel> ByUser(string userId);
 
         bool NumberIsByPartner(int numberId, int partnerId);
