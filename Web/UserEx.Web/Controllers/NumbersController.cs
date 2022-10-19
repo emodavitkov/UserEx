@@ -1,6 +1,4 @@
-﻿using OfficeOpenXml;
-
-namespace UserEx.Web.Controllers
+﻿namespace UserEx.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +10,7 @@ namespace UserEx.Web.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml;
     using UserEx.Data;
     using UserEx.Data.Common;
     using UserEx.Data.Models;
@@ -27,14 +26,13 @@ namespace UserEx.Web.Controllers
         // data to be removed - added for Upload test
         private readonly INumberService numbers;
         private readonly IPartnerService partners;
-        private readonly ApplicationDbContext data;
+        // private readonly ApplicationDbContext data;
 
         public NumbersController(
             INumberService numbers,
-            IPartnerService partners,
-            ApplicationDbContext data)
+            IPartnerService partners)
         {
-            this.data = data;
+            // this.data = data;
             this.numbers = numbers;
             this.partners = partners;
         }
@@ -144,7 +142,8 @@ namespace UserEx.Web.Controllers
         {
             var number = this.numbers.Details(id);
 
-            if (!information.Contains(number.Provider) || !information.Contains(number.DidNumber))
+            // if (!information.Contains(number.Provider) || !information.Contains(number.DidNumber))
+            if (!information.Contains(number.DidNumber)) 
             {
                 return this.BadRequest();
             }
@@ -160,7 +159,7 @@ namespace UserEx.Web.Controllers
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
-
+                
                 return this.View(new NumberManualModel
             {
                 // Providers = this.GetNumberProviders(),
@@ -203,7 +202,7 @@ namespace UserEx.Web.Controllers
                 return this.View(number);
             }
 
-            var numberId = this.numbers.Create(
+            var result = this.numbers.Create(
                 number.ProviderId,
                 number.DidNumber,
                 number.OrderReference,
@@ -233,7 +232,20 @@ namespace UserEx.Web.Controllers
             // };
             // this.data.Numbers.Add(numberData);
             // this.data.SaveChanges();
-            this.TempData[GlobalMessageKey] = "Number added successfully and awaiting for approval!";
+
+
+            if (result > 0)
+            {
+                this.TempData[GlobalMessageKey] = "Number added successfully and awaiting for approval!";
+            }
+            else
+            {
+                this.TempData[GlobalMessageKey] = "Number already exists!";
+                number.Providers = this.numbers.AllNumberProviders();
+                return this.View(number);
+            }
+
+            // this.TempData[GlobalMessageKey] = "Number added successfully and awaiting for approval!";
 
             // bug to be fixed later
             // return this.RedirectToAction(nameof(Details), new { id = numberId, information = @number.DidNumber });
@@ -496,6 +508,8 @@ namespace UserEx.Web.Controllers
                     }
             }
 
+            var result = this.numbers.BulkCreate(bulkDids, partnerId);
+
             // Copy files to FileSystem using Streams
 
             // var bytes = file.Sum(f => f.Length);
@@ -504,29 +518,37 @@ namespace UserEx.Web.Controllers
 
             // return this.RedirectToAction(nameof(this.All));
 
-            // to add try catch Model validation and move to services 
-            foreach (var number in bulkDids)
+            // move to services 
+            // foreach (var number in bulkDids)
+            // {
+            //    var numberFromExcel = new Number
+            //    {
+            //        DidNumber = number.DidNumber,
+            //        Description = number.Description,
+            //        StartDate = number.StartDate,
+            //        EndDate = number.EndDate,
+            //        ProviderId = (int)number.ProviderId,
+            //        Source = number.Source,
+            //        IsActive = true,
+            //        IsPublic = false,
+            //        MonthlyPrice = number.MonthlyPrice,
+            //        SetupPrice = number.SetupPrice,
+            //        PartnerId = partnerId,
+            //    };
+            //    this.data.Numbers.Add(numberFromExcel);
+            // }
+
+            // this.data.SaveChanges();
+
+
+            if (result == 0)
             {
-                var numberFromExcel = new Number
-                {
-                    DidNumber = number.DidNumber,
-                    Description = number.Description,
-                    StartDate = number.StartDate,
-                    EndDate = number.EndDate,
-                    ProviderId = (int)number.ProviderId,
-                    Source = number.Source,
-                    IsActive = true,
-                    IsPublic = false,
-                    MonthlyPrice = number.MonthlyPrice,
-                    SetupPrice = number.SetupPrice,
-                    PartnerId = partnerId,
-                };
-                this.data.Numbers.Add(numberFromExcel);
+                this.TempData[GlobalMessageKey] = "No new number were added due to duplication!";
             }
-
-            this.data.SaveChanges();
-
-            this.TempData[GlobalMessageKey] = "Bulk numbers were added successfully and awaiting for approval!";
+            else
+            {
+                this.TempData[GlobalMessageKey] = $" {result} numbers (from bulk) were added successfully and awaiting for approval!";
+            }
 
             // public async Task<List<NumberManualModel>> Upload(IFormFile file)
             // return bulkDids;

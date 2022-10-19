@@ -39,6 +39,8 @@
             DateTime? endDate,
             int partnerId);
 
+        int BulkCreate(List<NumberManualModel> bulkNumbers, int partnerId);
+
         bool Edit(
             int numberId,
             int providerId,

@@ -47,10 +47,10 @@
 		{
 			var number = Model.Numbers[i];
 			<div class="carousel-item @(i==0 ? "active" : String.Empty) bg-success text-white text-center border border-danger">
-				<img src="@number.DidNumber" class="d-block w-100" alt="@number.DidNumber @number.Description $@number.MonthlyPrice (Monthly Price)">
+				<img @*src="@number.DidNumber"*@ src="https://as1.ftcdn.net/v2/jpg/02/26/90/36/1000_F_226903601_5z112BhUg9r4nYFXnPBLWPQDPkKd1zSx.jpg" class="d-block w-100" alt="@number.DidNumber @number.Description $@number.MonthlyPrice (Monthly Price)">
 				<div class="carousel-caption d-none d-md-block">
 					@*<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>*@
-					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>
+					<h5><a class="btn btn-primary" asp-controller="Numbers" asp-action="Details" asp-route-information="@number.DidNumber" asp-route-id="@number.Id">@number.DidNumber @number.Description</a></h5>
 				</div>
 			</div>
 		}

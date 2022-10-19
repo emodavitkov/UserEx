@@ -67,14 +67,15 @@
 			<input class="btn btn-primary mt-3" type="submit" value="Save" />
 		</form>
 		
+		@*		
 		<h2 class="heading-margin text-center">Add Numbers in bulk</h2>
 		
 		
-		@*<form method="post" enctype="multipart/form-data" 
+		<form method="post" enctype="multipart/form-data" 
 		      asp-controller="Numbers" asp-action="Upload">
 			<input type="file" name="file"> 
 			<button type="submit" value="Upload" />
-		</form>*@ 
+		</form> 
 
 		
 		<form asp-action="Upload" asp-controller="Numbers" method="post" enctype = "multipart/form-data">
@@ -95,7 +96,7 @@
 		      
 		</form>
 
-		@*<form asp-action="Upload" asp-controller="Numbers" method="post" enctype = "multipart/form-data">
+		<form asp-action="Upload" asp-controller="Numbers" method="post" enctype = "multipart/form-data">
 
 			<div class="row mt-2">
 				<div class="col-12">
@@ -112,7 +113,8 @@
 			</div>
 
 		      
-		</form>*@ 
+		</form> 
+		*@
 
 
 

@@ -1,16 +1,16 @@
-﻿using UserEx.Web.ViewModels.Home;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace UserEx.Services.Data.Numbers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers.Models;
+    using UserEx.Web.ViewModels.Home;
     using UserEx.Web.ViewModels.Numbers;
 
     public class NumberService : INumberService
@@ -178,9 +178,43 @@ namespace UserEx.Services.Data.Numbers
                 IsPublic = false,
             };
 
-            this.data.Numbers.Add(numberData);
-            this.data.SaveChanges();
-            return numberData.Id;
+            if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == numberData.DidNumber) == null)
+            {
+                this.data.Numbers.Add(numberData);
+                return this.data.SaveChanges();
+            }
+
+            // return numberData.Id;
+            return 0;
+        }
+
+        public int BulkCreate(List<NumberManualModel> bulkNumbers, int partnerId)
+        {
+            foreach (var number in bulkNumbers)
+            {
+                if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.DidNumber) != null)
+                {
+                    continue;
+                }
+
+                var numberFromExcel = new Number
+                {
+                    DidNumber = number.DidNumber,
+                    Description = number.Description,
+                    StartDate = number.StartDate,
+                    EndDate = number.EndDate,
+                    ProviderId = (int)number.ProviderId,
+                    Source = number.Source,
+                    IsActive = true,
+                    IsPublic = false,
+                    MonthlyPrice = number.MonthlyPrice,
+                    SetupPrice = number.SetupPrice,
+                    PartnerId = partnerId,
+                };
+                this.data.Numbers.Add(numberFromExcel);
+            }
+
+            return this.data.SaveChanges();
         }
 
         public bool Edit(
@@ -240,12 +274,6 @@ namespace UserEx.Services.Data.Numbers
             bool isPublic)
         {
             var numberData = this.data.Numbers.Find(numberId);
-
-            //if (numberData == 0)
-            //{
-            //    return false;
-            //}
-
 
             numberData.ProviderId = providerId;
             numberData.DidNumber = didNumber;
