@@ -1,4 +1,8 @@
-﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using UserEx.Web.ViewModels.Api;
+
+namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
 {
     using System.Collections.Generic;
     using System.Net.Http;
@@ -27,7 +31,6 @@
 
         public async Task<IActionResult> GetBalance()
         {
-
             var didlogicApiKey = this.config["Didlogic:ApiKey"];
 
             using (var httpClient = new HttpClient())
@@ -39,19 +42,26 @@
                         Headers =
                         {
                             { "Host", "didlogic.com" },
-
-                            // { "Content-Type", "application/vnd.api+json" },
-                            //  { "Accept", "application/vnd.api+json" },
-                            // { "apiid", didlogicApiKey },
                         },
                     };
 
                 var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
+                var result = string.Empty;
+
                 using (HttpContent content = httpResponseMessage.Content)
                 {
-                    var json = content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    result = content.ReadAsStringAsync().GetAwaiter().GetResult();
                 }
+
+                result = result.Remove(0, 11).TrimEnd('}');
+
+                var balance = new BalancesApiResponseModel
+                {
+                    BalanceAmount = result,
+                };
+
+                return this.Ok(balance);
             }
 
             return Ok();

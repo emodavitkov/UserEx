@@ -33,6 +33,10 @@
 	   else if(userIsAdmin)
 	   {
 		   <li class="nav-item">
+			   <a class="nav-link text-dark" asp-area="" asp-controller="BalancesApi" asp-action="GetBalance">Balance</a>
+		   </li>
+
+		   <li class="nav-item">
 			   <a class="nav-link text-dark" asp-area="Administration" asp-controller="Numbers" asp-action="All">Administration</a>
 		   </li>
 	   }
