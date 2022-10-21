@@ -32,6 +32,7 @@
             ConfigureServices(builder.Services, builder.Configuration);
 
             var didwwApiKey = builder.Configuration["Didww:ApiKey"];
+            var didlogicApiKey = builder.Configuration["Didlogic:ApiKey"];
 
             var app = builder.Build();
             Configure(app);

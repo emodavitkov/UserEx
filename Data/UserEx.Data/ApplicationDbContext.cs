@@ -32,6 +32,10 @@
 
         public DbSet<Partner> Partners { get; init; }
 
+        public DbSet<Rate> Rates { get; init; }
+
+        public DbSet<Record> Records { get; init; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -85,6 +89,13 @@
                 .WithOne()
                 .HasForeignKey<Partner>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Rate>()
+                .HasKey(r => new { r.ProviderId, r.DialCode });
+
+            // modelBuilder.Entity<ResourceTag>()
+            //    .HasKey(rt => new { rt.ResourceId, rt.TagId });
 
             // builder
             //    .Entity<Partner>()
