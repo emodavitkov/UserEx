@@ -1,0 +1,31 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model UploadRecordModel
+
+@{
+	ViewData["Title"] = "Add CDRs";
+}
+
+<div class="row">
+	<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+		<h2 class="heading-margin text-center">@ViewData["Title"]</h2>
+		
+		<div asp-validation-summary="All"></div>
+
+		<form method="post" asp-controller="Records" asp-action="UploadRecord" enctype = "multipart/form-data">
+
+			<div class="row mt-2">
+				<div class="col-12">
+					<label class="col-form-label">Select File</label>
+					<input type="file" name="file" class="form-control" />
+				</div>
+			</div>
+
+			<div class="row mt-2">
+				<div class="col-12">
+					<button type="submit" class="btn btn-success">Upload File</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+

@@ -484,9 +484,11 @@
                             {
                                     DidNumber = worksheet.Cells[row,1].Value.ToString().Trim(),
                                     OrderReference = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                                    SetupPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 3].Value),
-                                    MonthlyPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 4].Value),
+                                    SetupPrice = Convert.ToDecimal(worksheet.Cells[row, 3].Value),
+                                    MonthlyPrice = Convert.ToDecimal(worksheet.Cells[row, 4].Value),
 
+                                    // SetupPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 3].Value),
+                                    // MonthlyPrice = (decimal)Convert.ToInt32(worksheet.Cells[row, 4].Value),
                                     // MonthlyPrice = (decimal)worksheet.Cells[row, 4].Value,
                                     Description = worksheet.Cells[row, 5].Value.ToString().Trim(),
 

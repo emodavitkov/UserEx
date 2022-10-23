@@ -1,9 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using UserEx.Web.ViewModels.Api;
-
-namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
+﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
 {
+    using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Text.Json;
@@ -11,12 +8,16 @@ namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using Microsoft.Extensions.Configuration;
     using UserEx.Data;
+    using UserEx.Web.ViewModels.Api;
+
+    // [Route("[controller]/api/balance")]
 
     [ApiController]
-    [Route("[controller]/api/balance")]
-    public class BalancesApiController : ControllerBase
+    [Route("api/[controller]")]
+    public class BalancesApiController : AdministrationController
     {
         private readonly ApplicationDbContext data;
         private readonly IConfiguration config;
@@ -32,6 +33,8 @@ namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
         public async Task<IActionResult> GetBalance()
         {
             var didlogicApiKey = this.config["Didlogic:ApiKey"];
+
+            var balance = new BalancesApiResponseModel { };
 
             using (var httpClient = new HttpClient())
             {
@@ -56,15 +59,13 @@ namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
 
                 result = result.Remove(0, 11).TrimEnd('}');
 
-                var balance = new BalancesApiResponseModel
+                balance = new BalancesApiResponseModel
                 {
                     BalanceAmount = result,
                 };
-
-                return this.Ok(balance);
             }
 
-            return Ok();
+            return this.Ok(balance);
         }
     }
 }

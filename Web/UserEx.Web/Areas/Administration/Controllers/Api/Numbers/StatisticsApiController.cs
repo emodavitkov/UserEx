@@ -1,4 +1,4 @@
-﻿namespace UserEx.Web.Controllers.Api.Number
+﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
     using System.Linq;
 
@@ -9,7 +9,7 @@
 
     [ApiController]
     [Route("api/statistics")]
-    public class StatisticsApiController : Controller
+    public class StatisticsApiController : AdministrationController
     {
         private readonly IStatisticsService statistics;
 
