@@ -40,9 +40,10 @@
             });
         }
 
+        // TBD model state validations and provider selection
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> UploadRate(IFormFile file)
+        public async Task<IActionResult> UploadRate(IFormFile file, int providerId)
         {
             var bulkRates = new List<UploadRateModel>();
 
@@ -73,7 +74,7 @@
                             DestinationName = worksheet.Cells[row, 1].Value.ToString().Trim(),
                             DialCode = worksheet.Cells[row, 2].Value.ToString().Trim(),
                             Cost = Convert.ToDecimal(worksheet.Cells[row, 3].Value),
-                            ProviderId = 1,
+                            ProviderId = providerId,
                         });
                     }
                 }
@@ -91,12 +92,11 @@
                 this.data.Rates.Add(numberFromExcel);
             }
 
-           this.data.SaveChanges();
+            this.data.SaveChanges();
 
             this.TempData[GlobalMessageKey] = "Rates were added!";
 
             return this.RedirectToAction(nameof(this.UploadRate));
         }
-
     }
 }

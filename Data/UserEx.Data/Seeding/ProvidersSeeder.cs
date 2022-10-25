@@ -17,7 +17,7 @@
 
             await dbContext.Providers.AddRangeAsync(new[]
             {
-                // new Provider { Name = "DIDww" },
+                new Provider { Name = "DIDww" },
                 new Provider { Name = "Bezeq" },
                 new Provider { Name = "CommPeak" },
                 new Provider { Name = "DIDlogic" },

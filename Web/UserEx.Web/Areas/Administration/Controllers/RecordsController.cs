@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,7 @@
     using UserEx.Data;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
+    using UserEx.Web.ViewModels.Numbers;
     using UserEx.Web.ViewModels.Rates;
     using UserEx.Web.ViewModels.Records;
 
@@ -38,6 +40,8 @@
                 // Providers = this.numbers.AllNumberProviders(),
             });
         }
+
+        // TBD model state validations and provider selection
 
         [HttpPost]
         [Authorize]
@@ -67,6 +71,10 @@
 
                     for (int row = 2; row <= rowCount; row++)
                     {
+                        var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
+
+                        var resultProviderId = this.GetProviderName(providerName);
+
                         bulkRecords.Add(new UploadRecordModel
                         {
                             Date = Convert.ToDateTime(worksheet.Cells[row, 1].Value),
@@ -75,23 +83,25 @@
                             DialCode = worksheet.Cells[row, 4].Value.ToString().Trim(),
                             BuyRate = Convert.ToDecimal(worksheet.Cells[row, 5].Value),
                             Duration = Convert.ToInt32(worksheet.Cells[row, 6].Value),
-                            ProviderId = 1,
+                            ProviderId = resultProviderId,
                         });
                     }
                 }
             }
 
+            // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
+            // Context.UserGroupPainAreas.RemoveRange(entities);
             foreach (var record in bulkRecords)
             {
                 var numberFromExcel = new Record
                 {
-                 Date = record.Date,
-                 CallerNumber = record.CallerNumber,
-                 CallingNumber = record.CallingNumber,
-                 BuyRate = record.BuyRate,
-                 Duration = record.Duration,
-                 ProviderId = record.ProviderId,
-                 DialCode = record.DialCode,
+                    Date = record.Date,
+                    CallerNumber = record.CallerNumber,
+                    CallingNumber = record.CallingNumber,
+                    BuyRate = record.BuyRate,
+                    Duration = record.Duration,
+                    ProviderId = record.ProviderId,
+                    DialCode = record.DialCode,
                 };
                 this.data.Records.Add(numberFromExcel);
             }
@@ -102,5 +112,19 @@
 
             return this.RedirectToAction(nameof(this.UploadRecord));
         }
+
+        public int GetProviderName(string providerName)
+            => this.data
+                .Providers
+                .Where(p => p.Name.ToLower() == providerName)
+                .Select(n => n.Id)
+                .FirstOrDefault();
+
+        // public List<int> GetProviderName(string providerName)
+        //   => this.data
+        //       .Providers
+        //       .Where(p => p.Name.ToLower() == providerName)
+        //       .Select(n => n.Id)
+        //       .ToList();
     }
 }
