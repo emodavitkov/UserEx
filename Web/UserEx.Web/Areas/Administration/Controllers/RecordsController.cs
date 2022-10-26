@@ -1,4 +1,6 @@
-﻿namespace UserEx.Web.Areas.Administration.Controllers
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace UserEx.Web.Areas.Administration.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -48,12 +50,23 @@
         public async Task<IActionResult> UploadRecord(IFormFile file)
         {
             var bulkRecords = new List<UploadRecordModel>();
+            var resultProviderId = 0;
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
 
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
+            }
+
+            if (file == null)
+            {
+                return this.BadRequest("No file is added!");
             }
 
             string fileName = file.FileName;
@@ -63,6 +76,7 @@
             using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
+
                 using (var package = new ExcelPackage(stream))
                 {
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -73,7 +87,12 @@
                     {
                         var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
 
-                        var resultProviderId = this.GetProviderName(providerName);
+                        resultProviderId = this.GetProviderName(providerName);
+
+                        if (this.data.Providers.FirstOrDefault(p => p.Name.ToLower() == providerName) == null)
+                        {
+                            continue;
+                        }
 
                         bulkRecords.Add(new UploadRecordModel
                         {
@@ -89,8 +108,13 @@
                 }
             }
 
+            var recordsDelete = await this.data.Records.AsQueryable().ToListAsync();
+            this.data.Records.RemoveRange(recordsDelete);
+           // this.TempData[GlobalMessageKey] = "The OLD CDRs were deleted!";
+
             // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
             // Context.UserGroupPainAreas.RemoveRange(entities);
+
             foreach (var record in bulkRecords)
             {
                 var numberFromExcel = new Record
@@ -108,7 +132,7 @@
 
             this.data.SaveChanges();
 
-            this.TempData[GlobalMessageKey] = "CDRs were added!";
+            this.TempData[GlobalMessageKey] = "The previous CDRs were deleted and the new file added!";
 
             return this.RedirectToAction(nameof(this.UploadRecord));
         }

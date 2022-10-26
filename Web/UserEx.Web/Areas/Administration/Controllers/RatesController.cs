@@ -1,8 +1,11 @@
-﻿namespace UserEx.Web.Areas.Administration.Controllers
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace UserEx.Web.Areas.Administration.Controllers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -43,15 +46,38 @@
         // TBD model state validations and provider selection
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> UploadRate(IFormFile file, int providerId)
+        public async Task<IActionResult> UploadRate(IFormFile file, int providerId, UploadRateModel ratesModel)
         {
+            // as input UploadRateModel rates
             var bulkRates = new List<UploadRateModel>();
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
 
+            // TBD
+            this.ModelState.Remove("DestinationName");
+            this.ModelState.Remove("DialCode");
+
+            if (!this.ModelState.IsValid)
+            {
+                 ratesModel.Providers = this.data
+                    .Providers
+                    .Select(p => new NumberProviderViewModel()
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                    })
+                 .ToList();
+                 return this.View();
+            }
+
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
+            }
+
+            if (file == null)
+            {
+                return this.BadRequest("No file is added!");
             }
 
             string fileName = file.FileName;
@@ -80,6 +106,22 @@
                 }
             }
 
+            var ratesDelete = await this.data.Rates.AsQueryable().Where(r => r.ProviderId == providerId).ToListAsync();
+            this.data.Rates.RemoveRange(ratesDelete);
+
+            // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
+            // Context.UserGroupPainAreas.RemoveRange(entities);
+
+            // if (!this.numbers.ProviderExists(number.ProviderId))
+            // {
+            //    this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
+            // }
+
+            // if (!this.ModelState.IsValid)
+            // {
+            //    number.Providers = this.numbers.AllNumberProviders();
+            //    return this.View(number);
+            // }
             foreach (var rate in bulkRates)
             {
                 var numberFromExcel = new Rate()
@@ -93,8 +135,7 @@
             }
 
             this.data.SaveChanges();
-
-            this.TempData[GlobalMessageKey] = "Rates were added!";
+            this.TempData[GlobalMessageKey] = "The selected Rates are added (old deleted)!";
 
             return this.RedirectToAction(nameof(this.UploadRate));
         }
