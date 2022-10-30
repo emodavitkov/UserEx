@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace UserEx.Web.Areas.Administration.Controllers
+﻿namespace UserEx.Web.Areas.Administration.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +9,7 @@ namespace UserEx.Web.Areas.Administration.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using OfficeOpenXml;
     using UserEx.Data;
     using UserEx.Data.Common;

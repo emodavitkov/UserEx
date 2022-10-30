@@ -14,14 +14,12 @@
 
         public DateTime Date { get; set; }
 
-        [Required]
-        public string CallerNumber { get; set; }
+        // public string CallerNumber { get; set; }
+        public string CallerNumberNotProcured { get; set; }
 
         [Required]
         public string CallingNumber { get; set; }
 
-        // public int NumberId { get; set; }
-        // public Number Number { get; set; }
         [Required]
         [Column(TypeName = "decimal(5,2)")]
         public decimal BuyRate { get; set; }
@@ -36,6 +34,12 @@
         public string DialCode { get; set; }
 
         [ForeignKey("ProviderId, DialCode")]
+
         public Rate Rate { get; set; }
+
+        // link to numbers
+        public int? NumberId { get; set; }
+
+        public Number Number { get; set; }
     }
 }

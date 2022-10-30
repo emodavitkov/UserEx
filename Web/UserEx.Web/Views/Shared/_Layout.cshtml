@@ -22,24 +22,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-	                    <li class="nav-item">
+	                    @*<li class="nav-item">
 		                    <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
-	                    </li>
+	                    </li>*@
 	                    @if (!User.IsAdmin())
 	                    {
 		                    <li class="nav-item">
-			                    <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="Add">DIDs</a>
+			                    <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="Add">Manual DID</a>
 		                    </li>
 		                    <li class="nav-item">
-			                    <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="Upload">Bulk</a>
+			                    <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="Upload">Bulk DIDs</a>
 		                    </li>
 	                    }
 	                    <li class="nav-item">
 		                    <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="All">All DIDs</a>
 	                    </li>
-	                    <li class="nav-item">
+	                    @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        </li>*@
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

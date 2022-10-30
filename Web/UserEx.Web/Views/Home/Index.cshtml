@@ -1,10 +1,15 @@
 ﻿@using UserEx.Common
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @*@model List<NumberListingViewModel>*@
 @model IndexViewModel
 
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     this.ViewData["Title"] = "UserEx Home";
+	var userIsAdmin = User.IsAdmin();
 }
 
 <div class="text-center">
@@ -101,27 +106,46 @@
 
 <div class="mb-5"></div>
 
-<div class="row">
+@if (userIsAdmin)
+{
+	<div class="row">
+		<div class="col-12 text-center">
+			<button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+		</div>
+	</div>
+
+
+	<div class="jumbotron d-none" id="statistics">
+		<div class="row">
+			<h2 class="col-md-4 text-center" id="total-numbers"></h2>
+			<h2 class="col-md-4 text-center" id="total-users"></h2>
+			<h2 class="col-md-4 text-center" id="total-cost"></h2>
+		</div>
+	</div>
+
+@section Scripts{
+	<script>
+		$('#statistics-button').on('click', ev => {
+			$.get('/api/statistics',
+				(data) => {
+					$('#total-numbers').text(data.totalNumbers + " Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-cost').text(data.totalMonthlyCost + " Cost");
+
+					$('#statistics').removeClass('d-none');
+					$('#statistics-button').hide();
+				});
+		});
+	</script>
+}
+}
+@*
+	<div class="row">
 	<div class="col-12 text-center">
 		<button class="btn btn-primary" id="statistics-button">Show Statistics</button>
 	</div>
 </div>
 
-@*
-	<div class="jumbotron">
-	<div class="row bg-success text-white">
-		<h2 class="col-md-4 text-center">
-			@Model.TotalNumbers Numbers
-		</h2>
-		<h2 class="col-md-4 text-center">
-			@Model.TotalUsers Users
-		</h2>
-		<h2 class="col-md-4 text-center">
-			@Model.TotalX X
-		</h2>
-	</div>
-</div>
-*@
 
 <div class="jumbotron d-none" id="statistics">
 	<div class="row">
@@ -146,3 +170,4 @@
 		});
 	</script>
 }
+*@

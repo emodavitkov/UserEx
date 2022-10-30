@@ -46,5 +46,8 @@
         public int? PartnerId { get; init; }
 
         public Partner Partner { get; init; }
+
+        // link to numbers
+        public IEnumerable<Record> Records { get; init; } = new List<Record>();
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserEx.Data;
 
@@ -11,9 +12,10 @@ using UserEx.Data;
 namespace UserEx.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221029130526_RecordsToNumbers")]
+    partial class RecordsToNumbers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -385,7 +387,8 @@ namespace UserEx.Data.Migrations
                     b.Property<decimal>("BuyRate")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("CallerNumberNotProcured")
+                    b.Property<string>("CallerNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CallingNumber")

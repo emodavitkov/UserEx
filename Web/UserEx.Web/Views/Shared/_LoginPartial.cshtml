@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using UserEx.Services.Data.Partners
 @using static UserEx.Common.GlobalConstants
+@using AutoMapper.QueryableExtensions
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -22,6 +23,9 @@
 	        <li class="nav-item">
 		        <a class="nav-link text-dark" asp-area="" asp-controller="Numbers" asp-action="OfficeDids">Office DIDs</a>
 	        </li>
+	        <li class="nav-item">
+		        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Partner: @UserManager.Users.Where(u => u.Id==userId).Select(x=>x.FullName).FirstOrDefault()</a>
+	        </li>
         }
 
 	   else if(!userIsAdmin)
@@ -32,6 +36,9 @@
 	   }
 	   else if(userIsAdmin)
 	   {
+		   <li class="nav-item">
+			   <a class="nav-link text-dark" asp-area="Administration" asp-controller="Billing" asp-action="Index">Billing</a>
+		   </li>
 		   <li class="nav-item">
 			   <a class="nav-link text-dark" asp-area="Administration" asp-controller="Records" asp-action="UploadRecord">CDRs</a>
 		   </li>
@@ -45,17 +52,31 @@
 		   <li class="nav-item">
 			   <a class="nav-link text-dark" asp-area="Administration" asp-controller="Numbers" asp-action="All">Administration</a>
 		   </li>
+		   <li class="nav-item">
+			   <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Core OPS: @UserManager.Users.Where(u => u.Id==userId).Select(x=>x.FullName).FirstOrDefault()</a>
+		   </li>
 	   }
-	    <li class="nav-item">
+	    
+	   @*
+			<li class="nav-item">
+		    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Core OPS @UserManager.Users.Where(u => u.Id==userId).Select(x=>x.FullName).FirstOrDefault() !</a>
+	    </li>
+		*@
+
+		@* <li class="nav-item">
 		    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Core OPS @User.Identity.Name!</a>
 	    </li>
-	   
-        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+		*@
+
+	    @*
+			   if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
             </li>
         }
+		*@
+
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>

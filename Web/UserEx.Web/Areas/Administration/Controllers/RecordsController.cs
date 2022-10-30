@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace UserEx.Web.Areas.Administration.Controllers
+﻿namespace UserEx.Web.Areas.Administration.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +9,7 @@ namespace UserEx.Web.Areas.Administration.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using OfficeOpenXml;
     using UserEx.Data;
     using UserEx.Data.Models;
@@ -50,7 +49,6 @@ namespace UserEx.Web.Areas.Administration.Controllers
         public async Task<IActionResult> UploadRecord(IFormFile file)
         {
             var bulkRecords = new List<UploadRecordModel>();
-            var resultProviderId = 0;
 
             if (!this.ModelState.IsValid)
             {
@@ -87,7 +85,7 @@ namespace UserEx.Web.Areas.Administration.Controllers
                     {
                         var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
 
-                        resultProviderId = this.GetProviderName(providerName);
+                        var resultProviderId = this.GetProviderName(providerName);
 
                         if (this.data.Providers.FirstOrDefault(p => p.Name.ToLower() == providerName) == null)
                         {
@@ -110,26 +108,54 @@ namespace UserEx.Web.Areas.Administration.Controllers
 
             var recordsDelete = await this.data.Records.AsQueryable().ToListAsync();
             this.data.Records.RemoveRange(recordsDelete);
-           // this.TempData[GlobalMessageKey] = "The OLD CDRs were deleted!";
+
+            // this.TempData[GlobalMessageKey] = "The OLD CDRs were deleted!";
 
             // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
             // Context.UserGroupPainAreas.RemoveRange(entities);
-
             foreach (var record in bulkRecords)
             {
+                var callerNumber = record.CallerNumber;
+                int? resultNumberId = null;
+                string resultCallerNumberNotProcured = null;
+
+                if (this.GetNumberId(callerNumber) != 0)
+                {
+                    resultNumberId = this.GetNumberId(callerNumber);
+                }
+                else
+                {
+                    resultCallerNumberNotProcured = callerNumber;
+                }
+
                 var numberFromExcel = new Record
                 {
                     Date = record.Date,
-                    CallerNumber = record.CallerNumber,
+                    CallerNumberNotProcured = resultCallerNumberNotProcured,
                     CallingNumber = record.CallingNumber,
                     BuyRate = record.BuyRate,
                     Duration = record.Duration,
                     ProviderId = record.ProviderId,
                     DialCode = record.DialCode,
+                    NumberId = resultNumberId,
                 };
                 this.data.Records.Add(numberFromExcel);
             }
 
+            // foreach (var record in bulkRecords)
+            // {
+            //    var numberFromExcel = new Record
+            //    {
+            //        Date = record.Date,
+            //        CallerNumber = record.CallerNumber,
+            //        CallingNumber = record.CallingNumber,
+            //        BuyRate = record.BuyRate,
+            //        Duration = record.Duration,
+            //        ProviderId = record.ProviderId,
+            //        DialCode = record.DialCode,
+            //    };
+            //    this.data.Records.Add(numberFromExcel);
+            // }
             this.data.SaveChanges();
 
             this.TempData[GlobalMessageKey] = "The previous CDRs were deleted and the new file added!";
@@ -141,6 +167,13 @@ namespace UserEx.Web.Areas.Administration.Controllers
             => this.data
                 .Providers
                 .Where(p => p.Name.ToLower() == providerName)
+                .Select(n => n.Id)
+                .FirstOrDefault();
+
+        public int GetNumberId(string callerNumber)
+            => this.data
+                .Numbers
+                .Where(n => n.DidNumber == callerNumber)
                 .Select(n => n.Id)
                 .FirstOrDefault();
 

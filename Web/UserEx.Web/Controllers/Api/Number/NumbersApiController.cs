@@ -29,7 +29,7 @@
         public async Task<IActionResult> UploadDids()
         {
             var didwwApiKey = this.config["Didww:ApiKey"];
-
+            var didwwId = 9;
             using (var httpClient = new HttpClient())
             {
                 var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids?include=order")
@@ -66,7 +66,7 @@
 
                         var numberData = new Data.Models.Number
                         {
-                            ProviderId = 1,
+                            ProviderId = didwwId,
                             DidNumber = number.Attributes.Number,
                             SetupPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.SetupPrice,
                             MonthlyPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,

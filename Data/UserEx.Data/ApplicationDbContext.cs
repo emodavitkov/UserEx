@@ -94,6 +94,14 @@
                 .Entity<Rate>()
                 .HasKey(r => new { r.ProviderId, r.DialCode });
 
+            // link to Numbers
+            builder
+                .Entity<Record>()
+                .HasOne(r => r.Number)
+                .WithMany(r => r.Records)
+                .HasForeignKey(n => n.NumberId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // modelBuilder.Entity<ResourceTag>()
             //    .HasKey(rt => new { rt.ResourceId, rt.TagId });
 
