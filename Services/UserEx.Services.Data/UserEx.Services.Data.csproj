@@ -27,8 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Billing\" />
-    <Folder Include="Rates\" />
-    <Folder Include="Records\" />
   </ItemGroup>
 
 </Project>

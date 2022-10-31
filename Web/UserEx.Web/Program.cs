@@ -19,6 +19,8 @@
     using UserEx.Services.Data;
     using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Partners;
+    using UserEx.Services.Data.Rates;
+    using UserEx.Services.Data.Records;
     using UserEx.Services.Data.Statistics;
     using UserEx.Services.Mapping;
     using UserEx.Services.Messaging;
@@ -77,6 +79,8 @@
             services.AddTransient<IStatisticsService, StatisticsService>();
             services.AddTransient<INumberService, NumberService>();
             services.AddTransient<IPartnerService, PartnerService>();
+            services.AddTransient<IRateService, RateService>();
+            services.AddTransient<IRecordService, RecordService>();
         }
 
         private static void Configure(WebApplication app)

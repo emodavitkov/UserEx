@@ -15,6 +15,7 @@
     using UserEx.Data.Common;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
+    using UserEx.Services.Data.Rates;
     using UserEx.Web.Controllers;
     using UserEx.Web.ViewModels.Numbers;
     using UserEx.Web.ViewModels.Rates;
@@ -23,14 +24,15 @@
 
     public class RatesController : AdministrationController
     {
-        private readonly ApplicationDbContext data;
         private readonly INumberService numbers;
+        private readonly IRateService rates;
 
         public RatesController(
-             ApplicationDbContext data, INumberService numbers)
+             INumberService numbers,
+             IRateService rates)
         {
-            this.data = data;
             this.numbers = numbers;
+            this.rates = rates;
         }
 
         [Authorize]
@@ -56,17 +58,20 @@
             this.ModelState.Remove("DestinationName");
             this.ModelState.Remove("DialCode");
 
+            // moving to services
             if (!this.ModelState.IsValid)
             {
-                 ratesModel.Providers = this.data
-                    .Providers
-                    .Select(p => new NumberProviderViewModel()
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                    })
-                 .ToList();
-                 return this.View();
+                ratesModel.Providers = this.rates.AllProviders();
+
+                // ratesModel.Providers = this.data
+                 //   .Providers
+                 //   .Select(p => new NumberProviderViewModel()
+                 //   {
+                 //       Id = p.Id,
+                 //       Name = p.Name,
+                 //   })
+                 // .ToList();
+                return this.View();
             }
 
             if (!Directory.Exists(filePath))
@@ -105,8 +110,9 @@
                 }
             }
 
-            var ratesDelete = await this.data.Rates.AsQueryable().Where(r => r.ProviderId == providerId).ToListAsync();
-            this.data.Rates.RemoveRange(ratesDelete);
+            // moved to service
+            // var ratesDelete = await this.data.Rates.AsQueryable().Where(r => r.ProviderId == providerId).ToListAsync();
+            // this.data.Rates.RemoveRange(ratesDelete);
 
             // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
             // Context.UserGroupPainAreas.RemoveRange(entities);
@@ -116,24 +122,20 @@
             //    this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
             // }
 
-            // if (!this.ModelState.IsValid)
+            // moved to service
+            // foreach (var rate in bulkRates)
             // {
-            //    number.Providers = this.numbers.AllNumberProviders();
-            //    return this.View(number);
+            //    var numberFromExcel = new Rate()
+            //    {
+            //        DestinationName = rate.DestinationName,
+            //        DialCode = rate.DialCode,
+            //        Cost = rate.Cost,
+            //        ProviderId = rate.ProviderId,
+            //    };
+            //    this.data.Rates.Add(numberFromExcel);
             // }
-            foreach (var rate in bulkRates)
-            {
-                var numberFromExcel = new Rate()
-                {
-                    DestinationName = rate.DestinationName,
-                    DialCode = rate.DialCode,
-                    Cost = rate.Cost,
-                    ProviderId = rate.ProviderId,
-                };
-                this.data.Rates.Add(numberFromExcel);
-            }
-
-            this.data.SaveChanges();
+            // this.data.SaveChanges();
+            this.rates.Upload(providerId, bulkRates);
             this.TempData[GlobalMessageKey] = "The selected Rates are added (old deleted)!";
 
             return this.RedirectToAction(nameof(this.UploadRate));
