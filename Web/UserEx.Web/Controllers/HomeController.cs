@@ -18,17 +18,14 @@
     {
         private readonly INumberService numbers;
         private readonly IStatisticsService statistics;
-        private readonly ApplicationDbContext data;
         private readonly IMemoryCache cache;
 
         public HomeController(
             IStatisticsService statistics,
-            ApplicationDbContext data,
             INumberService numbers,
             IMemoryCache cache)
         {
             this.statistics = statistics;
-            this.data = data;
             this.numbers = numbers;
             this.cache = cache;
         }

@@ -35,5 +35,23 @@
             public const int PhoneNumberMinLength = 6;
             public const int PhoneNumberMaxLength = 20;
         }
+
+        public class Rate
+        {
+            public const int DialCodeNumberMinLength = 1;
+            public const int DialCodeNumberMaxLength = 25;
+            public const int DestinationNameMinLength = 2;
+            public const int DestinationNameMaxLength = 30;
+        }
+
+        public class Records
+        {
+            public const int OfficeNameMinLength = 2;
+            public const int OfficeNameMaxLength = 25;
+            public const int DialCodeNumberMinLength = 1;
+            public const int DialCodeNumberMaxLength = 25;
+            public const int PhoneNumberMinLength = 6;
+            public const int PhoneNumberMaxLength = 20;
+        }
     }
 }

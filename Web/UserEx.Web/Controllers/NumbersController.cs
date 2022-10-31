@@ -23,10 +23,8 @@
 
     public class NumbersController : Controller
     {
-        // data to be removed - added for Upload test
         private readonly INumberService numbers;
         private readonly IPartnerService partners;
-        // private readonly ApplicationDbContext data;
 
         public NumbersController(
             INumberService numbers,

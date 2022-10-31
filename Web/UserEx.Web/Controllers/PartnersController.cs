@@ -7,17 +7,18 @@
     using UserEx.Data;
     using UserEx.Data.Common;
     using UserEx.Data.Models;
+    using UserEx.Services.Data.Partners;
     using UserEx.Web.ViewModels.Partners;
 
     using static UserEx.Common.GlobalConstants;
 
     public class PartnersController : Controller
     {
-        private readonly ApplicationDbContext data;
+        private readonly IPartnerService partner;
 
-        public PartnersController(ApplicationDbContext data)
+        public PartnersController(IPartnerService partner)
         {
-            this.data = data;
+            this.partner = partner;
         }
 
         [Authorize]
@@ -31,10 +32,13 @@
         public IActionResult SetUp(SetUpPartnerFormModel partner)
         {
             var userId = this.User.GetId();
-            var userIdAlreadyPartner = this.data
-                .Partners
-                .Any(p => p.UserId == userId);
 
+            // move to service
+            var userIdAlreadyPartner = this.partner.IsPartner(userId);
+
+            // var userIdAlreadyPartner = this.data
+            //    .Partners
+            //    .Any(p => p.UserId == userId);
             if (userIdAlreadyPartner)
             {
                 return this.BadRequest();
@@ -45,15 +49,16 @@
                 return this.View(partner);
             }
 
-            var partnerData = new Partner
-            {
-                OfficeName = partner.OfficeName,
-                PhoneNumber = partner.PhoneNumber,
-                UserId = userId,
-            };
-            this.data.Partners.Add(partnerData);
-            this.data.SaveChanges();
+            this.partner.SetUp(partner, userId);
 
+            // var partnerData = new Partner
+            // {
+            //    OfficeName = partner.OfficeName,
+            //    PhoneNumber = partner.PhoneNumber,
+            //    UserId = userId,
+            // };
+            // this.data.Partners.Add(partnerData);
+            // this.data.SaveChanges();
             this.TempData[GlobalMessageKey] = "Thank you for being a Partner!";
 
             return this.RedirectToAction("All", "Numbers");

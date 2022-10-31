@@ -1,4 +1,6 @@
-﻿namespace UserEx.Services.Data.Partners
+﻿using UserEx.Web.ViewModels.Partners;
+
+namespace UserEx.Services.Data.Partners
 {
     using System;
     using System.Collections.Generic;
@@ -11,5 +13,7 @@
         public bool IsPartner(string userId);
 
         public int GetIdByUser(string userId);
+
+        public void SetUp(SetUpPartnerFormModel partner, string userId);
     }
 }

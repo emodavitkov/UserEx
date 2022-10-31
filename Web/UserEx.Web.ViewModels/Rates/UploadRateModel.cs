@@ -11,10 +11,13 @@
     using UserEx.Data.Models;
     using UserEx.Web.ViewModels.Numbers;
 
+    using static UserEx.Data.Common.DataConstants.Rate;
+
     public class UploadRateModel
     {
         // to add validation rules
         [Required]
+        [StringLength(DialCodeNumberMaxLength, MinimumLength = DialCodeNumberMinLength)]
         public string DialCode { get; set; }
 
         [Required]
@@ -23,6 +26,7 @@
         public Provider Provider { get; init; }
 
         [Required]
+        [StringLength(DestinationNameMaxLength, MinimumLength = DestinationNameMinLength)]
         public string DestinationName { get; set; }
 
         [Required]

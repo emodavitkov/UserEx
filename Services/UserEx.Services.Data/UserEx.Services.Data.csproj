@@ -25,4 +25,10 @@
     <ProjectReference Include="..\UserEx.Services.Mapping\UserEx.Services.Mapping.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Billing\" />
+    <Folder Include="Rates\" />
+    <Folder Include="Records\" />
+  </ItemGroup>
+
 </Project>

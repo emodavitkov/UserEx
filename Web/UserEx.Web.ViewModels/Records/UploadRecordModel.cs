@@ -9,16 +9,18 @@
     using System.Threading.Tasks;
 
     using UserEx.Data.Models;
+    using static UserEx.Data.Common.DataConstants.Records;
 
     public class UploadRecordModel
     {
-        // to add validation rules
         public DateTime Date { get; set; }
 
         [Required]
+        [StringLength(PhoneNumberMaxLength, MinimumLength = PhoneNumberMinLength)]
         public string CallerNumber { get; set; }
 
         [Required]
+        [StringLength(PhoneNumberMaxLength, MinimumLength = PhoneNumberMinLength)]
         public string CallingNumber { get; set; }
 
         [Required]
@@ -32,6 +34,7 @@
         public int ProviderId { get; init; }
 
         [Required]
+        [StringLength(DialCodeNumberMaxLength, MinimumLength = DialCodeNumberMinLength)]
         public string DialCode { get; set; }
     }
 }
