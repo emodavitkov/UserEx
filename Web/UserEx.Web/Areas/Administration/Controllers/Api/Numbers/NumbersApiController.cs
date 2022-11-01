@@ -1,5 +1,9 @@
-﻿namespace UserEx.Web.Controllers.Api.Number
+﻿using UserEx.Services.Data.Numbers;
+
+namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
+    // UserEx.Web.Areas.Administration.Controllers.Api.Numbers
+    // UserEx.Web.Controllers.Api.Number
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
@@ -11,19 +15,21 @@
     using UserEx.Data;
     using UserEx.Web.ViewModels.Api;
 
+    // public class NumbersApiController : ControllerBase
     [ApiController]
     [Route("[controller]/api/number")]
-    public class NumbersApiController : ControllerBase
+    public class NumbersApiController : AdministrationController
     {
-        private readonly ApplicationDbContext data;
+       // private readonly ApplicationDbContext data;
         private readonly IConfiguration config;
+        private readonly INumberApiService number;
 
         public NumbersApiController(
-            ApplicationDbContext data,
-            IConfiguration config)
+            IConfiguration config,
+            INumberApiService number)
         {
             this.config = config;
-            this.data = data;
+            this.number = number;
         }
 
         public async Task<IActionResult> UploadDids()
@@ -57,11 +63,17 @@
 
                     foreach (var number in numbersApiResponse.Data)
                     {
-                        if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
+                        // move to service
+                        var currentNumber = number.Attributes.Number;
+                        if (this.number.NumberExists(currentNumber))
                         {
                             continue;
                         }
 
+                        // if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
+                        // {
+                        //    continue;
+                        // }
                         var orderId = number.Relationships.Order.OrderData.OrderId;
 
                         var numberData = new Data.Models.Number
@@ -92,12 +104,14 @@
                         numbersApiCollected.Add(numberData);
                     }
 
-                    this.data.Numbers.AddRange(numbersApiCollected);
+                    // move to service
+                    this.number.Add(numbersApiCollected);
 
-                    this.data.SaveChanges();
+                    // this.data.Numbers.AddRange(numbersApiCollected);
+                    // this.data.SaveChanges();
                 }
 
-                return Ok();
+                return this.Ok();
             }
         }
     }

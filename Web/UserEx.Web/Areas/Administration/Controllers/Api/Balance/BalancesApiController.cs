@@ -14,20 +14,15 @@
     using UserEx.Web.ViewModels.Api;
 
     // [Route("[controller]/api/balance")]
-
     [ApiController]
     [Route("api/[controller]")]
     public class BalancesApiController : AdministrationController
     {
-        private readonly ApplicationDbContext data;
         private readonly IConfiguration config;
 
-        public BalancesApiController(
-            ApplicationDbContext data,
-            IConfiguration config)
+        public BalancesApiController(IConfiguration config)
         {
             this.config = config;
-            this.data = data;
         }
 
         public async Task<IActionResult> GetBalance()

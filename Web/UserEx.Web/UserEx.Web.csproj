@@ -56,5 +56,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="Controllers\Api\Number\" />
   </ItemGroup>
 </Project>

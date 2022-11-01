@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace UserEx.Services.Data.Numbers
+﻿namespace UserEx.Services.Data.Numbers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using UserEx.Data;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers.Models;

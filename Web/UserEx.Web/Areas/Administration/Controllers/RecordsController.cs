@@ -23,17 +23,10 @@
 
     public class RecordsController : AdministrationController
     {
-        private readonly ApplicationDbContext data;
-        private readonly INumberService numbers;
         private readonly IRecordService records;
 
-        public RecordsController(
-            ApplicationDbContext data,
-            INumberService numbers,
-            IRecordService records)
+        public RecordsController(IRecordService records)
         {
-            this.data = data;
-            this.numbers = numbers;
             this.records = records;
         }
 
@@ -167,7 +160,6 @@
             //    this.data.Records.Add(numberFromExcel);
             // }
             // this.data.SaveChanges();
-
             this.records.Upload(bulkRecords);
 
             this.TempData[GlobalMessageKey] = "The previous CDRs were deleted and the new file added!";

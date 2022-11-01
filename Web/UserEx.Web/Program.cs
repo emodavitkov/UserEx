@@ -81,6 +81,7 @@
             services.AddTransient<IPartnerService, PartnerService>();
             services.AddTransient<IRateService, RateService>();
             services.AddTransient<IRecordService, RecordService>();
+            services.AddTransient<INumberApiService, NumberApiService>();
         }
 
         private static void Configure(WebApplication app)
