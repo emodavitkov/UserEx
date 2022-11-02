@@ -1,5 +1,27 @@
 ﻿@model NumberDetailsServiceModel
 
+<div class="card text-white bg-secondary col-md-6 offset-2" style="width: 20rem;">
+	<img src="https://toppng.com/uploads/preview/dialing-dialpad-hand-finger-telephone-pad-svg-icon-phone-dial-pad-icon-11553394187eecww1sbyc.png" class="card-img-top" alt="...">
+	<div class="card-body">
+		<h5 class="card-title">DID number more details:</h5>
+	</div>
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item"><strong>Number:</strong> @Model.DidNumber</li>
+		<li class="list-group-item"><strong>Order Reference:</strong> @Model.OrderReference</li>
+		<li class="list-group-item"><strong>Description:</strong> @Model.Description</li>
+		<li class="list-group-item"><strong>Provider name:</strong>: @Model.Provider</li>
+		<li class="list-group-item"><strong>Setup price:</strong> @Model.SetupPrice</li>
+		<li class="list-group-item"><strong>Monthly price:</strong> @Model.MonthlyPrice</li>
+		<li class="list-group-item"><strong>Order date:</strong> @Model.StartDate</li>
+		<li class="list-group-item"><strong>Active:</strong> @Model.IsActive</li>
+		<li class="list-group-item"><strong>Public:</strong> @Model.IsPublic</li>
+	</ul>
+	<div class="card-body" style="border-color: grey">
+	</div>
+</div>
+
+@*
 <div class="col-md-6 offset-3">
 	<h2>@Model.PartnerName @Model.Provider @Model.MonthlyPrice</h2>
 </div>
+*@

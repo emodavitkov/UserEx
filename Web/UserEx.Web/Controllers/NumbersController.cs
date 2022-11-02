@@ -141,7 +141,7 @@
             var number = this.numbers.Details(id);
 
             // if (!information.Contains(number.Provider) || !information.Contains(number.DidNumber))
-            if (!information.Contains(number.DidNumber)) 
+            if (!information.Contains(number.DidNumber))
             {
                 return this.BadRequest();
             }
@@ -230,8 +230,6 @@
             // };
             // this.data.Numbers.Add(numberData);
             // this.data.SaveChanges();
-
-
             if (result > 0)
             {
                 this.TempData[GlobalMessageKey] = "Number added successfully and awaiting for approval!";
@@ -539,8 +537,6 @@
             // }
 
             // this.data.SaveChanges();
-
-
             if (result == 0)
             {
                 this.TempData[GlobalMessageKey] = "No new number were added due to duplication!";
@@ -581,8 +577,6 @@
         //    // return Ok(new { count = file.Count, bytes, filePath });
         //    return this.RedirectToAction(nameof(this.All));
         // }
-
-
         // moved in the number service
         // private bool UserIsPartner()
         //    => this.data

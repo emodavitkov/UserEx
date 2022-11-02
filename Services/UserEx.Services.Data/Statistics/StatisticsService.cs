@@ -19,14 +19,15 @@
 
         public StatisticsServiceModel Total()
         {
-            var totalNumbers = this.data.Numbers.Count(n => n.IsPublic);
+            var totalNumbersApproved = this.data.Numbers.Count(n => n.IsPublic);
+            var totalNumbersNotApproved = this.data.Numbers.Count(n => n.IsPublic == false);
             var totalUsers = this.data.Users.Count();
 
             return new StatisticsServiceModel
             {
-                TotalNumbers = totalNumbers,
+                TotalNumbersApproved = totalNumbersApproved,
                 TotalUsers = totalUsers,
-                TotalMonthlyCost = 0,
+                TotalNumbersNotApproved = totalNumbersNotApproved,
             };
         }
     }

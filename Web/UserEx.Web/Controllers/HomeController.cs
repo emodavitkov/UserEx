@@ -70,7 +70,7 @@
 
             return this.View(new IndexViewModel
             {
-                TotalNumbers = totalStatistics.TotalNumbers,
+                TotalNumbers = totalStatistics.TotalNumbersApproved,
                 TotalUsers = totalStatistics.TotalUsers,
                 Numbers = latestNumbers,
             });

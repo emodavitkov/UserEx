@@ -119,7 +119,7 @@
 		<div class="row">
 			<h2 class="col-md-4 text-center" id="total-numbers"></h2>
 			<h2 class="col-md-4 text-center" id="total-users"></h2>
-			<h2 class="col-md-4 text-center" id="total-cost"></h2>
+			<h2 class="col-md-4 text-center" id="total-numForApp"></h2>
 		</div>
 	</div>
 
@@ -128,9 +128,9 @@
 		$('#statistics-button').on('click', ev => {
 			$.get('/api/statistics',
 				(data) => {
-					$('#total-numbers').text(data.totalNumbers + " Numbers");
+					$('#total-numbers').text(data.totalNumbersApproved + " Approved Numbers");
 					$('#total-users').text(data.totalUsers + " Users");
-					$('#total-cost').text(data.totalMonthlyCost + " Cost");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
 
 					$('#statistics').removeClass('d-none');
 					$('#statistics-button').hide();

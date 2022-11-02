@@ -8,10 +8,10 @@
 
     public class StatisticsServiceModel
     {
-        public int TotalNumbers { get; init; }
+        public int TotalNumbersApproved { get; init; }
 
         public int TotalUsers { get; set; }
 
-        public int TotalMonthlyCost { get; set; }
+        public int TotalNumbersNotApproved { get; set; }
     }
 }
