@@ -1,0 +1,79 @@
+﻿@using UserEx.Data.Models
+@using Microsoft.AspNetCore.Identity
+@model BalancesApiResponseModel
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	this.ViewBag.Title = "Billing Data";
+	var userIsAdmin = User.IsAdmin();
+}
+
+<h2 class="heading-margin text-center">@ViewBag.Title</h2>
+
+<div class="col-md-3 offset-0 text-center">
+	<h3>Balance data:</h3>
+	@*<h2>@Model.BalanceAmount</h2>*@
+</div>
+
+<div class="mb-3"></div>
+
+@if (userIsAdmin)
+{
+	<div class="row">
+		<div class="col-6 text-center">
+			<button class="btn btn-primary" id="statistics-button">Show Balance</button>
+		</div>
+	</div>
+
+
+	<div class="jumbotron d-none" id="statistics">
+		<div class="row">
+			<h2 class="col-md-4 text-center" id="didlogic-balance"></h2>
+			@*
+				<h2 class="col-md-4 text-center" id="total-users"></h2>
+			<h2 class="col-md-4 text-center" id="total-numForApp"></h2>
+			*@
+		</div>
+	</div>
+
+@section Scripts{
+	<script>
+		window.addEventListener('load', ev => {
+			$.get('/api/balancesapi',
+				(data) => {
+					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					@*
+					$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
+					*@
+
+					$('#statistics').removeClass('d-none');
+					$('#statistics-button').hide();
+				});
+		});
+	</script>
+}
+}
+
+@*
+	@section Scripts{
+	<script>
+		$('#statistics-button').on('click', ev => {
+			$.get('/api/balancesapi',
+				(data) => {
+					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					@*
+					$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
+					//end
+$('#statistics').removeClass('d-none');
+$('#statistics-button').hide();
+});
+});
+</script>
+}
+}
+*@

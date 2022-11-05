@@ -1,0 +1,16 @@
+﻿@using UserEx.Data.Models
+@using Microsoft.AspNetCore.Identity
+@model BalancesApiResponseModel
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	this.ViewBag.Title = "Balance test";
+	var userIsAdmin = User.IsAdmin();
+}
+
+<h2 class="heading-margin text-center">@ViewBag.Title</h2>
+
+<div class="col-md-3 offset-0 text-center">
+	<h2>@Model.BalanceAmount</h2>
+</div>

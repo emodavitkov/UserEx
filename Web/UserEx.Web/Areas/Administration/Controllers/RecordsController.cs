@@ -76,6 +76,9 @@
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                     var rowCount = worksheet.Dimension.Rows;
 
+                    // to do validate excel file with first row names added in one costant with spaces 
+                    // with for string.Join(" ", myvar); and compare with the constant
+
                     for (int row = 2; row <= rowCount; row++)
                     {
                         var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();

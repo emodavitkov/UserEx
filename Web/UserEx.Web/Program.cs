@@ -17,6 +17,7 @@
     using UserEx.Data.Repositories;
     using UserEx.Data.Seeding;
     using UserEx.Services.Data;
+    using UserEx.Services.Data.Billing;
     using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Partners;
     using UserEx.Services.Data.Rates;
@@ -82,6 +83,7 @@
             services.AddTransient<IRateService, RateService>();
             services.AddTransient<IRecordService, RecordService>();
             services.AddTransient<INumberApiService, NumberApiService>();
+            services.AddTransient<IBillingService, BillingService>();
         }
 
         private static void Configure(WebApplication app)

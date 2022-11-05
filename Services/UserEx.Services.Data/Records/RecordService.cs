@@ -75,6 +75,5 @@
             var provider = this.data.Providers.FirstOrDefault(p => p.Name == providerName);
             return provider != null;
         }
-
     }
 }

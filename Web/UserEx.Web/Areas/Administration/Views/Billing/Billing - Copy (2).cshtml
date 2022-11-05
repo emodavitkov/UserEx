@@ -1,0 +1,121 @@
+﻿@using UserEx.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserEx.Web.ViewModels.Billing.BillingResponseModel
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	this.ViewBag.Title = "Your Billing Data";
+	var userIsAdmin = User.IsAdmin();
+}
+
+<h2 class="heading-margin text-center">@ViewBag.Title</h2>
+
+<div class="row">
+	<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+		<h2 class="heading-margin text-center">Cost selection options:</h2>
+		
+		<div asp-validation-summary="All"></div>
+		
+		<form method="post">
+			<div class="form-group">
+				<label asp-for="ProviderId"></label>
+				<select asp-for="ProviderId" class="form-control">
+					@foreach (var provider in Model.Providers)
+					{
+						<option value="@provider.Id">@provider.Name</option>
+					}
+				</select>
+				<span asp-validation-for="ProviderId" class="small text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="StartDate"></label>
+				<input asp-for="StartDate" class="form-control" placeholder="@DateTime.UtcNow.Date">
+				<span asp-validation-for="StartDate" class="small text-danger"></span>
+			</div>
+			
+			<div class="form-group">
+				<label asp-for="EndDate"></label>
+				<input asp-for="EndDate" class="form-control" placeholder="@DateTime.UtcNow.Date">
+				<span asp-validation-for="EndDate" class="small text-danger"></span>
+			</div>
+
+			<input class="btn btn-primary mt-3" type="submit" value="Submit" />
+		</form>
+
+	</div>
+</div>
+
+<div class="col-md-3 offset-0 text-center">
+	<h3>Billing data:</h3>
+	<h2></h2>
+</div>
+
+<div class="col-md-3 offset-0 text-center">
+	<h3>Balance data:</h3>
+	@*<h2>@Model.BalanceAmount</h2>*@
+</div>
+
+<div class="mb-3"></div>
+
+@if (userIsAdmin)
+{
+	<div class="row">
+		<div class="col-6 text-center">
+			<button class="btn btn-primary" id="statistics-button">Show Balance</button>
+		</div>
+	</div>
+
+
+	<div class="jumbotron d-none" id="statistics">
+		<div class="row">
+			<h2 class="col-md-4 text-center" id="didlogic-balance"></h2>
+			@*
+				<h2 class="col-md-4 text-center" id="total-users"></h2>
+			<h2 class="col-md-4 text-center" id="total-numForApp"></h2>
+			*@
+		</div>
+	</div>
+
+@section Scripts{
+	<script>
+		window.addEventListener('load', ev => {
+			$.get('/api/balancesapi',
+				(data) => {
+					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					@*
+					$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
+					*@
+
+					$('#statistics').removeClass('d-none');
+					$('#statistics-button').hide();
+				});
+		});
+	</script>
+}
+}
+
+@*
+	@section Scripts{
+	<script>
+		$('#statistics-button').on('click', ev => {
+			$.get('/api/balancesapi',
+				(data) => {
+					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					@*
+					$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
+					//end
+$('#statistics').removeClass('d-none');
+$('#statistics-button').hide();
+});
+});
+</script>
+}
+}
+*@

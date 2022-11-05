@@ -1,0 +1,17 @@
+﻿@using UserEx.Data.Models
+@using Microsoft.AspNetCore.Identity
+@model UserEx.Web.ViewModels.Billing.BillingCostByProviderModel
+
+@*@model UserEx.Web.ViewModels.Billing.BillingResponseModel*@
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	this.ViewBag.Title = "Cost by provider test";
+	var userIsAdmin = User.IsAdmin();
+}
+
+<h2 class="heading-margin text-center">@ViewBag.Title</h2>
+
+<div class="col-md-3 offset-0 text-center">
+	<h2>@Model.SumCostByProvider</h2>
+</div>
