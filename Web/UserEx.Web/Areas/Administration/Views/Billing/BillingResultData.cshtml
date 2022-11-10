@@ -6,21 +6,39 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-	this.ViewBag.Title = "Your Billing Data:";
+	this.ViewBag.Title = "Your Billing and Balance data:";
 	var userIsAdmin = User.IsAdmin();
 }
 
 <h2 class="heading-margin text-center">@ViewBag.Title</h2>
 
-<div class="container">
-	<div class="row row-cols-2">
-		<div class="col">Billing data by chosen provider:</div>
-		<div class="col">@Model.SumCostByProvider</div>
-		<div class="col">Billing data by selected time spam:</div>
-		<div class="col">@Model.SumCostByDate</div>
+<div class="mb-5"></div>
+
+<div class="container px-4">
+	<div class="row gx-5">
+		<div class="col">
+			<div class="p-3 border bg-light"><strong>Billing data by chosen provider:</strong></div>
+		</div>
+		<div class="col">
+			<div class="p-3 border bg-light">$@Model.SumCostByProvider</div>
+		</div>
 	</div>
 </div>
 
+<div class="mb-5"></div>
+
+<div class="container px-4">
+	<div class="row gx-5">
+		<div class="col">
+			<div class="p-3 border bg-light"><strong>Billing data by selected time spam:</strong></div>
+		</div>
+		<div class="col">
+			<div class="p-3 border bg-light">$@Model.SumCostByDate</div>
+		</div>
+	</div>
+</div>
+
+@*
 <div class="col-md-6 offset-0 text-center">
 	<h2>Billing data by chosen provider:</h2>
 	<h3>@Model.SumCostByProvider</h3>
@@ -31,9 +49,13 @@
 	<h2>Billing data by selected time spam:</h2>
 	<h3>@Model.SumCostByDate</h3>
 </div>
+*@
 
-<div class="col-md-6 offset-0 text-center">
-	<h2>Balance data:</h2>
+<div class="mb-3"></div>
+
+
+<div class="col-md-2 offset-0 text-center">
+	<h3>Balance data:</h3>
 </div>
 
 <div class="mb-3"></div>
@@ -49,7 +71,7 @@
 
 	<div class="jumbotron d-none" id="statistics">
 		<div class="row">
-			<h2 class="col-md-4 text-center" id="didlogic-balance"></h2>
+			<h3 class="col-md-4 text-center" id="didlogic-balance"></h3>
 			@*
 				<h2 class="col-md-4 text-center" id="total-users"></h2>
 			<h2 class="col-md-4 text-center" id="total-numForApp"></h2>
@@ -57,9 +79,10 @@
 		</div>
 	</div>
 
+
 @section Scripts{
 	<script>
-		window.addEventListener('load', ev => {
+		$('#statistics-button').on('click', ev => {
 			$.get('/api/balancesapi',
 				(data) => {
 					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
@@ -76,6 +99,29 @@
 	</script>
 }
 }
+
+@*
+	
+@section Scripts{
+	<script>
+		window.addEventListener('load', ev => {
+			$.get('/api/balancesapi',
+				(data) => {
+					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					@*
+						$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
+					$('#total-users').text(data.totalUsers + " Users");
+					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
+					//comment
+
+$('#statistics').removeClass('d-none');
+$('#statistics-button').hide();
+});
+});
+</script>
+}
+}
+*@
 
 @*
 	@section Scripts{
