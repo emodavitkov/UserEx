@@ -82,6 +82,20 @@
             return result;
         }
 
+        public decimal CostProcuredNumbers()
+        {
+            var costResult = new List<decimal>();
+
+
+            var result = this.data
+                .Records
+                .Where(n => n.NumberId != null)
+                .Take(1)
+                .Sum(x => x.Number.MonthlyPrice);
+
+            return result;
+        }
+
         public IEnumerable<NumberProviderViewModel> AllNumberProviders()
            => this.data
                .Providers

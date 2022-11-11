@@ -13,12 +13,13 @@
     public interface IBillingService
     {
         // public void Balance(BalancesApiResponseModel result);
-
         public Task<BalancesApiResponseModel> GetBalance();
 
         public decimal CostByProviderId(int providerId);
 
         public decimal CostAllProviderByDate(DateTime startDate, DateTime endDate);
+
+        public decimal CostProcuredNumbers();
 
         IEnumerable<NumberProviderViewModel> AllNumberProviders();
 

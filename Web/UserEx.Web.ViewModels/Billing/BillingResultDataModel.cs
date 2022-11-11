@@ -11,5 +11,7 @@
         public decimal SumCostByProvider { get; set; }
 
         public decimal SumCostByDate { get; set; }
+
+        public decimal SumProcuredNumbers { get; set; }
     }
 }

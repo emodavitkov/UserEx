@@ -74,11 +74,13 @@
 
             var resultCostByProviderId = this.billing.CostByProviderId(billingModel.ProviderId);
             var resultCostByDate = this.billing.CostAllProviderByDate(billingModel.StartDate, billingModel.EndDate);
+            var resultProcuredNumbers = this.billing.CostProcuredNumbers();
 
             var billingResultData = new BillingResultDataModel
             {
                 SumCostByProvider = resultCostByProviderId,
                 SumCostByDate = resultCostByDate,
+                SumProcuredNumbers = resultProcuredNumbers,
             };
 
             return this.View("BillingResultData", billingResultData);

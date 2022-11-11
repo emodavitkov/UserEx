@@ -1,12 +1,12 @@
-﻿using UserEx.Web.ViewModels.Partners;
-
-namespace UserEx.Services.Data.Partners
+﻿namespace UserEx.Services.Data.Partners
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
+    using UserEx.Web.ViewModels.Partners;
 
     public interface IPartnerService
     {
