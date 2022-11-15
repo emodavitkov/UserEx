@@ -90,8 +90,13 @@
             var result = this.data
                 .Records
                 .Where(n => n.NumberId != null)
-                .Take(1)
-                .Sum(x => x.Number.MonthlyPrice);
+                .Select(x => new
+                {
+                    NumberId = x.NumberId,
+                    MonthlyPrice = x.Number.MonthlyPrice,
+                })
+                .Distinct()
+                .Sum(x => x.MonthlyPrice);
 
             return result;
         }

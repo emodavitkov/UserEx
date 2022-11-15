@@ -239,7 +239,6 @@
                return false;
             }
 
-
             numberData.ProviderId = providerId;
             numberData.DidNumber = didNumber;
             numberData.OrderReference = orderReference;
@@ -287,7 +286,6 @@
             numberData.EndDate = DateTime.Now;
             numberData.IsPublic = isPublic;
 
-
             // numberData.PartnerId = partnerId;
             this.data.Remove(numberData);
             this.data.SaveChanges();
@@ -307,7 +305,6 @@
             number.IsPublic = !number.IsPublic;
 
             this.data.SaveChanges();
-
         }
 
         public bool NumberIsByPartner(int numberId, int partnerId)
@@ -347,7 +344,6 @@
         //            Name = p.Name,
         //        })
         //        .ToList();
-
         private static IEnumerable<NumberServiceModel> GetNumbers(IQueryable<Number> numberQuery)
             => numberQuery
                 .Select(n => new NumberServiceModel

@@ -1,0 +1,10 @@
+﻿{
+  "General": {
+    "AutomaticStartup": false
+  },
+
+  "ConnectionStrings": {
+    "DefaultConnection": "My Fake Connection String"
+  },
+  "AllowedHosts": "*"
+}

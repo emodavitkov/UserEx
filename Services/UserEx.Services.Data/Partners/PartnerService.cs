@@ -23,11 +23,24 @@
                 .Any(p => p.UserId == userId);
 
         public int GetIdByUser(string userId)
-           => this.data
-            .Partners
-            .Where(p => p.UserId == userId)
-            .Select(p => p.Id)
-            .FirstOrDefault();
+        {
+            var result = this.data
+                .Partners
+                .Where(p => p.UserId == userId)
+                .FirstOrDefault();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            // var result = this.data
+            //    .Partners
+            //    .Where(p => p.UserId == userId)
+            //    .Select(p => p.Id)
+            //    .FirstOrDefault();
+            return result.Id;
+        }
 
         public void SetUp(SetUpPartnerFormModel partner, string userId)
         {
