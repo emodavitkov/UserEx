@@ -86,7 +86,6 @@
         {
             var costResult = new List<decimal>();
 
-
             var result = this.data
                 .Records
                 .Where(n => n.NumberId != null)

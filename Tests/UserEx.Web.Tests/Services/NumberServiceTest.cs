@@ -394,7 +394,7 @@
                 1);
 
             // Assert
-            Assert.Equal(5, data.Numbers.Count());
+            Assert.Equal(numberList.Count + 1, data.Numbers.Count());
         }
 
         [Fact]
@@ -492,6 +492,7 @@
 
             // Assert
             Assert.Equal("0987654325", data.Numbers.Where(x => x.Id == 1).Select(x => x.DidNumber).FirstOrDefault());
+            Assert.Equal("TestDescription5", data.Numbers.Where(x => x.Id == 1).Select(x => x.Description).FirstOrDefault());
         }
 
         [Fact]
