@@ -3,20 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using OfficeOpenXml;
-    using UserEx.Data;
-    using UserEx.Data.Models;
-    using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Records;
-    using UserEx.Web.ViewModels.Numbers;
-    using UserEx.Web.ViewModels.Rates;
     using UserEx.Web.ViewModels.Records;
 
     using static UserEx.Common.GlobalConstants;
@@ -70,41 +63,67 @@
             {
                 await file.CopyToAsync(stream);
 
-                using (var package = new ExcelPackage(stream))
+                try
                 {
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    var rowCount = worksheet.Dimension.Rows;
-
-                    // to do validate excel file with first row names added in one costant with spaces 
-                    // with for string.Join(" ", myvar); and compare with the constant
-
-                    for (int row = 2; row <= rowCount; row++)
+                    using (var package = new ExcelPackage(stream))
                     {
-                        var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
+                        var firstRowTemplate = "Date*CallerID*Phone Number*Dial Code*Buy Rate*Duration*Provider";
+                        var numberOfColumns = 7;
+                        var firstRow = 1;
+                        var firstRowList = new List<string>();
 
-                        // moved to service
-                        var resultProviderId = this.records.GetProviderName(providerName);
+                        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
 
-                        // var resultProviderId = this.GetProviderName(providerName);
-
-                        // if (this.data.Providers.FirstOrDefault(p => p.Name.ToLower() == providerName) == null)
-                        if (!this.records.ProviderNameExists(providerName))
+                        for (int row = 1; row <= firstRow; row++)
                         {
-                            continue;
+                            for (int col = 1; col <= numberOfColumns; col++)
+                            {
+                                var value = Convert.ToString(worksheet.Cells[row, col].Value);
+                                firstRowList.Add(value);
+                            }
                         }
 
-                        bulkRecords.Add(new UploadRecordModel
+                        var result = string.Join("*", firstRowList);
+
+                        if (result != firstRowTemplate)
                         {
-                            Date = Convert.ToDateTime(worksheet.Cells[row, 1].Value),
-                            CallerNumber = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                            CallingNumber = worksheet.Cells[row, 3].Value.ToString().Trim(),
-                            DialCode = worksheet.Cells[row, 4].Value.ToString().Trim(),
-                            BuyRate = Convert.ToDecimal(worksheet.Cells[row, 5].Value),
-                            Duration = Convert.ToInt32(worksheet.Cells[row, 6].Value),
-                            ProviderId = resultProviderId,
-                        });
+                            return this.BadRequest(error: "Wrong CDRs template was used. Re-check and try again!");
+                        }
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
+
+                            // moved to service
+                            var resultProviderId = this.records.GetProviderName(providerName);
+
+                            // var resultProviderId = this.GetProviderName(providerName);
+
+                            // if (this.data.Providers.FirstOrDefault(p => p.Name.ToLower() == providerName) == null)
+                            if (!this.records.ProviderNameExists(providerName))
+                            {
+                                continue;
+                            }
+
+                            bulkRecords.Add(new UploadRecordModel
+                            {
+                                Date = Convert.ToDateTime(worksheet.Cells[row, 1].Value),
+                                CallerNumber = worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                CallingNumber = worksheet.Cells[row, 3].Value.ToString().Trim(),
+                                DialCode = worksheet.Cells[row, 4].Value.ToString().Trim(),
+                                BuyRate = Convert.ToDecimal(worksheet.Cells[row, 5].Value),
+                                Duration = Convert.ToInt32(worksheet.Cells[row, 6].Value),
+                                ProviderId = resultProviderId,
+                            });
+                        }
                     }
+                }
+                catch (Exception)
+                {
+                    this.TempData[GlobalMessageKey] = "Wrong CDRs file format was used! Try again but with the correct file extension.";
+                    return this.RedirectToAction(nameof(this.UploadRecord));
                 }
             }
 

@@ -3,21 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using OfficeOpenXml;
-    using UserEx.Data;
-    using UserEx.Data.Common;
-    using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Rates;
-    using UserEx.Web.Controllers;
-    using UserEx.Web.ViewModels.Numbers;
     using UserEx.Web.ViewModels.Rates;
 
     using static UserEx.Common.GlobalConstants;
@@ -91,22 +84,52 @@
             using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
-                using (var package = new ExcelPackage(stream))
-                {
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    var rowCount = worksheet.Dimension.Rows;
 
-                    for (int row = 2; row <= rowCount; row++)
+                try
+                {
+                    using (var package = new ExcelPackage(stream))
                     {
-                        bulkRates.Add(new UploadRateModel
+                        var firstRowTemplate = "Destination Name*Dial Code*Cost";
+                        var numberOfColumns = 3;
+                        var firstRow = 1;
+                        var firstRowList = new List<string>();
+
+                        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
+
+                        for (int row = 1; row <= firstRow; row++)
                         {
-                            DestinationName = worksheet.Cells[row, 1].Value.ToString().Trim(),
-                            DialCode = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                            Cost = Convert.ToDecimal(worksheet.Cells[row, 3].Value),
-                            ProviderId = providerId,
-                        });
+                            for (int col = 1; col <= numberOfColumns; col++)
+                            {
+                                var value = Convert.ToString(worksheet.Cells[row, col].Value);
+                                firstRowList.Add(value);
+                            }
+                        }
+
+                        var result = string.Join("*", firstRowList);
+
+                        if (result != firstRowTemplate)
+                        {
+                            return this.BadRequest(error: "Wrong Rates template was used. Re-check and try again!");
+                        }
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            bulkRates.Add(new UploadRateModel
+                            {
+                                DestinationName = worksheet.Cells[row, 1].Value.ToString().Trim(),
+                                DialCode = worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                Cost = Convert.ToDecimal(worksheet.Cells[row, 3].Value),
+                                ProviderId = providerId,
+                            });
+                        }
                     }
+                }
+                catch (Exception)
+                {
+                    this.TempData[GlobalMessageKey] = "Wrong Rates file format was used! Try again but with the correct file extension.";
+                    return this.RedirectToAction(nameof(this.UploadRate));
                 }
             }
 

@@ -1,8 +1,7 @@
-﻿using UserEx.Web.Controllers;
-
-namespace UserEx.Web.Tests.Controllers
+﻿namespace UserEx.Web.Tests.Controllers
 {
     using MyTested.AspNetCore.Mvc;
+    using UserEx.Web.Controllers;
     using Xunit;
 
     public class PartnerControllerTest
