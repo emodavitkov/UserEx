@@ -36,6 +36,7 @@
 
             var didwwApiKey = builder.Configuration["Didww:ApiKey"];
             var didlogicApiKey = builder.Configuration["Didlogic:ApiKey"];
+            var squaretalkApiKey = builder.Configuration["SquareTalk:ApiKey"];
 
             var app = builder.Build();
             Configure(app);

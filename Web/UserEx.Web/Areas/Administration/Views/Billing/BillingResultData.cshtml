@@ -6,7 +6,7 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-	this.ViewBag.Title = "Your Billing and Balance data:";
+	this.ViewBag.Title = "Your Billing data:";
 	var userIsAdmin = User.IsAdmin();
 }
 
@@ -68,75 +68,92 @@
 <div class="mb-3"></div>
 
 
-<div class="col-md-2 offset-0 text-center">
-	<h3>Balance data:</h3>
+<div class="col-md-4 offset-4 text-center">
+	<h2>Your Balance data:</h2>
 </div>
 
 <div class="mb-3"></div>
 
 @if (userIsAdmin)
 {
-	<div class="row">
+	@*
+		<div class="row">
 		<div class="col-6 text-center">
 			<button class="btn btn-primary" id="statistics-button">Show Balance</button>
 		</div>
 	</div>
-
+	*@
 
 	<div class="jumbotron d-none" id="statistics">
 		<div class="row">
 			<h3 class="col-md-4 text-center" id="didlogic-balance"></h3>
-			@*
-				<h2 class="col-md-4 text-center" id="total-users"></h2>
-			<h2 class="col-md-4 text-center" id="total-numForApp"></h2>
-			*@
+			<h3 class="col-md-4 text-center" id="didww-balance"></h3>
+			<h3 class="col-md-4 text-center" id="squaretalk-balance"></h3>
 		</div>
 	</div>
 
 
-@section Scripts{
-	<script>
-		$('#statistics-button').on('click', ev => {
-			$.get('/api/balancesapi',
-				(data) => {
-					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
-					@*
-						$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
-					$('#total-users').text(data.totalUsers + " Users");
-					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
-					*@
-
-					$('#statistics').removeClass('d-none');
-					$('#statistics-button').hide();
-				});
-		});
-	</script>
-}
-}
-
-@*
-	
 @section Scripts{
 	<script>
 		window.addEventListener('load', ev => {
 			$.get('/api/balancesapi',
 				(data) => {
 					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
+					$('#statistics').removeClass('d-none');
+					@*
+					$('#statistics-button').hide();
+					*@
+				});
+		});
+
+		window.addEventListener('load', ev => {
+			$.get('/api/balancesdidwwapi',
+				(data) => {
+					$('#didww-balance').text(data.balanceAmount + "$ DIDww balance");
+					$('#statistics').removeClass('d-none');
+					
+					@*
+					$('#statistics-button').hide();
+					*@
+					});
+			});
+
+		window.addEventListener('load', ev => {
+			$.get('/api/balancessquaretalkapi',
+				(data) => {
+					$('#squaretalk-balance').text(data.balanceAmount + " SquareTalk balance");
+					$('#statistics').removeClass('d-none');
+
+					@*
+					$('#statistics-button').hide();
+					*@
+				});
+		});
+	</script>
+
+}
+}
+
+@*
+@section Scripts{
+	<script>
+		window.addEventListener('load', ev => {
+			$.get('/api/balancesdidwwapi',
+				(data) => {
+					$('#didww-balance').text(data.balanceAmount + "$ DIDww balance");
 					@*
 						$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
 					$('#total-users').text(data.totalUsers + " Users");
 					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
-					//comment
+					// comment
 
-$('#statistics').removeClass('d-none');
-$('#statistics-button').hide();
-});
-});
+                    $('#statistics').removeClass('d-none');
+                    $('#statistics-button').hide();
+				});
+            });
 </script>
 }
-}
-*@
-
+}*@
 @*
 	@section Scripts{
 	<script>
