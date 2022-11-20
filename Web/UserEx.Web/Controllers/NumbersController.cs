@@ -255,14 +255,14 @@
         {
             var userId = this.User.GetId();
 
-            if (!this.partners.IsPartner(userId) && !User.IsAdmin())
+            if (!this.partners.IsPartner(userId) && !this.User.IsAdmin())
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
 
             var number = this.numbers.Details(id);
 
-            if (number.UserId != userId && !User.IsAdmin())
+            if (number.UserId != userId && !this.User.IsAdmin())
             {
                 return this.Unauthorized();
             }
@@ -287,9 +287,14 @@
         [Authorize]
         public IActionResult Edit(int id, NumberManualModel number)
         {
-            var partnerId = this.partners.GetIdByUser(this.User.GetId());
+            var partnerId = 0;
 
-            if (partnerId == 0 && !User.IsAdmin())
+            if (!this.User.IsAdmin())
+            {
+                partnerId = this.partners.GetIdByUser(this.User.GetId());
+            }
+
+            if (partnerId == 0 && !this.User.IsAdmin())
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
@@ -305,7 +310,7 @@
                 return this.View(number);
             }
 
-            if (!this.numbers.NumberIsByPartner(id, partnerId) && !User.IsAdmin())
+            if (!this.numbers.NumberIsByPartner(id, partnerId) && !this.User.IsAdmin())
             {
                 return this.BadRequest();
             }
@@ -340,7 +345,7 @@
         {
             var userId = this.User.GetId();
 
-            if (!this.partners.IsPartner(userId) && !User.IsAdmin())
+            if (!this.partners.IsPartner(userId) && !this.User.IsAdmin())
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
@@ -372,7 +377,13 @@
         [Authorize]
         public IActionResult Delete(int id, NumberManualModel number)
         {
-            var partnerId = this.partners.GetIdByUser(this.User.GetId());
+            // var partnerId = this.partners.GetIdByUser(this.User.GetId());
+            var partnerId = 0;
+
+            if (!this.User.IsAdmin())
+            {
+                partnerId = this.partners.GetIdByUser(this.User.GetId());
+            }
 
             if (partnerId == 0 && !User.IsAdmin())
             {

@@ -2,7 +2,6 @@
 {
     using System.Reflection;
 
-    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -84,6 +83,7 @@
             services.AddTransient<IRateService, RateService>();
             services.AddTransient<IRecordService, RecordService>();
             services.AddTransient<INumberApiService, NumberApiService>();
+            services.AddTransient<INumberDidlogicApiService, NumberDidlogicApiService>();
             services.AddTransient<IBillingService, BillingService>();
         }
 

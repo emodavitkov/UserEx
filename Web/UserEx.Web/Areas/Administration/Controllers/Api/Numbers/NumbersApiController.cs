@@ -1,6 +1,4 @@
-﻿using UserEx.Services.Data.Numbers;
-
-namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
+﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
     // UserEx.Web.Areas.Administration.Controllers.Api.Numbers
     // UserEx.Web.Controllers.Api.Number
@@ -13,6 +11,7 @@ namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using UserEx.Data;
+    using UserEx.Services.Data.Numbers;
     using UserEx.Web.ViewModels.Api;
 
     // public class NumbersApiController : ControllerBase
