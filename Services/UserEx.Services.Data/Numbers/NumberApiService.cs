@@ -26,7 +26,6 @@
 
         public bool NumberExists(string currentNumber)
         {
-            // (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
             var numberExist = this.data.Numbers.FirstOrDefault(n => n.DidNumber == currentNumber);
             return numberExist != null;
         }

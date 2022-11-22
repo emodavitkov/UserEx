@@ -4,8 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
+    using PhoneNumbers;
     using UserEx.Data;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers.Models;
@@ -15,10 +14,12 @@
     public class NumberService : INumberService
     {
         private readonly ApplicationDbContext data;
+        private static PhoneNumberUtil phoneUtil;
 
         public NumberService(ApplicationDbContext data)
         {
             this.data = data;
+            phoneUtil = PhoneNumberUtil.GetInstance();
         }
 
         public NumberQueryServiceModel All(
@@ -191,7 +192,20 @@
         {
             foreach (var number in bulkNumbers)
             {
-                if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.DidNumber) != null)
+                bool phoneNumberIsValid;
+
+                try
+                {
+                    var phoneNumber = phoneUtil.Parse($"+{number.DidNumber}", null);
+
+                    phoneNumberIsValid = phoneUtil.IsValidNumber(phoneNumber);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+
+                if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.DidNumber) != null || !phoneNumberIsValid)
                 {
                     continue;
                 }
@@ -229,8 +243,6 @@
             DateTime startDate,
             DateTime? endDate,
             bool isPublic)
-
-            // int partnerId
         {
             var numberData = this.data.Numbers.Find(id);
 

@@ -157,7 +157,7 @@
             {
                 return this.RedirectToAction(nameof(PartnersController.SetUp), "Partners");
             }
-                
+
                 return this.View(new NumberManualModel
             {
                 // Providers = this.GetNumberProviders(),
@@ -401,7 +401,7 @@
                 return this.View(number);
             }
 
-            if (!this.numbers.NumberIsByPartner(id, partnerId) && !User.IsAdmin())
+            if (!this.numbers.NumberIsByPartner(id, partnerId) && !this.User.IsAdmin())
             {
                 return this.BadRequest();
             }

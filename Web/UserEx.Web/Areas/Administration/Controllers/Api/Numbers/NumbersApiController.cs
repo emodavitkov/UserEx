@@ -1,7 +1,5 @@
 ﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
-    // UserEx.Web.Areas.Administration.Controllers.Api.Numbers
-    // UserEx.Web.Controllers.Api.Number
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;

@@ -17,7 +17,8 @@
         // public const int NumberMaxLength = 15;
         // public const int NumberDescriptionMinLength = 2;
         [Required]
-        [StringLength(MaxLength, MinimumLength = MinLength)]
+        // [StringLength(MaxLength, MinimumLength = MinLength)]
+        [ValidateNumber(ErrorMessage = "The number is not a valid E.164 format! Double-check and try again!")]
         public string DidNumber { get; set; }
 
         // [DisplayFormat(ConvertEmptyStringToNull = true)]
