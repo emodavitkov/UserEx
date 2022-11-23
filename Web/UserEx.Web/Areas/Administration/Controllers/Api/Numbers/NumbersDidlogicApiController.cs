@@ -1,4 +1,6 @@
-﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
+﻿using UserEx.Data.Models;
+
+namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +13,8 @@
     using Microsoft.Extensions.Configuration;
     using UserEx.Services.Data.Numbers;
     using UserEx.Web.ViewModels.Api;
+
+    using static UserEx.Common.GlobalConstants;
 
     [ApiController]
     [Route("[controller]/api/number")]
@@ -32,56 +36,71 @@
         {
             var didlogicApiKey = this.config["Didlogic:ApiKey"];
             var didlogicId = 3;
-
-            using (var httpClient = new HttpClient())
+            var result = 0;
+            try
             {
-                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://didlogic.com/api/v1/purchases.json?apiid={@didlogicApiKey}")
+                using (var httpClient = new HttpClient())
                 {
-                    Headers =
+                    var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://didlogic.com/api/v1/purchases.json?apiid={@didlogicApiKey}")
                     {
-                        { "Host", "didlogic.com" },
-                    },
-                };
-
-                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
-
-                    var numbersApiResponse =
-                        await JsonSerializer.DeserializeAsync<NumbersDidlogicApiResponseModel>(contentStream);
-
-                    var numbersApiCollected = new List<Data.Models.Number>();
-
-                    foreach (var number in numbersApiResponse.Purchases)
-                    {
-                        // move to service
-                        var currentNumber = number.Number;
-                        if (this.number.NumberExists(currentNumber))
+                        Headers =
                         {
-                            continue;
+                            { "Host", "didlogic.com" },
+                        },
+                    };
+
+                    var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+
+                    if (httpResponseMessage.IsSuccessStatusCode)
+                    {
+                        using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+                        var numbersApiResponse =
+                            await JsonSerializer.DeserializeAsync<NumbersDidlogicApiResponseModel>(contentStream);
+
+                        var numbersApiCollected = new List<Number>();
+
+                        foreach (var number in numbersApiResponse.Purchases)
+                        {
+                            // move to service
+                            var currentNumber = number.Number;
+                            if (this.number.NumberExists(currentNumber))
+                            {
+                                continue;
+                            }
+
+                            var numberData = new Number
+                            {
+                                ProviderId = didlogicId,
+                                DidNumber = number.Number,
+                                Description = number.Description,
+                                MonthlyPrice = number.MonthlyPrice,
+                                SetupPrice = number.SetupPrice,
+                                OrderReference = null,
+                                Source = numbersApiResponse.Source,
+                                IsActive = true,
+                                StartDate = DateTime.Now,
+                            };
+                            numbersApiCollected.Add(numberData);
                         }
 
-                        var numberData = new Data.Models.Number
-                        {
-                            ProviderId = didlogicId,
-                            DidNumber = number.Number,
-                            Description = number.Description,
-                            MonthlyPrice = number.MonthlyPrice,
-                            SetupPrice = number.SetupPrice,
-                            OrderReference = null,
-                            Source = numbersApiResponse.Source,
-                            IsActive = true,
-                            StartDate = DateTime.Now,
-                        };
-                        numbersApiCollected.Add(numberData);
+                        result = numbersApiCollected.Count;
+                        this.number.Add(numbersApiCollected);
                     }
 
-                    this.number.Add(numbersApiCollected);
+                    if (result == 0)
+                    {
+                        return this.Ok("No new numbers added - your DidLogic DID numbers are up-to-date! Go back and enjoy using UserEx!");
+                    }
+                    else
+                    {
+                        return this.Ok($"{@result} DidLogic numbers added and awaiting for an approval! Go back and enjoy using UserEx!");
+                    }
                 }
-
-                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
             }
         }
     }

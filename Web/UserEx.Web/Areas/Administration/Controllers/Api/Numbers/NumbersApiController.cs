@@ -1,5 +1,6 @@
 ﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
@@ -9,8 +10,11 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using UserEx.Data;
+    using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
     using UserEx.Web.ViewModels.Api;
+
+    using static UserEx.Common.GlobalConstants;
 
     // public class NumbersApiController : ControllerBase
     [ApiController]
@@ -33,82 +37,102 @@
         {
             var didwwApiKey = this.config["Didww:ApiKey"];
             var didwwId = 9;
-            using (var httpClient = new HttpClient())
+            var result = 0;
+            try
             {
-                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids?include=order")
+                using (var httpClient = new HttpClient())
                 {
-                    Headers =
+                    var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://api.didww.com/v3/dids?include=order")
                     {
-                        { "Host", "api.didww.com" },
-
-                        // { "Content-Type", "application/vnd.api+json" },
-                        { "Accept", "application/vnd.api+json" },
-                        { "Api-Key", didwwApiKey },
-                    },
-                };
-
-                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
-
-                    var numbersApiResponse =
-                        await JsonSerializer.DeserializeAsync<NumbersApiResponseModel>(contentStream);
-
-                    var numbersApiCollected = new List<Data.Models.Number>();
-
-                    foreach (var number in numbersApiResponse.Data)
-                    {
-                        // move to service
-                        var currentNumber = number.Attributes.Number;
-                        if (this.number.NumberExists(currentNumber))
+                        Headers =
                         {
-                            continue;
+                            { "Host", "api.didww.com" },
+
+                            // { "Content-Type", "application/vnd.api+json" },
+                            { "Accept", "application/vnd.api+json" },
+                            { "Api-Key", didwwApiKey },
+                        },
+                    };
+
+                    var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+
+                    if (httpResponseMessage.IsSuccessStatusCode)
+                    {
+                        using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+                        var numbersApiResponse =
+                            await JsonSerializer.DeserializeAsync<NumbersApiResponseModel>(contentStream);
+
+                        var numbersApiCollected = new List<Number>();
+
+                        foreach (var number in numbersApiResponse.Data)
+                        {
+                            // move to service
+                            var currentNumber = number.Attributes.Number;
+                            if (this.number.NumberExists(currentNumber))
+                            {
+                                continue;
+                            }
+
+                            // if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
+                            // {
+                            //    continue;
+                            // }
+                            var orderId = number.Relationships.Order.OrderData.OrderId;
+
+                            var numberData = new Number
+                            {
+                                ProviderId = didwwId,
+                                DidNumber = number.Attributes.Number,
+                                SetupPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.SetupPrice,
+                                MonthlyPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
+                                OrderReference = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderReference,
+                                Description = number.Attributes.Description,
+                                Source = numbersApiResponse.Source,
+                                IsActive = true,
+                                StartDate = number.Attributes.CreatedAt.Date,
+                            };
+
+
+                            // foreach (var orderDetails in numbersApiResponse.Included)
+                            // {
+                            //    if (orderDetails.IncludedOrderId == orderId)
+                            //    {
+                            //        numberData.MonthlyPrice = orderDetails.Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
+                            //        numberData.SetupPrice = orderDetails.Attributes.OrderItems.OrderItemsAttributes.OrderSetupPrice,
+                            //            OrderReference = orderDetails.Attributes.OrderReference,
+
+                            // };
+                            //    }
+                            // }
+                            numbersApiCollected.Add(numberData);
                         }
 
-                        // if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
-                        // {
-                        //    continue;
-                        // }
-                        var orderId = number.Relationships.Order.OrderData.OrderId;
+                        result = numbersApiCollected.Count;
 
-                        var numberData = new Data.Models.Number
-                        {
-                            ProviderId = didwwId,
-                            DidNumber = number.Attributes.Number,
-                            SetupPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.SetupPrice,
-                            MonthlyPrice = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
-                            OrderReference = numbersApiResponse.Included.FirstOrDefault(o => o.IncludedOrderId == orderId).Attributes.OrderReference,
-                            Description = number.Attributes.Description,
-                            Source = numbersApiResponse.Source,
-                            IsActive = true,
-                            StartDate = number.Attributes.CreatedAt.Date,
-                        };
+                        // move to service
+                        this.number.Add(numbersApiCollected);
 
-
-                        // foreach (var orderDetails in numbersApiResponse.Included)
-                        // {
-                        //    if (orderDetails.IncludedOrderId == orderId)
-                        //    {
-                        //        numberData.MonthlyPrice = orderDetails.Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
-                        //        numberData.SetupPrice = orderDetails.Attributes.OrderItems.OrderItemsAttributes.OrderSetupPrice,
-                        //            OrderReference = orderDetails.Attributes.OrderReference,
-
-                        // };
-                        //    }
-                        // }
-                        numbersApiCollected.Add(numberData);
+                        // this.data.Numbers.AddRange(numbersApiCollected);
+                        // this.data.SaveChanges();
                     }
 
-                    // move to service
-                    this.number.Add(numbersApiCollected);
+                    if (result == 0)
+                    {
+                        return this.Ok("No new numbers added - your DIDww DID numbers are up-to-date! Go back and enjoy using UserEx!");
+                    }
+                    else
+                    {
+                        return this.Ok($"{@result} DIDww numbers added and awaiting for an approval! Go back and enjoy using UserEx!");
+                    }
 
-                    // this.data.Numbers.AddRange(numbersApiCollected);
-                    // this.data.SaveChanges();
+                    // this.TempData[GlobalMessageKey] = "DIDww Numbers added successfully(new numbers only) and awaiting for approval!";
+                    // return this.Ok($"{@result} DIDww numbers added and awaiting for an approval (if any, new numbers only)! Go back and enjoy using UserEx!");
                 }
-
-                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
             }
         }
     }
