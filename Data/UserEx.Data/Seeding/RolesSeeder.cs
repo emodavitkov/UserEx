@@ -2,11 +2,9 @@
 {
     using System;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
     using UserEx.Common;
     using UserEx.Data.Models;
@@ -25,6 +23,7 @@
             Task
                 .Run(async () =>
                 {
+                    // ! initial setup
                     if (await roleManager.RoleExistsAsync(AdministratorRoleName))
                     {
                         return;

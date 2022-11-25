@@ -4,11 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+
     using UserEx.Data;
     using UserEx.Web.ViewModels.Api;
     using UserEx.Web.ViewModels.Numbers;
@@ -64,11 +63,22 @@
 
         public decimal CostByProviderId(int providerId)
         {
-            var result = this.data
+            var query = this.data
                 .Records
-                .Where(p => p.ProviderId == providerId)
-                .Sum(x => x.BuyRate * x.Duration / 60);
+                .AsQueryable();
 
+            if (providerId != 0)
+            {
+                query = query.Where(x => x.ProviderId == providerId);
+            }
+
+            var result = query
+            .Sum(x => x.BuyRate * x.Duration / 60);
+
+            // var result = this.data
+            //    .Records
+            //    .Where(p => p.ProviderId == providerId)
+            //    /*.Sum(x => x.BuyRate * x.Duration / 60);*/
             return result;
         }
 

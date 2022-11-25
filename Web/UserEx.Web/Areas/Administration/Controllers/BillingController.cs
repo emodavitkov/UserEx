@@ -50,7 +50,7 @@
         [Authorize]
         public IActionResult Billing(BillingResponseModel billingModel)
         {
-            if (!this.billing.ProviderExists(billingModel.ProviderId))
+            if (!this.billing.ProviderExists(billingModel.ProviderId) && billingModel.ProviderId != 0)
             {
                 this.ModelState.AddModelError(nameof(billingModel.ProviderId), "Provider does not exist.");
             }
