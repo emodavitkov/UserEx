@@ -1,14 +1,9 @@
 ﻿namespace UserEx.Web.ViewModels.Records
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    using UserEx.Data.Models;
     using static UserEx.Data.Common.DataConstants.Records;
 
     public class UploadRecordModel

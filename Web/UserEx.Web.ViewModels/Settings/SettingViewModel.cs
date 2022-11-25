@@ -1,9 +1,8 @@
 ﻿namespace UserEx.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using UserEx.Data.Models;
     using UserEx.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

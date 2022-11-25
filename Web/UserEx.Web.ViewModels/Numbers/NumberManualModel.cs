@@ -5,19 +5,13 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    using Microsoft.AspNetCore.Http;
     using UserEx.Data.Models;
 
     using static UserEx.Data.Common.DataConstants.Number;
 
-    // public class AddNumberManualModel
     public class NumberManualModel
     {
-        // public const int NumberMinLength = 5;
-        // public const int NumberMaxLength = 15;
-        // public const int NumberDescriptionMinLength = 2;
         [Required]
-        // [StringLength(MaxLength, MinimumLength = MinLength)]
         [ValidateNumber(ErrorMessage = "The number is not a valid E.164 format! Double-check and try again!")]
         public string DidNumber { get; set; }
 
@@ -55,10 +49,6 @@
         [Display(Name="Provider")]
         public int ProviderId { get; set; }
 
-       // [Required(ErrorMessage = "Please select file")]
-       // public IFormFile DidBulk { get; set; }
-
-        // public IEnumerable<NumberProviderServiceModel> Providers { get; set; }
         public IEnumerable<NumberProviderViewModel> Providers { get; set; }
     }
 }

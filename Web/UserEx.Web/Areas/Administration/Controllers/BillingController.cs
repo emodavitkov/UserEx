@@ -1,18 +1,12 @@
 ﻿namespace UserEx.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using UserEx.Data;
     using UserEx.Data.Common;
     using UserEx.Services.Data.Billing;
     using UserEx.Services.Data.Numbers;
-    using UserEx.Web.Controllers;
-    using UserEx.Web.ViewModels.Api;
     using UserEx.Web.ViewModels.Billing;
 
     public class BillingController : AdministrationController
