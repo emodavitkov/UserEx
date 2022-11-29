@@ -18,16 +18,20 @@ namespace UserEx.Web.Areas.Identity.Pages.Account
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
     using UserEx.Data.Models;
+    using UserEx.Services.Data.ReCaptcha;
 
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ReCaptchaService _reCaptchaService;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, ReCaptchaService reCaptchaService)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _reCaptchaService = reCaptchaService;
+
         }
 
         /// <summary>
@@ -78,6 +82,12 @@ namespace UserEx.Web.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
+            // reCaptcha
+            [Required]
+            public string Token { get; set; }
+
+
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -107,6 +117,15 @@ namespace UserEx.Web.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
+            //google reCaptcha confirmation
+            var reCaptchaResult = _reCaptchaService.TokenVerify(Input.Token);
+            if (!reCaptchaResult.Result.Success && reCaptchaResult.Result.Score <= 0.5)
+            {
+                this.ModelState.AddModelError(string.Empty, "You are not a human.");
+                return this.Page();
+            }
+
+            // reCapture is up to here
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)

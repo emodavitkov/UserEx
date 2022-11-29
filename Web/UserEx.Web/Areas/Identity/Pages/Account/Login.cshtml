@@ -1,8 +1,13 @@
 ﻿@page
 @model LoginModel
 
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Log in";
+	var reCaptchaSiteKey = Configuration["ReCaptcha:SiteKey"];
 }
 
 <div class="row">
@@ -21,6 +26,10 @@
 				    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true"/>
 				    <label asp-for="Input.Password" class="form-label"></label>
 				    <span asp-validation-for="Input.Password" class="text-danger"></span>
+			    </div>
+			    @*reCaptcha input*@
+			    <div>
+				    <input type="hidden"  id="input-token" asp-for="Input.Token" />
 			    </div>
 			    <div>
 				    <div class="checkbox">
@@ -78,6 +87,32 @@
         </section>
     </div> *@
 </div>
+
+	<script src="https://www.google.com/recaptcha/api.js?render=6LcT4zYjAAAAAIXEWPEAfSlrKl_mUmC4R97R48Gi"></script>
+<script>
+	grecaptcha.ready(function () {
+		grecaptcha.execute('6LcT4zYjAAAAAIXEWPEAfSlrKl_mUmC4R97R48Gi', { action: 'submit' }).then(function (token) {
+			// Add your logic to submit to your backend server here.
+			console.log(token);
+			$("#input-token").val(token);
+			
+		});
+	});
+
+	@*
+	<script src="https://www.google.com/recaptcha/api.js?render=@reCaptchaSiteKey"></script>
+<script>
+	grecaptcha.ready(function () {
+		grecaptcha.execute(@reCaptchaSiteKey, { action: 'submit' })}.then(function (token) {
+			// Add your logic to submit to your backend server here.
+			console.log(token);
+			$("#input-token").val(token);
+			
+		});
+	});
+*@
+
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

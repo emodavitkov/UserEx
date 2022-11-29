@@ -20,6 +20,7 @@
     using UserEx.Services.Data.Numbers;
     using UserEx.Services.Data.Partners;
     using UserEx.Services.Data.Rates;
+    using UserEx.Services.Data.ReCaptcha;
     using UserEx.Services.Data.Records;
     using UserEx.Services.Data.Statistics;
     using UserEx.Services.Mapping;
@@ -36,8 +37,24 @@
             var didwwApiKey = builder.Configuration["Didww:ApiKey"];
             var didlogicApiKey = builder.Configuration["Didlogic:ApiKey"];
             var squaretalkApiKey = builder.Configuration["SquareTalk:ApiKey"];
+            var reCaptchaKey = builder.Configuration["ReCaptcha:ApiKey"];
+            var reCaptchaSiteKey = builder.Configuration["ReCaptcha:SiteKey"];
+
+            // add services for the reCaptcha to the container
+            // builder.Services.AddCors();
+            // builder.Services.AddControllers();
+            // builder.Services.AddEndpointsApiExplorer();
+            // builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            // reCapture setup
+            // app.UseSwagger(options =>
+            // {
+            //    options.SerializeAsV2 = true;
+            // });
+            // app.UseFileServer();
+
             Configure(app);
             app.Run();
         }
@@ -85,6 +102,7 @@
             services.AddTransient<INumberApiService, NumberApiService>();
             services.AddTransient<INumberDidlogicApiService, NumberDidlogicApiService>();
             services.AddTransient<IBillingService, BillingService>();
+            services.AddTransient<ReCaptchaService>();
         }
 
         private static void Configure(WebApplication app)
@@ -103,12 +121,21 @@
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+                // app.UseSwagger();
+                // app.UseSwaggerUI();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            //// global cors policy
+            // app.UseCors(x => x
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader()
+            //    .SetIsOriginAllowed(origin => true)
+            //    .AllowCredentials());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
