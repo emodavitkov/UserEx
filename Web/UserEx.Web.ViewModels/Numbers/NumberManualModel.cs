@@ -15,7 +15,6 @@
         [ValidateNumber(ErrorMessage = "The number is not a valid E.164 format! Double-check and try again!")]
         public string DidNumber { get; set; }
 
-        // [DisplayFormat(ConvertEmptyStringToNull = true)]
         public string OrderReference { get; set; }
 
         [Required]

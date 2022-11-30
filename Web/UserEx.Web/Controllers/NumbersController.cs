@@ -454,6 +454,12 @@
         [Authorize]
         public async Task<IActionResult> Upload(IFormFile file)
         {
+            if (file is null)
+            {
+                this.ModelState.AddModelError(nameof(file), "Please select file.");
+                return this.View();
+            }
+
             var partnerId = this.partners.GetIdByUser(this.User.GetId());
 
             var bulkDids = new List<NumberManualModel>();
