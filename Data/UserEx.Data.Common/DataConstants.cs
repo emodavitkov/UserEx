@@ -1,11 +1,5 @@
 ﻿namespace UserEx.Data.Common
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     public class DataConstants
     {
         public class User
@@ -18,8 +12,8 @@
 
         public class Number
         {
-            public const int MinLength = 5;
-            public const int MaxLength = 15;
+            // public const int MinLength = 5;
+            // public const int MaxLength = 15;
             public const int DescriptionMinLength = 2;
         }
 

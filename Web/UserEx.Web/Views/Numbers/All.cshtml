@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<NumberListingViewModel>*@
-@model AllNumbersQueryModel
+﻿@model AllNumbersQueryModel
 @using static UserEx.Common.GlobalConstants
 
 @{
@@ -42,47 +41,6 @@
 	</div>
 </form>
 
-@*
-	<div class="row">
-	@foreach (var number in Model.Numbers)
-	{
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body text-center">
-					<h5 class="card-title text-center">@number.DidNumber -> @number.Description $@number.MonthlyPrice (@number.Provider)</h5>
-				        <a asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id" asp-route-information="@(number.Provider + "-" + @number.DidNumber)" class="btn btn-primary">View More</a>
-				</div>
-			</div>
-		</div>
-	}
-</div>
-*@
-
-@*Admin to edit cars -> from _NumberPartial but needs to be touched*@
-
-@*
-	<div class="row">
-	@foreach (var number in Model.Numbers)
-	{
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body text-center">
-					<h5 class="card-title text-center">@number.DidNumber -> @number.Description $@number.MonthlyPrice (@number.Provider)</h5>
-					<a asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id" asp-route-information="@(number.Provider + "-" + @number.DidNumber)" class="btn btn-primary">View More</a>
-					@if (ViewBag.AllowNumberEdit == true || User.IsInRole(AdministratorRoleName))
-					{
-						<a asp-controller="Numbers" asp-action="Edit" asp-route-id="@number.Id" class="btn btn-warning">Edit</a>
-						<a asp-controller="Numbers" asp-action="Delete" asp-route-id="@number.Id" class="btn btn-danger">Delete</a>
-					}
-				</div>
-			</div>
-		</div>
-	}
-</div>
-*@
-
-@*<partial name="_NumbersPartial" model="@Model.Numbers" />*@
-
 <div class="row">
 	<table class="table table-striped table-bordered border-secondary">
 		<thead class="thead-dark text-center">
@@ -112,8 +70,6 @@
 						<a asp-area="" asp-controller="Numbers" asp-action="Delete" asp-route-id="@number.Id" class="btn btn-danger float-right ml-3">Delete</a>
 						<a asp-area="" asp-controller="Numbers" asp-action="Edit" asp-route-id="@number.Id" class="btn btn-warning float-right ml-3">Edit</a>
 					}
-					@*<a asp-area="Administration" asp-controller="Numbers" asp-action="ChangeVisibility" asp-route-id="@number.Id" class="btn btn-info float-right ml-3">@(number.IsPublic ? "Disable_" : "Approve")</a>*@
-					@*<a asp-area="" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id" asp-route-information="@car.GetInformation()" class="btn btn-primary float-right ml-3">View</a>*@
 					<a asp-area="" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id" asp-route-information="@(number.Provider + "-" + @number.DidNumber)" class="btn btn-primary float-right ml-3">View</a>
 				</td>
 			</tr>

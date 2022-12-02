@@ -1,7 +1,11 @@
 ﻿namespace UserEx.Web.Areas.Administration.Controllers
 {
+    using System.Linq;
+
     using Microsoft.AspNetCore.Mvc;
     using UserEx.Services.Data.Numbers;
+    using UserEx.Services.Data.Numbers.Models;
+    using UserEx.Web.ViewModels.Numbers;
 
     public class NumbersController : AdministrationController
     {
@@ -12,15 +16,23 @@
             this.numbers = numbers;
         }
 
-        public IActionResult All()
+        public IActionResult All([FromQuery] int currentPage = 1)
         {
-            var numbers = this.numbers
-                .All(publicOnly: false)
-                .Numbers;
+            //var numbers = this.numbers
+            //    .All(publicOnly: false)
+            //    .Numbers;
 
-            return this.View(numbers);
+            var numbersQuery = this.numbers
+                .All(publicOnly: false, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
 
-            // return this.View(this.numbers.All(publicOnly: false).Numbers);
+            var result = new AllNumberServiceAdminModel
+            {
+                CurrentPage =currentPage,
+                TotalNumbers = numbersQuery.TotalNumbers,
+                Numbers = numbersQuery.Numbers,
+            };
+
+            return this.View(result);
         }
 
         public IActionResult ChangeVisibility(int id)

@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using UserEx.Common;
     using UserEx.Web.Controllers;
 
     using static UserEx.Common.GlobalConstants;
