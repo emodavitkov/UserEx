@@ -22,18 +22,22 @@
             phoneUtil = PhoneNumberUtil.GetInstance();
         }
 
+        // bool publicOnly = true)
         public NumberQueryServiceModel All(
             string provider = null,
             string searchTerm = null,
             NumberSorting sorting = NumberSorting.DateCreated,
             int currentPage = 1,
             int numbersPerPage = int.MaxValue,
-            bool publicOnly = true)
+            bool? publicOnly = null)
         {
             // isPublic addition
             // var numbersQuery = this.data.Numbers.AsQueryable();
-            var numbersQuery = this.data.Numbers
-                .Where(n => !publicOnly || n.IsPublic);
+            // add filter to the Admin All numbers view
+            // var numbersQuery = this.data.Numbers
+            //        .Where(n => !publicOnly || n.IsPublic);
+            var numbersQuery = this.data.Numbers.AsQueryable();
+            numbersQuery = publicOnly.HasValue ? numbersQuery.Where(n => n.IsPublic == publicOnly) : numbersQuery;
 
             if (!string.IsNullOrWhiteSpace(provider))
             {

@@ -16,18 +16,33 @@
             this.numbers = numbers;
         }
 
-        public IActionResult All([FromQuery] int currentPage = 1)
+        public IActionResult All([FromQuery] string filter, int currentPage = 1)
         {
-            //var numbers = this.numbers
+            bool? select = null;
+            if (filter == "all")
+            {
+                select = null;
+            }
+            else if (filter == "approve")
+            {
+                select = false;
+            }
+            else if (filter == "disable")
+            {
+                select = true;
+            }
+
+            // var numbers = this.numbers
             //    .All(publicOnly: false)
             //    .Numbers;
-
+            // var numbersQuery = this.numbers
+            //    .All(publicOnly: false, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
             var numbersQuery = this.numbers
-                .All(publicOnly: false, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
-
+                .All(publicOnly: select, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
             var result = new AllNumberServiceAdminModel
             {
-                CurrentPage =currentPage,
+                Filter = filter,
+                CurrentPage = currentPage,
                 TotalNumbers = numbersQuery.TotalNumbers,
                 Numbers = numbersQuery.Numbers,
             };

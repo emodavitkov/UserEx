@@ -11,6 +11,7 @@
     using UserEx.Web.ViewModels.Home;
     using UserEx.Web.ViewModels.Numbers;
 
+    // bool? publicOnly = true)
     public interface INumberService
     {
         NumberQueryServiceModel All(
@@ -19,7 +20,7 @@
             NumberSorting sorting = NumberSorting.DateCreated,
             int currentPage = 1,
             int numbersPerPage = int.MaxValue,
-            bool publicOnly = true);
+            bool? publicOnly = null);
 
         // IEnumerable<LatestNumbersServiceModel> Latest();
         IEnumerable<NumberIndexViewModel> Latest();

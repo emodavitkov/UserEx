@@ -10,6 +10,10 @@
 
         public int TotalNumbers { get; set; }
 
+        public string Filter { get; init; }
+
+        public bool IsPublic { get; init; }
+
         public IEnumerable<NumberServiceModel> Numbers { get; set; }
     }
 }
