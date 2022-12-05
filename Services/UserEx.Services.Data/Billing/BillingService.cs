@@ -84,10 +84,20 @@
 
         public decimal CostAllProviderByDate(DateTime startDate, DateTime endDate)
         {
-            var result = this.data
-                .Records
-                .Where(d => d.Date.Date >= startDate.Date && d.Date.Date <= endDate.Date)
-                .Sum(x => x.BuyRate * x.Duration / 60);
+            decimal result = 0;
+
+            try
+            {
+                result = this.data
+                    .Records
+                    .Where(d => d.Date.Date >= startDate.Date && d.Date.Date <= endDate.Date)
+                    .Sum(x => x.BuyRate * x.Duration / 60);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             return result;
         }
@@ -110,6 +120,87 @@
             return result;
         }
 
+        // public IList<double?> CostCallsByMonthChart()
+        public IList<CostSumByMonth> CostCallsByMonthChart()
+        {
+            var startDate = DateTime.UtcNow.AddYears(-1); // getting date before one year
+            var startYear = startDate.Year;
+            var startMonth = startDate.Month;
+            startDate = new DateTime(startYear, startMonth, 1); // getting first day of month
+
+            var resultQuery = this.data.Records.Where(r => r.Date >= startDate && r.Duration > 0).AsQueryable();
+
+            var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month }); // Make records in groups with same Year and Month
+
+            var result = groupedByYearAndMonthResult
+                .Select(g =>
+                    new CostSumByMonth
+                    {
+                        Date = g.First().Date, // getting one day from group only for sorting
+                        MonthDisplay = $"{g.First().Date:MMM} {g.Key.Year}",
+                        CostSum = g.Sum(groupRecords => groupRecords.BuyRate * groupRecords.Duration / 60),
+                    })
+                .OrderBy(g => g.Date)
+                .ToList();
+
+            return result;
+
+            // IList<double?> numbersList = new List<double?>();
+            // for (int i = 1; i <= 12; i++)
+            // {
+            //   var result = this.data
+            //        .Records
+            //        .Where(x => x.Duration > 0 && x.Date.Month == i)
+            //        .Sum(x => x.BuyRate * x.Duration / 60);
+            //   double convert = (double)result;
+            //   numbersList.Add(convert);
+            // }
+            // return numbersList;
+        }
+
+        public IList<CostNumberProvisionSumByMonth> CostProcuredNumbersByMonthChart()
+        {
+            // getting date before one year
+            var startDate = DateTime.UtcNow.AddYears(-1);
+            var startYear = startDate.Year;
+            var startMonth = startDate.Month;
+
+            // getting first day of month
+            startDate = new DateTime(startYear, startMonth, 1);
+
+            var resultQuery = this.data.Records.Where(r => r.Date >= startDate && r.NumberId != null).AsQueryable();
+
+            // Make records in groups with same Year and Month
+            var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month });
+
+            // var result = this.data
+            //    .Records
+            //    .Where(n => n.NumberId != null)
+            //    .Select(x => new
+            //    {
+            //        NumberId = x.NumberId,
+            //        MonthlyPrice = x.Number.MonthlyPrice,
+            //    })
+            //    .Distinct()
+            //    .Sum(x => x.MonthlyPrice);
+
+
+            var result = groupedByYearAndMonthResult
+                .Select(g =>
+                    new CostNumberProvisionSumByMonth
+                    {
+                        // getting one day from group only for sorting
+                        Date = g.First().Date,
+
+                        MonthDisplay = $"{g.First().Date:MMM} {g.Key.Year}",
+                        CostSum = g.Sum(groupRecords => groupRecords.Number.MonthlyPrice),
+                    })
+                .OrderBy(g => g.Date)
+                .ToList();
+
+            return result;
+        }
+
         public IEnumerable<NumberProviderViewModel> AllNumberProviders()
            => this.data
                .Providers
@@ -124,5 +215,23 @@
             => this.data
                 .Providers
                 .Any(p => p.Id == providerId);
+
+        public class CostSumByMonth
+        {
+            public DateTime Date { get; set; }
+
+            public string MonthDisplay { get; set; }
+
+            public decimal? CostSum { get; set; }
+        }
+
+        public class CostNumberProvisionSumByMonth
+        {
+            public DateTime Date { get; set; }
+
+            public string MonthDisplay { get; set; }
+
+            public decimal? CostSum { get; set; }
+        }
     }
 }

@@ -2,13 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Mvc;
     using UserEx.Web.ViewModels.Api;
     using UserEx.Web.ViewModels.Numbers;
+
+    using static UserEx.Services.Data.Billing.BillingService;
 
     public interface IBillingService
     {
@@ -21,6 +20,12 @@
 
         public decimal CostProcuredNumbers();
 
+        // public IList<double?> CostCallsByMonthChart();
+        public IList<CostSumByMonth> CostCallsByMonthChart();
+
+        public IList<CostNumberProvisionSumByMonth> CostProcuredNumbersByMonthChart();
+
+        // public decimal CostProcuredNumbersByMonthChart();
         IEnumerable<NumberProviderViewModel> AllNumberProviders();
 
         bool ProviderExists(int providerId);
