@@ -1,4 +1,8 @@
-﻿namespace UserEx.Services.Data.Billing
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using UserEx.Data.Models;
+
+namespace UserEx.Services.Data.Billing
 {
     using System;
     using System.Collections.Generic;
@@ -168,9 +172,13 @@
             // getting first day of month
             startDate = new DateTime(startYear, startMonth, 1);
 
-            var resultQuery = this.data.Records.Where(r => r.Date >= startDate && r.NumberId != null).AsQueryable();
+            var resultQuery = this.data.Records.Where(r => r.Date >= startDate && r.NumberId != null)
+                .Include(x => x.Number)
+                .ToList()
+                .Distinct(new RecordSameNumberComparer());
 
-            // Make records in groups with same Year and Month
+                // .AsQueryable()
+                // Make records in groups with same Year and Month
             var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month });
 
             // var result = this.data
@@ -184,7 +192,6 @@
             //    .Distinct()
             //    .Sum(x => x.MonthlyPrice);
 
-
             var result = groupedByYearAndMonthResult
                 .Select(g =>
                     new CostNumberProvisionSumByMonth
@@ -193,7 +200,9 @@
                         Date = g.First().Date,
 
                         MonthDisplay = $"{g.First().Date:MMM} {g.Key.Year}",
-                        CostSum = g.Sum(groupRecords => groupRecords.Number.MonthlyPrice),
+                        CostSum = g
+                           // .Distinct(new RecordSameNumberComparer())
+                            .Sum(groupRecords => groupRecords.Number.MonthlyPrice),
                     })
                 .OrderBy(g => g.Date)
                 .ToList();
@@ -232,6 +241,38 @@
             public string MonthDisplay { get; set; }
 
             public decimal? CostSum { get; set; }
+        }
+
+        public class RecordSameNumberComparer : IEqualityComparer<Record>
+        {
+            public bool Equals(Record x, Record y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                // Check whether any of the compared objects is null.
+                if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+                {
+                    return false;
+                }
+
+                // Check whether the numberID properties are equal.
+                return x.NumberId == y.NumberId;
+            }
+
+            public int GetHashCode(Record record)
+            {
+                // Get hash code for the Name field if it is not null.
+                int hashProductName = record.NumberId == null ? 0 : record.NumberId.GetHashCode();
+
+                // Get hash code for the Code field.
+                int hashProductCode = record.NumberId.GetHashCode();
+
+                // Calculate the hash code for the product.
+                return hashProductName ^ hashProductCode;
+            }
         }
     }
 }
