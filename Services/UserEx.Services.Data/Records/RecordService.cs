@@ -53,7 +53,7 @@
                 this.data.Records.Add(numberFromExcel);
             }
 
-            this.data.SaveChanges();
+            // this.data.SaveChanges();
         }
 
         public int GetProviderName(string providerName)

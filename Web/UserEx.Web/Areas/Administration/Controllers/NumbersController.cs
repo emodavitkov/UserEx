@@ -50,12 +50,18 @@
             return this.View(result);
         }
 
-        public IActionResult ChangeVisibility(int id)
+        // public IActionResult ChangeVisibility(int id)
+
+        public IActionResult ChangeVisibility(int id, string filter)
         {
             this.numbers.ChangeVisibility(id);
 
-            return this.RedirectToAction(nameof(this.All));
-        }
+            return this.RedirectToAction(nameof(this.All), new
+            {
+                filter =filter,
+            });
 
+            // return this.RedirectToAction(nameof(this.All), filter);
+        }
     }
 }

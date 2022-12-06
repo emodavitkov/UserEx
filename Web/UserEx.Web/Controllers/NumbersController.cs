@@ -40,7 +40,8 @@
                 query.SearchTerm,
                 query.Sorting,
                 query.CurrentPage,
-                AllNumbersQueryModel.NumbersPerPage);
+                AllNumbersQueryModel.NumbersPerPage,
+                publicOnly: true);
 
             // var numbersQuery = this.data.Numbers.AsQueryable();
 
