@@ -20,7 +20,7 @@
 			<div class="p-3 border bg-light"><strong>Billing data by chosen provider:</strong></div>
 		</div>
 		<div class="col">
-			<div class="p-3 border bg-light">$@Model.SumCostByProvider</div>
+			<div class="p-3 border bg-light">@Model.SumCostByProvider.ToString("C2")</div>
 		</div>
 	</div>
 </div>
@@ -33,7 +33,7 @@
 			<div class="p-3 border bg-light"><strong>Billing data by selected time spam:</strong></div>
 		</div>
 		<div class="col">
-			<div class="p-3 border bg-light">$@Model.SumCostByDate</div>
+			<div class="p-3 border bg-light">@Model.SumCostByDate.ToString("C2")</div>
 		</div>
 	</div>
 </div>
@@ -46,24 +46,12 @@
 			<div class="p-3 border bg-light"><strong>Billing data procured numbers:</strong></div>
 		</div>
 		<div class="col">
-			<div class="p-3 border bg-light">$@Model.SumProcuredNumbers</div>
+			<div class="p-3 border bg-light">@Model.SumProcuredNumbers.ToString("C2")</div>
 		</div>
 	</div>
 </div>
 
 <div class="mb-5"></div>
-@*
-<div class="col-md-6 offset-0 text-center">
-	<h2>Billing data by chosen provider:</h2>
-	<h3>@Model.SumCostByProvider</h3>
-</div>
-
-
-<div class="col-md-6 offset-0 text-center">
-	<h2>Billing data by selected time spam:</h2>
-	<h3>@Model.SumCostByDate</h3>
-</div>
-*@
 
 <div class="mb-3"></div>
 
@@ -76,14 +64,6 @@
 
 @if (userIsAdmin)
 {
-	@*
-		<div class="row">
-		<div class="col-6 text-center">
-			<button class="btn btn-primary" id="statistics-button">Show Balance</button>
-		</div>
-	</div>
-	*@
-
 	<div class="jumbotron d-none" id="statistics">
 		<div class="row">
 			<h3 class="col-md-4 text-center" id="didlogic-balance"></h3>
@@ -133,44 +113,3 @@
 
 }
 }
-
-@*
-@section Scripts{
-	<script>
-		window.addEventListener('load', ev => {
-			$.get('/api/balancesdidwwapi',
-				(data) => {
-					$('#didww-balance').text(data.balanceAmount + "$ DIDww balance");
-					@*
-						$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
-					$('#total-users').text(data.totalUsers + " Users");
-					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
-					// comment
-
-                    $('#statistics').removeClass('d-none');
-                    $('#statistics-button').hide();
-				});
-            });
-</script>
-}
-}*@
-@*
-	@section Scripts{
-	<script>
-		$('#statistics-button').on('click', ev => {
-			$.get('/api/balancesapi',
-				(data) => {
-					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
-					@*
-					$('#total-numbers').text(data.balanceAmount + " Approved Numbers");
-					$('#total-users').text(data.totalUsers + " Users");
-					$('#total-numForApp').text(data.totalNumbersNotApproved + " Numbers for Approval");
-					//end
-$('#statistics').removeClass('d-none');
-$('#statistics-button').hide();
-});
-});
-</script>
-}
-}
-*@

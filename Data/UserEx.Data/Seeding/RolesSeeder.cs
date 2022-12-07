@@ -18,8 +18,9 @@
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
+            // the seeding below is duplicated and can be removed along with the SeedRoleAsync function below
 
+            // await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
             Task
                 .Run(async () =>
                 {
@@ -51,18 +52,18 @@
                 .GetResult();
         }
 
-        private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, string roleName)
-        {
-            var role = await roleManager.FindByNameAsync(roleName);
-            if (role == null)
-            {
-                var result = await roleManager.CreateAsync(new ApplicationRole(roleName));
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
-            }
-        }
+        // private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, string roleName)
+        // {
+        //    var role = await roleManager.FindByNameAsync(roleName);
+        //    if (role == null)
+        //    {
+        //        var result = await roleManager.CreateAsync(new ApplicationRole(roleName));
+        //        if (!result.Succeeded)
+        //        {
+        //            throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+        //        }
+        //    }
+        // }
 
         // public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         // {
