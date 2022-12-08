@@ -43,9 +43,4 @@ Administrator dashboard:
 💾 Database Diagram:
 ![image](https://user-images.githubusercontent.com/53617178/206588144-50dbfb24-0fc6-4c0d-addd-b1ab990b66df.png)
 
-
-
- 
- [UserEx_GitHub.docx](https://github.com/emodavitkov/UserEx/files/10190569/UserEx_GitHub.docx)
-
- 
+[UserEx_GitHub.docx](https://github.com/emodavitkov/UserEx/files/10190602/UserEx_GitHub.docx)
