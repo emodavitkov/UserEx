@@ -7,7 +7,6 @@ UserEx Website is my defense project for the ASP.NET Core MVC course at SoftUni 
 Project is hosted on Azure at: https://userex.azurewebsites.net/ , you may register and play around creating your office and numbers.
 
 ✏️ Overview:
-[UserEx_GitHub.docx](https://github.com/emodavitkov/UserEx/files/10190559/UserEx_GitHub.docx)
 
 UserEx is an application used for managing telephony/voice services in terms of:
 -	Storing and maintaining the procured DID phone numbers (adding them manually one by one, via bulk (excel file), or API) from selected VoIP providers
