@@ -15,7 +15,7 @@ UserEx is an application used for managing telephony/voice services in terms of:
 -	CDRs 
 -	And many other… 
 
-Administrator dashboard:[UserEx_GitHub.docx](https://github.com/emodavitkov/UserEx/files/10190560/UserEx_GitHub.docx)
+Administrator dashboard:
 
 - Provision Providers’ numbers via API
 - Approve, Disapprove, Add, Edit, Delete, and View DID numbers. 
@@ -47,5 +47,6 @@ Administrator dashboard:[UserEx_GitHub.docx](https://github.com/emodavitkov/User
 
 
  
- 
+ [UserEx_GitHub.docx](https://github.com/emodavitkov/UserEx/files/10190569/UserEx_GitHub.docx)
+
  
