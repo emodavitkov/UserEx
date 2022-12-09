@@ -3,18 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data.Models;
-    using UserEx.Services.Data.Numbers;
-    using UserEx.Services.Data.Partners;
-    using UserEx.Services.Data.Rates;
     using UserEx.Services.Data.Records;
     using UserEx.Web.Tests.Mocks;
-    using UserEx.Web.ViewModels.Numbers;
-    using UserEx.Web.ViewModels.Partners;
-    using UserEx.Web.ViewModels.Rates;
     using UserEx.Web.ViewModels.Records;
     using Xunit;
 
@@ -51,9 +43,6 @@
             using var data = DatabaseMock.Instance;
 
             var recordService = new RecordService(data);
-
-            // data.Rates.AddRange(rateUpload);
-           // data.SaveChanges();
 
             // Act
             recordService.Upload(recordUpload);

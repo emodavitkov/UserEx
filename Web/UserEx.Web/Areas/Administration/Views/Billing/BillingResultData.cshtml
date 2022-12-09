@@ -80,9 +80,6 @@
 				(data) => {
 					$('#didlogic-balance').text(data.balanceAmount + "$ DIDlogic balance");
 					$('#statistics').removeClass('d-none');
-					@*
-					$('#statistics-button').hide();
-					*@
 				});
 		});
 
@@ -91,11 +88,7 @@
 				(data) => {
 					$('#didww-balance').text(data.balanceAmount + "$ DIDww balance");
 					$('#statistics').removeClass('d-none');
-					
-					@*
-					$('#statistics-button').hide();
-					*@
-					});
+				});
 			});
 
 		window.addEventListener('load', ev => {
@@ -103,10 +96,6 @@
 				(data) => {
 					$('#squaretalk-balance').text(data.balanceAmount + " SquareTalk balance");
 					$('#statistics').removeClass('d-none');
-
-					@*
-					$('#statistics-button').hide();
-					*@
 				});
 		});
 	</script>

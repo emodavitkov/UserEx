@@ -1,19 +1,12 @@
 ﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Balance
 {
-    using System;
-    using System.Collections.Generic;
     using System.Net.Http;
-    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using Microsoft.Extensions.Configuration;
-    using UserEx.Data;
     using UserEx.Web.ViewModels.Api;
 
-    // [Route("[controller]/api/balance")]
     [ApiController]
     [Route("api/[controller]")]
     public class BalancesApiController : AdministrationController

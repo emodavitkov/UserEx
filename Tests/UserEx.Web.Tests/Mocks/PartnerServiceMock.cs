@@ -1,9 +1,7 @@
 ﻿namespace UserEx.Web.Tests.Mocks
 {
     using Moq;
-    using UserEx.Data.Models;
     using UserEx.Services.Data.Partners;
-    using UserEx.Services.Data.Statistics;
 
     public static class PartnerServiceMock
     {

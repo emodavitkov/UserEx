@@ -11,7 +11,6 @@
 
     public interface IBillingService
     {
-        // public void Balance(BalancesApiResponseModel result);
         public Task<BalancesApiResponseModel> GetBalance();
 
         public decimal CostByProviderId(int providerId);
@@ -20,12 +19,10 @@
 
         public decimal CostProcuredNumbers();
 
-        // public IList<double?> CostCallsByMonthChart();
         public IList<CostSumByMonth> CostCallsByMonthChart();
 
         public IList<CostNumberProvisionSumByMonth> CostProcuredNumbersByMonthChart();
 
-        // public decimal CostProcuredNumbersByMonthChart();
         IEnumerable<NumberProviderViewModel> AllNumberProviders();
 
         bool ProviderExists(int providerId);

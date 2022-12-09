@@ -14,18 +14,13 @@
             this.numbersDidlogic = numbersDidlogic;
         }
 
-        //test bla bla
-
         public IActionResult DidlogicApiTrigger()
         {
-           
             var numbers = this.numbers
                 .All(publicOnly: false)
                 .Numbers;
 
             return this.RedirectToAction();
-
-            // return this.View(this.numbers.All(publicOnly: false).Numbers);
         }
 
         public IActionResult ChangeVisibility(int id)
@@ -34,6 +29,5 @@
 
             return this.RedirectToAction();
         }
-
     }
 }

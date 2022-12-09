@@ -1,10 +1,6 @@
 ﻿namespace UserEx.Web.Tests.Services
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data.Models;
     using UserEx.Services.Data.Partners;
@@ -24,13 +20,6 @@
 
             using var data = DatabaseMock.Instance;
 
-            // data.Partners.Add(new Partner
-            // {
-            //    UserId = userId,
-            //    OfficeName = officeName,
-            //    PhoneNumber = phoneNumber,
-            // });
-            // data.SaveChanges();
             var partnerService = new PartnerService(data);
 
             // Act

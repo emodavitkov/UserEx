@@ -4,8 +4,7 @@
     ViewData["Title"] = "Chart";
 
     Chart verticalBarChart = (Chart)ViewData["VerticalBarChart"];
-   //  Chart horizontalBarChart = (Chart)ViewData["HorizontalBarChart"];
-    Chart lineChart = (Chart)ViewData["LineChart"];
+	Chart lineChart = (Chart)ViewData["LineChart"];
 }
 
 @section Head {
@@ -26,22 +25,12 @@
         <div class="card-body">
             <h5 class="card-title">Vertical Bar Chart</h5>
             <canvas id="verticalBarChart"></canvas>
-            @*<a href="https://github.com/mattosaurus/bitScry/blob/master/bitScry/Controllers/Projects/ChartController.cs" class="btn btn-primary">View Code</a>*@
         </div>
     </div>
-	@*
-            <div class="card col-md-6">
-        <div class="card-body">
-            <h5 class="card-title">Horizontal Bar Chart</h5>
-            <canvas id="horizontalBarChart"></canvas>
-        </div>
-    </div>
-    *@
-    <div class="card col-md-6">
+	<div class="card col-md-6">
         <div class="card-body">
             <h5 class="card-title">Line Chart with Zoom</h5>
             <canvas id="lineChart"></canvas>
-            @*<a href="https://github.com/mattosaurus/bitScry/blob/master/bitScry/Controllers/Projects/ChartController.cs" class="btn btn-primary">View Code</a>*@
         </div>
         <div>Use alt-click for drag-to-zoom</div>
     </div>
@@ -64,11 +53,7 @@
     <script type="text/javascript">
         @Html.Raw(verticalBarChart.CreateChartCode("verticalBarChart"));
     </script>
-    @*
-        <script type="text/javascript">
-        @Html.Raw(horizontalBarChart.CreateChartCode("horizontalBarChart"));
-    </script>
-    *@
+   
     <script type="text/javascript">
         @Html.Raw(lineChart.CreateChartCode("lineChart"));
     </script>

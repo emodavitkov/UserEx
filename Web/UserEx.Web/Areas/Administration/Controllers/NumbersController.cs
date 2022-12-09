@@ -32,11 +32,6 @@
                 select = true;
             }
 
-            // var numbers = this.numbers
-            //    .All(publicOnly: false)
-            //    .Numbers;
-            // var numbersQuery = this.numbers
-            //    .All(publicOnly: false, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
             var numbersQuery = this.numbers
                 .All(publicOnly: select, currentPage: currentPage, numbersPerPage: AllNumbersQueryModel.NumbersPerPage);
             var result = new AllNumberServiceAdminModel
@@ -50,8 +45,6 @@
             return this.View(result);
         }
 
-        // public IActionResult ChangeVisibility(int id)
-
         public IActionResult ChangeVisibility(int id, string filter)
         {
             this.numbers.ChangeVisibility(id);
@@ -60,8 +53,6 @@
             {
                 filter =filter,
             });
-
-            // return this.RedirectToAction(nameof(this.All), filter);
         }
     }
 }

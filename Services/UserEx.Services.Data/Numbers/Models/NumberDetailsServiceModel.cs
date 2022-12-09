@@ -1,10 +1,6 @@
 ﻿namespace UserEx.Services.Data.Numbers.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class NumberDetailsServiceModel : NumberServiceModel
     {
@@ -16,7 +12,6 @@
 
         public DateTime StartDate { get; set; }
 
-        // public DateTime? EndDate { get; set; }
         public int? PartnerId { get; set; }
 
         public int ProviderId { get; set; }

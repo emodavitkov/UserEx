@@ -1,12 +1,8 @@
 ﻿namespace UserEx.Web.ViewModels.Rates
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data.Models;
     using UserEx.Web.ViewModels.Numbers;
@@ -15,7 +11,6 @@
 
     public class UploadRateModel
     {
-        // to add validation rules
         [Required]
         [StringLength(DialCodeNumberMaxLength, MinimumLength = DialCodeNumberMinLength)]
         public string DialCode { get; set; }

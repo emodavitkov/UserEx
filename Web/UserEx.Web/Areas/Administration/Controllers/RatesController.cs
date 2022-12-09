@@ -37,33 +37,21 @@
             });
         }
 
-        // TBD model state validations and provider selection
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UploadRate(IFormFile file, int providerId, UploadRateModel ratesModel)
         {
-            // as input UploadRateModel rates
             var bulkRates = new List<UploadRateModel>();
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
 
-            // TBD
             this.ModelState.Remove("DestinationName");
             this.ModelState.Remove("DialCode");
 
-            // moving to services
             if (!this.ModelState.IsValid)
             {
                 ratesModel.Providers = this.rates.AllProviders();
 
-                // ratesModel.Providers = this.data
-                 //   .Providers
-                 //   .Select(p => new NumberProviderViewModel()
-                 //   {
-                 //       Id = p.Id,
-                 //       Name = p.Name,
-                 //   })
-                 // .ToList();
                 return this.View();
             }
 
@@ -133,31 +121,6 @@
                 }
             }
 
-            // moved to service
-            // var ratesDelete = await this.data.Rates.AsQueryable().Where(r => r.ProviderId == providerId).ToListAsync();
-            // this.data.Rates.RemoveRange(ratesDelete);
-
-            // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
-            // Context.UserGroupPainAreas.RemoveRange(entities);
-
-            // if (!this.numbers.ProviderExists(number.ProviderId))
-            // {
-            //    this.ModelState.AddModelError(nameof(number.ProviderId), "Provider does not exist.");
-            // }
-
-            // moved to service
-            // foreach (var rate in bulkRates)
-            // {
-            //    var numberFromExcel = new Rate()
-            //    {
-            //        DestinationName = rate.DestinationName,
-            //        DialCode = rate.DialCode,
-            //        Cost = rate.Cost,
-            //        ProviderId = rate.ProviderId,
-            //    };
-            //    this.data.Rates.Add(numberFromExcel);
-            // }
-            // this.data.SaveChanges();
             this.rates.Upload(providerId, bulkRates);
             this.TempData[GlobalMessageKey] = "The selected Rates are added (old deleted)!";
 

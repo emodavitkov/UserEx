@@ -1,10 +1,7 @@
 ﻿namespace UserEx.Services.Data.Records
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data;
     using UserEx.Data.Models;
@@ -53,7 +50,7 @@
                 this.data.Records.Add(numberFromExcel);
             }
 
-            // this.data.SaveChanges();
+            this.data.SaveChanges();
         }
 
         public int GetProviderName(string providerName)

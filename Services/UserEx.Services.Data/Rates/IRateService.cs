@@ -1,10 +1,7 @@
 ﻿namespace UserEx.Services.Data.Rates
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+
     using UserEx.Web.ViewModels.Numbers;
     using UserEx.Web.ViewModels.Rates;
 

@@ -20,7 +20,6 @@
         [Required]
         public string UserId { get; set; }
 
-        // public ApplicationUser User { get; set; }
         public IEnumerable<Number> Numbers { get; init; } = new List<Number>();
     }
 }

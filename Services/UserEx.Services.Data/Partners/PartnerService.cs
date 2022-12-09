@@ -1,10 +1,7 @@
 ﻿namespace UserEx.Services.Data.Partners
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data;
     using UserEx.Data.Models;
@@ -34,11 +31,6 @@
                 throw new ArgumentNullException();
             }
 
-            // var result = this.data
-            //    .Partners
-            //    .Where(p => p.UserId == userId)
-            //    .Select(p => p.Id)
-            //    .FirstOrDefault();
             return result.Id;
         }
 

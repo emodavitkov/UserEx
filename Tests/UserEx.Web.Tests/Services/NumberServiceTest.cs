@@ -3,15 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
-    using UserEx.Services.Data.Partners;
     using UserEx.Web.Tests.Mocks;
     using UserEx.Web.ViewModels.Numbers;
-    using UserEx.Web.ViewModels.Partners;
     using Xunit;
 
     public class NumberServiceTest

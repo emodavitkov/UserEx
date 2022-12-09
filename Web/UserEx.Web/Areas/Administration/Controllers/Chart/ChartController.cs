@@ -22,20 +22,14 @@
         public IActionResult Chart()
         {
             Chart verticalBarChart = this.GenerateVerticalBarChart();
-
-           // Chart horizontalBarChart = GenerateHorizontalBarChart();
             Chart lineChart = this.GenerateLineChart();
 
-            // var query = this.billing.CostCallsByMonthChart();
             this.ViewData["VerticalBarChart"] = verticalBarChart;
-
-           // this.ViewData["HorizontalBarChart"] = horizontalBarChart;
             this.ViewData["LineChart"] = lineChart;
 
             return this.View();
         }
 
-        // private static Chart GenerateVerticalBarChart()
         private Chart GenerateVerticalBarChart()
         {
             Chart chart = new Chart();
@@ -44,15 +38,10 @@
             var query = this.billing.CostCallsByMonthChart();
 
             Data data = new Data();
-
-            // data.Labels = new List<string>() { "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
             data.Labels = query.Select(r => r.MonthDisplay).ToList();
             BarDataset dataset = new BarDataset()
             {
                 Label = "Calls cost by month 2022",
-
-                // Data = new List<double?>() { 12, 2, 3, 4, 5, 12, 19, 3, 5, 2, 3, 35 },
-                // Data = (IList<double?>)query,
                 Data = query.Select(r => (double?)r.CostSum).ToList(),
                 BackgroundColor = new List<ChartColor>
                 {
@@ -123,136 +112,6 @@
             return chart;
         }
 
-        // private static Chart GenerateHorizontalBarChart()
-        private Chart GenerateHorizontalBarChart()
-        {
-            Chart chart = new Chart();
-            chart.Type = Enums.ChartType.Bar;
-
-            chart.Data = new Data()
-            {
-                Datasets = new List<Dataset>()
-                {
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 1",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(12, 1),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(255, 99, 132, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 2",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(19, 2),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(54, 162, 235, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 3",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(3, 3),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(255, 206, 86, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 4",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(5, 4),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(75, 192, 192, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 5",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(2, 5),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(153, 102, 255, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                    {
-                        new VerticalBarDataset()
-                        {
-                            Label = "Dataset 6",
-                            Data = new List<VerticalBarDataPoint?>()
-                            {
-                                new VerticalBarDataPoint(3, 6),
-                            },
-                            BackgroundColor = new List<ChartColor>
-                            {
-                                ChartColor.FromRgba(255, 159, 64, 0.2),
-                            },
-                            BorderWidth = new List<int>() { 2 },
-                            IndexAxis = "y",
-                        }
-                    },
-                },
-            };
-
-            chart.Options = new Options()
-            {
-                Responsive = true,
-                Plugins = new ChartJSCore.Models.Plugins()
-                {
-                    Legend = new Legend()
-                    {
-                        Position = "right",
-                    },
-                    Title = new Title()
-                    {
-                        Display = true,
-                        Text = new List<string>() { "Chart.js Horizontal Bar Chart" },
-                    },
-                },
-            };
-
-            return chart;
-        }
-
-        // private static Chart GenerateLineChart()
         private Chart GenerateLineChart()
         {
             Chart chart = new Chart();
@@ -272,15 +131,12 @@
 
             Data data = new Data
             {
-                // Labels = new List<string> { "January", "February", "March", "April", "May", "June", "July" },
-               Labels = query.Select(r => r.MonthDisplay).ToList(),
+                Labels = query.Select(r => r.MonthDisplay).ToList(),
             };
 
             LineDataset dataset = new LineDataset()
             {
                 Label = "DID numbers cost by month",
-
-                // Data = new List<double?> { 65, 59, 80, 81, 56, 55, 40 },
                 Data = query.Select(r => (double?)r.CostSum).ToList(),
                 Fill = "true",
                 Tension = .01,

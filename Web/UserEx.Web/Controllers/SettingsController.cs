@@ -3,12 +3,12 @@
     using System;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Mvc;
     using UserEx.Data.Common.Repositories;
     using UserEx.Data.Models;
     using UserEx.Services.Data;
-    using UserEx.Web.ViewModels.Settings;
 
-    using Microsoft.AspNetCore.Mvc;
+    using UserEx.Web.ViewModels.Settings;
 
     public class SettingsController : BaseController
     {

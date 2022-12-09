@@ -11,7 +11,6 @@
 
     public class BillingController : AdministrationController
     {
-        // private readonly ApplicationDbContext data;
         private readonly IBillingService billing;
         private readonly INumberService number;
 
@@ -23,13 +22,6 @@
             this.number = number;
         }
 
-        // public IActionResult Index()
-        // {
-        //    var totalNumbersApproved = this.data.Numbers.Count(n => n.IsPublic);
-        //    var totalNumbersNotApproved = this.data.Numbers.Count(n => n.IsPublic == false);
-        //    var totalUsers = this.data.Users.Count();
-        //    return this.Ok();
-        // }
         [Authorize]
         public IActionResult Billing()
         {

@@ -3,9 +3,8 @@ namespace UserEx.Data.Models
 {
     using System;
 
-    using UserEx.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
+    using UserEx.Data.Common.Models;
 
     public class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity
     {

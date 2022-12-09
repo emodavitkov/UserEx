@@ -1,5 +1,4 @@
 ﻿@model AllNumberServiceAdminModel
-@*@model IEnumerable<NumberServiceModel>*@
 
 @using UserEx.Services.Data.Numbers.Models 
 @{
@@ -60,7 +59,6 @@
 				<a asp-area="" asp-controller="Numbers" asp-action="Delete" asp-route-id="@number.Id" class="btn btn-danger float-right ml-3">Delete</a>
 				<a asp-area="" asp-controller="Numbers" asp-action="Edit" asp-route-id="@number.Id" class="btn btn-warning float-right ml-3">Edit</a>
 				<a asp-area="Administration" asp-controller="Numbers" asp-action="ChangeVisibility" asp-route-id="@number.Id" asp-route-filter="@Model.Filter" class="btn float-right ml-3" style="width: 90px; background-color: @(number.IsPublic ? "lightgreen": "yellow")">@(number.IsPublic ? "Disable" : "Approve")</a>
-				@*<a asp-area="Administration" asp-controller="Numbers" asp-action="ChangeVisibility" asp-route-id="@number.Id" class="btn float-right ml-3" style="width: 90px; background-color: @(number.IsPublic ? "lightgreen": "yellow")">@(number.IsPublic ? "Disable" : "Approve")</a>*@
 				<a asp-area="" asp-controller="Numbers" asp-action="Details" asp-route-id="@number.Id" asp-route-information="@(number.Provider + "-" + @number.DidNumber)" class="btn btn-primary float-right ml-3">View</a>
 			</td>
 		</tr>

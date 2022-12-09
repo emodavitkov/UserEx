@@ -1,6 +1,5 @@
 ﻿namespace UserEx.Web.ViewModels.Api
 {
-    using System;
     using System.Text.Json.Serialization;
 
     using UserEx.Data.Models;

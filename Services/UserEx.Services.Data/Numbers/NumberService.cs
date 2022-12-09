@@ -22,7 +22,6 @@
             phoneUtil = PhoneNumberUtil.GetInstance();
         }
 
-        // bool publicOnly = true)
         public NumberQueryServiceModel All(
             string provider = null,
             string searchTerm = null,
@@ -31,11 +30,6 @@
             int numbersPerPage = int.MaxValue,
             bool? publicOnly = null)
         {
-            // isPublic addition
-            // var numbersQuery = this.data.Numbers.AsQueryable();
-            // add filter to the Admin All numbers view
-            // var numbersQuery = this.data.Numbers
-            //        .Where(n => !publicOnly || n.IsPublic);
             var numbersQuery = this.data.Numbers.AsQueryable();
             numbersQuery = publicOnly.HasValue ? numbersQuery.Where(n => n.IsPublic == publicOnly) : numbersQuery;
 
@@ -59,40 +53,14 @@
                 NumberSorting.MonthlyPrice => numbersQuery.OrderByDescending(n => n.MonthlyPrice),
                 NumberSorting.Description => numbersQuery.OrderBy(n => n.Description),
                 _ => numbersQuery.OrderByDescending(n => n.Id),
-
-                // NumberSorting.Description or _ => numbersQuery.OrderByDescending(n => n.Id),
-                // _ => carsQuery.OrderByDescending(c => c.Id)
             };
 
-            // var totalNumbers = this.data.Numbers.Count();
             var totalNumbers = numbersQuery.Count();
 
             var numbers = GetNumbers(numbersQuery
                 .Skip((currentPage - 1) * numbersPerPage)
                 .Take(numbersPerPage));
 
-            // getNumbers above
-            // var numbers = numbersQuery
-            //    .Skip((currentPage - 1) * numbersPerPage)
-            //    .Take(numbersPerPage)
-            //    // .OrderByDescending(n => n.Id)
-            //    .Select(n => new NumberServiceModel()
-            //    {
-            //        Id = n.Id,
-            //        DidNumber = n.DidNumber,
-            //        MonthlyPrice = n.MonthlyPrice,
-            //        Description = n.Description,
-            //        Provider = n.Provider.Name,
-            //    })
-            //    .ToList();
-
-            //// brand
-            // var numberProviders = this.data
-            //    .Numbers
-            //    .Select(p => p.Provider.Name)
-            //    .Distinct()
-            //    .OrderBy(p => p)
-            //    .ToList();
             return new NumberQueryServiceModel
             {
                 TotalNumbers = totalNumbers,
@@ -102,7 +70,6 @@
             };
         }
 
-        // issue with LatestNumbersServiceModel
         public IEnumerable<NumberIndexViewModel> Latest()
             => this.data
                 .Numbers
@@ -118,19 +85,6 @@
                 .Take(3)
                 .ToList();
 
-        // public IEnumerable<LatestNumbersServiceModel> Latest()
-        //    => this.data
-        //        .Numbers
-        //        .OrderByDescending(n => n.Id)
-        //        .Select(n => new LatestNumbersServiceModel()
-        //        {
-        //            Id = n.Id,
-        //            DidNumber = n.DidNumber,
-        //            MonthlyPrice = n.MonthlyPrice,
-        //            Description = n.Description,
-        //        })
-        //        .Take(3)
-        //        .ToList();
         public NumberDetailsServiceModel Details(int id)
             => this.data
                 .Numbers
@@ -188,7 +142,6 @@
                 return this.data.SaveChanges();
             }
 
-            // return numberData.Id;
             return 0;
         }
 
@@ -261,14 +214,11 @@
             numberData.SetupPrice = setupPrice;
             numberData.MonthlyPrice = monthlyPrice;
             numberData.Description = description;
-
-            // numberData.Source = SourceEnum.Manual;
             numberData.IsActive = isActive;
             numberData.StartDate = startDate;
             numberData.EndDate = endDate;
             numberData.IsPublic = isPublic;
 
-            // numberData.PartnerId = partnerId;
             this.data.SaveChanges();
             return true;
         }
@@ -295,14 +245,11 @@
             numberData.SetupPrice = setupPrice;
             numberData.MonthlyPrice = monthlyPrice;
             numberData.Description = description;
-
-            // numberData.Source = SourceEnum.Manual;
             numberData.IsActive = false;
             numberData.StartDate = startDate;
             numberData.EndDate = DateTime.Now;
             numberData.IsPublic = isPublic;
 
-            // numberData.PartnerId = partnerId;
             this.data.Remove(numberData);
             this.data.SaveChanges();
 
@@ -351,15 +298,6 @@
                 .Providers
                 .Any(p => p.Id == providerId);
 
-        // public IEnumerable<NumberProviderServiceModel> AllNumberProviders()
-        //    => this.data
-        //        .Providers
-        //        .Select(p => new NumberProviderServiceModel()
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //        })
-        //        .ToList();
         private static IEnumerable<NumberServiceModel> GetNumbers(IQueryable<Number> numberQuery)
             => numberQuery
                 .Select(n => new NumberServiceModel

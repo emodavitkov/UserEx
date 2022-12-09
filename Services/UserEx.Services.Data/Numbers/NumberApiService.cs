@@ -1,10 +1,7 @@
 ﻿namespace UserEx.Services.Data.Numbers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data;
     using UserEx.Data.Models;

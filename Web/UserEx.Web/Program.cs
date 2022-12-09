@@ -40,21 +40,7 @@
             var reCaptchaKey = builder.Configuration["ReCaptcha:ApiKey"];
             var reCaptchaSiteKey = builder.Configuration["ReCaptcha:SiteKey"];
 
-            // add services for the reCaptcha to the container
-            // builder.Services.AddCors();
-            // builder.Services.AddControllers();
-            // builder.Services.AddEndpointsApiExplorer();
-            // builder.Services.AddSwaggerGen();
-
             var app = builder.Build();
-
-            // reCapture setup
-            // app.UseSwagger(options =>
-            // {
-            //    options.SerializeAsV2 = true;
-            // });
-            // app.UseFileServer();
-
             Configure(app);
             app.Run();
         }
@@ -121,21 +107,12 @@
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
-                // app.UseSwagger();
-                // app.UseSwaggerUI();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
-            //// global cors policy
-            // app.UseCors(x => x
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader()
-            //    .SetIsOriginAllowed(origin => true)
-            //    .AllowCredentials());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

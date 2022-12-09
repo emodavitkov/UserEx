@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-using UserEx.Data.Models;
-
-namespace UserEx.Services.Data.Billing
+﻿namespace UserEx.Services.Data.Billing
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +6,10 @@ namespace UserEx.Services.Data.Billing
     using System.Net.Http;
     using System.Threading.Tasks;
 
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-
     using UserEx.Data;
+    using UserEx.Data.Models;
     using UserEx.Web.ViewModels.Api;
     using UserEx.Web.ViewModels.Numbers;
 
@@ -79,10 +76,6 @@ namespace UserEx.Services.Data.Billing
             var result = query
             .Sum(x => x.BuyRate * x.Duration / 60);
 
-            // var result = this.data
-            //    .Records
-            //    .Where(p => p.ProviderId == providerId)
-            //    /*.Sum(x => x.BuyRate * x.Duration / 60);*/
             return result;
         }
 
@@ -124,17 +117,20 @@ namespace UserEx.Services.Data.Billing
             return result;
         }
 
-        // public IList<double?> CostCallsByMonthChart()
         public IList<CostSumByMonth> CostCallsByMonthChart()
         {
-            var startDate = DateTime.UtcNow.AddYears(-1); // getting date before one year
+            // getting date before one year
+            var startDate = DateTime.UtcNow.AddYears(-1);
             var startYear = startDate.Year;
             var startMonth = startDate.Month;
-            startDate = new DateTime(startYear, startMonth, 1); // getting first day of month
+
+            // getting first day of month
+            startDate = new DateTime(startYear, startMonth, 1);
 
             var resultQuery = this.data.Records.Where(r => r.Date >= startDate && r.Duration > 0).AsQueryable();
 
-            var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month }); // Make records in groups with same Year and Month
+            // Make records in groups with same Year and Month
+            var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month });
 
             var result = groupedByYearAndMonthResult
                 .Select(g =>
@@ -148,18 +144,6 @@ namespace UserEx.Services.Data.Billing
                 .ToList();
 
             return result;
-
-            // IList<double?> numbersList = new List<double?>();
-            // for (int i = 1; i <= 12; i++)
-            // {
-            //   var result = this.data
-            //        .Records
-            //        .Where(x => x.Duration > 0 && x.Date.Month == i)
-            //        .Sum(x => x.BuyRate * x.Duration / 60);
-            //   double convert = (double)result;
-            //   numbersList.Add(convert);
-            // }
-            // return numbersList;
         }
 
         public IList<CostNumberProvisionSumByMonth> CostProcuredNumbersByMonthChart()
@@ -177,20 +161,8 @@ namespace UserEx.Services.Data.Billing
                 .ToList()
                 .Distinct(new RecordSameNumberComparer());
 
-                // .AsQueryable()
                 // Make records in groups with same Year and Month
             var groupedByYearAndMonthResult = resultQuery.GroupBy(r => new { r.Date.Year, r.Date.Month });
-
-            // var result = this.data
-            //    .Records
-            //    .Where(n => n.NumberId != null)
-            //    .Select(x => new
-            //    {
-            //        NumberId = x.NumberId,
-            //        MonthlyPrice = x.Number.MonthlyPrice,
-            //    })
-            //    .Distinct()
-            //    .Sum(x => x.MonthlyPrice);
 
             var result = groupedByYearAndMonthResult
                 .Select(g =>
@@ -201,7 +173,6 @@ namespace UserEx.Services.Data.Billing
 
                         MonthDisplay = $"{g.First().Date:MMM} {g.Key.Year}",
                         CostSum = g
-                           // .Distinct(new RecordSameNumberComparer())
                             .Sum(groupRecords => groupRecords.Number.MonthlyPrice),
                     })
                 .OrderBy(g => g.Date)

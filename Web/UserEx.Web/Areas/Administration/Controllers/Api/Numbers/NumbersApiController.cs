@@ -9,19 +9,14 @@
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
-    using UserEx.Data;
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
     using UserEx.Web.ViewModels.Api;
 
-    using static UserEx.Common.GlobalConstants;
-
-    // public class NumbersApiController : ControllerBase
     [ApiController]
     [Route("[controller]/api/number")]
     public class NumbersApiController : AdministrationController
     {
-       // private readonly ApplicationDbContext data;
         private readonly IConfiguration config;
         private readonly INumberApiService number;
 
@@ -38,6 +33,7 @@
             var didwwApiKey = this.config["Didww:ApiKey"];
             var didwwId = 9;
             var result = 0;
+
             try
             {
                 using (var httpClient = new HttpClient())
@@ -47,8 +43,6 @@
                         Headers =
                         {
                             { "Host", "api.didww.com" },
-
-                            // { "Content-Type", "application/vnd.api+json" },
                             { "Accept", "application/vnd.api+json" },
                             { "Api-Key", didwwApiKey },
                         },
@@ -67,17 +61,12 @@
 
                         foreach (var number in numbersApiResponse.Data)
                         {
-                            // move to service
                             var currentNumber = number.Attributes.Number;
                             if (this.number.NumberExists(currentNumber))
                             {
                                 continue;
                             }
 
-                            // if (this.data.Numbers.FirstOrDefault(n => n.DidNumber == number.Attributes.Number) != null)
-                            // {
-                            //    continue;
-                            // }
                             var orderId = number.Relationships.Order.OrderData.OrderId;
 
                             var numberData = new Number
@@ -93,28 +82,12 @@
                                 StartDate = number.Attributes.CreatedAt.Date,
                             };
 
-
-                            // foreach (var orderDetails in numbersApiResponse.Included)
-                            // {
-                            //    if (orderDetails.IncludedOrderId == orderId)
-                            //    {
-                            //        numberData.MonthlyPrice = orderDetails.Attributes.OrderItems.FirstOrDefault().OrderItemsAttributes.MonthlyPrice,
-                            //        numberData.SetupPrice = orderDetails.Attributes.OrderItems.OrderItemsAttributes.OrderSetupPrice,
-                            //            OrderReference = orderDetails.Attributes.OrderReference,
-
-                            // };
-                            //    }
-                            // }
                             numbersApiCollected.Add(numberData);
                         }
 
                         result = numbersApiCollected.Count;
 
-                        // move to service
                         this.number.Add(numbersApiCollected);
-
-                        // this.data.Numbers.AddRange(numbersApiCollected);
-                        // this.data.SaveChanges();
                     }
 
                     if (result == 0)
@@ -125,9 +98,6 @@
                     {
                         return this.Ok($"{@result} DIDww numbers added and awaiting for an approval! Go back and enjoy using UserEx!");
                     }
-
-                    // this.TempData[GlobalMessageKey] = "DIDww Numbers added successfully(new numbers only) and awaiting for approval!";
-                    // return this.Ok($"{@result} DIDww numbers added and awaiting for an approval (if any, new numbers only)! Go back and enjoy using UserEx!");
                 }
             }
             catch (Exception e)

@@ -96,12 +96,8 @@
                         {
                             var providerName = worksheet.Cells[row, 7].Value.ToString().ToLower().Trim();
 
-                            // moved to service
                             var resultProviderId = this.records.GetProviderName(providerName);
 
-                            // var resultProviderId = this.GetProviderName(providerName);
-
-                            // if (this.data.Providers.FirstOrDefault(p => p.Name.ToLower() == providerName) == null)
                             if (!this.records.ProviderNameExists(providerName))
                             {
                                 continue;
@@ -127,88 +123,11 @@
                 }
             }
 
-            // moving to service
-            // var recordsDelete = await this.data.Records.AsQueryable().ToListAsync();
-            // this.data.Records.RemoveRange(recordsDelete);
-
-            // this.TempData[GlobalMessageKey] = "The OLD CDRs were deleted!";
-
-            // var entities = await Context.UserGroupPainAreas.Where(ug => ug.UserGroupId == userGroupId).ToListAsync();
-            // Context.UserGroupPainAreas.RemoveRange(entities);
-
-            // moving to service
-            // foreach (var record in bulkRecords)
-            // {
-            //    var callerNumber = record.CallerNumber;
-            //    int? resultNumberId = null;
-            //    string resultCallerNumberNotProcured = null;
-
-            // if (this.GetNumberId(callerNumber) != 0)
-            //    {
-            //        resultNumberId = this.GetNumberId(callerNumber);
-            //    }
-            //    else
-            //    {
-            //        resultCallerNumberNotProcured = callerNumber;
-            //    }
-
-            // var numberFromExcel = new Record
-            //    {
-            //        Date = record.Date,
-            //        CallerNumberNotProcured = resultCallerNumberNotProcured,
-            //        CallingNumber = record.CallingNumber,
-            //        BuyRate = record.BuyRate,
-            //        Duration = record.Duration,
-            //        ProviderId = record.ProviderId,
-            //        DialCode = record.DialCode,
-            //        NumberId = resultNumberId,
-            //    };
-            //    this.data.Records.Add(numberFromExcel);
-            // }
-
-            // old
-            // foreach (var record in bulkRecords)
-            // {
-            //    var numberFromExcel = new Record
-            //    {
-            //        Date = record.Date,
-            //        CallerNumber = record.CallerNumber,
-            //        CallingNumber = record.CallingNumber,
-            //        BuyRate = record.BuyRate,
-            //        Duration = record.Duration,
-            //        ProviderId = record.ProviderId,
-            //        DialCode = record.DialCode,
-            //    };
-            //    this.data.Records.Add(numberFromExcel);
-            // }
-            // this.data.SaveChanges();
             this.records.Upload(bulkRecords);
 
             this.TempData[GlobalMessageKey] = "The previous CDRs were deleted and the new file added!";
 
             return this.RedirectToAction(nameof(this.UploadRecord));
         }
-
-        // moved to service
-        // public int GetProviderName(string providerName)
-        //    => this.data
-        //        .Providers
-        //        .Where(p => p.Name.ToLower() == providerName)
-        //        .Select(n => n.Id)
-        //        .FirstOrDefault();
-
-        // public int GetNumberId(string callerNumber)
-        //    => this.data
-        //        .Numbers
-        //        .Where(n => n.DidNumber == callerNumber)
-        //        .Select(n => n.Id)
-        //        .FirstOrDefault();
-
-        // public List<int> GetProviderName(string providerName)
-        //   => this.data
-        //       .Providers
-        //       .Where(p => p.Name.ToLower() == providerName)
-        //       .Select(n => n.Id)
-        //       .ToList();
     }
 }

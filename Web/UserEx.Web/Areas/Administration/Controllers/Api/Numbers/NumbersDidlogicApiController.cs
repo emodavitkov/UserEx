@@ -1,26 +1,21 @@
-﻿using UserEx.Data.Models;
-
-namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
+﻿namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Text.Json;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers;
     using UserEx.Web.ViewModels.Api;
-
-    using static UserEx.Common.GlobalConstants;
 
     [ApiController]
     [Route("[controller]/api/number")]
     public class NumbersDidlogicApiController : AdministrationController
     {
-       // private readonly ApplicationDbContext data;
         private readonly IConfiguration config;
         private readonly INumberDidlogicApiService number;
 
@@ -37,6 +32,7 @@ namespace UserEx.Web.Areas.Administration.Controllers.Api.Numbers
             var didlogicApiKey = this.config["Didlogic:ApiKey"];
             var didlogicId = 3;
             var result = 0;
+
             try
             {
                 using (var httpClient = new HttpClient())

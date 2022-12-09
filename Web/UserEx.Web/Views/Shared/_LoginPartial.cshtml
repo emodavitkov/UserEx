@@ -14,8 +14,7 @@
     {
             var userId = User.GetId();
 	        var userIsPartner = Partners.IsPartner(userId);
-	        @*var userIsAdmin = User.IsInRole(AdministratorRoleName);*@
-	        var userIsAdmin = User.IsAdmin();
+	    var userIsAdmin = User.IsAdmin();
         
 
         @if (userIsPartner && !userIsAdmin)

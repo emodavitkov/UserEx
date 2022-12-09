@@ -2,16 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using UserEx.Data.Models;
     using UserEx.Services.Data.Numbers.Models;
     using UserEx.Web.ViewModels.Home;
     using UserEx.Web.ViewModels.Numbers;
 
-    // bool? publicOnly = true)
     public interface INumberService
     {
         NumberQueryServiceModel All(
@@ -22,7 +18,6 @@
             int numbersPerPage = int.MaxValue,
             bool? publicOnly = null);
 
-        // IEnumerable<LatestNumbersServiceModel> Latest();
         IEnumerable<NumberIndexViewModel> Latest();
 
         NumberDetailsServiceModel Details(int numberId);
@@ -76,10 +71,8 @@
 
         void ChangeVisibility(int numberId);
 
-        // IEnumerable<string> AllNumberProviders();
         IEnumerable<string> AllNumbersByProvider();
 
-        // IEnumerable<NumberProviderServiceModel> AllNumberProviders();
         IEnumerable<NumberProviderViewModel> AllNumberProviders();
 
         bool ProviderExists(int providerId);

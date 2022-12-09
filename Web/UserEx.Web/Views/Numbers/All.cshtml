@@ -122,38 +122,3 @@
 			asp-route-sorting="@((int)Model.Sorting)">>></a>
 	</div>
 </div>
-
-@*
-	
-<div class="row">
-	<table class="table">
-		<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col">DID number</th>
-			<th scope="col">Provider</th>
-			<th scope="col">Office</th>
-			<th scope="col">Monthly Cost</th>
-			<th scope="col">Actions</th>
-		</tr>
-		</thead>
-
-		@foreach (var number in Model.Numbers)
-		{
-		
-			<tbody>
-			<tr>
-				<th scope="row">@i</th>
-				<td>@number.DidNumber</td>
-				<td>@number.Provider</td>
-				<td>@number.Description</td>
-				<td>@number.MonthlyPrice</td>
-				<td>@number.MonthlyPrice</td>
-			</tr>
-			</tbody>
-			i += 1;
-		}
-	</table>
-
-</div>
-*@
