@@ -1,7 +1,6 @@
 UseEx
 
 Project Introduction:
-
 UserEx Website is my defense project for the ASP.NET Core MVC course at SoftUni (October-Dec 2022).
 
 Project is hosted on Azure at: https://userex.azurewebsites.net/ , you may register and play around creating your office and numbers.
@@ -35,7 +34,7 @@ Administrator dashboard:
 - Google ReCAPTCHA
 - Chart.js 
 - Google libphonenumber-csharp
-- Carrier APIs – for provisioning numbers and current balance
+- Carriers' API – for provisioning numbers and current balance
 - Bootstrap
 - In-memory cache
 - AJAX real-time Requests
